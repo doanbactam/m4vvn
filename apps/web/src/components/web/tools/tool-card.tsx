@@ -1,53 +1,64 @@
-import { formatNumber } from "@curiousleaf/utils"
-import { formatDistanceToNowStrict } from "date-fns"
-import { GitForkIcon, StarIcon, TimerIcon } from "lucide-react"
-import type { ComponentProps } from "react"
-import { H4 } from "~/components/common/heading"
-import { Link } from "~/components/common/link"
-import { Skeleton } from "~/components/common/skeleton"
-import { Stack } from "~/components/common/stack"
-import { ToolBadges } from "~/components/web/tools/tool-badges"
-import { Badge } from "~/components/common/badge"
-import { Card, CardDescription, CardHeader } from "~/components/common/card"
-import { Favicon } from "~/components/web/ui/favicon"
-import { Insights } from "~/components/web/ui/insights"
-import type { ToolMany } from "~/server/web/tools/payloads"
+import { formatNumber } from "@curiousleaf/utils";
+import { formatDistanceToNowStrict } from "date-fns";
+import { GitForkIcon, TimerIcon, DollarSignIcon } from "lucide-react";
+import type { ComponentProps } from "react";
+import { H4 } from "~/components/common/heading";
+import { Link } from "~/components/common/link";
+import { Skeleton } from "~/components/common/skeleton";
+import { Stack } from "~/components/common/stack";
+import { ToolBadges } from "~/components/web/tools/tool-badges";
+import { Badge } from "~/components/common/badge";
+import { Card, CardDescription, CardHeader } from "~/components/common/card";
+import { Favicon } from "~/components/web/ui/favicon";
+import { Insights } from "~/components/web/ui/insights";
+import type { ToolMany } from "~/server/web/tools/payloads";
 
 type ToolCardProps = ComponentProps<typeof Card> & {
-  tool: ToolMany
-
-  /**
-   * Disables the view transition.
-   */
-  isRelated?: boolean
-}
+  tool: ToolMany;
+  isRelated?: boolean;
+};
 
 const ToolCard = ({ className, tool, isRelated, ...props }: ToolCardProps) => {
   const insights = [
-    { label: "Stars", value: formatNumber(tool.stars, "standard"), icon: <StarIcon /> },
-    { label: "Forks", value: formatNumber(tool.forks, "standard"), icon: <GitForkIcon /> },
+    {
+      label: "Pricing",
+      value: tool.pricingType || "Free",
+      icon: <DollarSignIcon />,
+    },
+    { label: "Forks", value: tool.forks || 0, icon: <GitForkIcon /> },
     {
       label: "Last commit",
-      value:
-        tool.lastCommitDate && formatDistanceToNowStrict(tool.lastCommitDate, { addSuffix: true }),
+      value: tool.lastCommitDate
+        ? formatDistanceToNowStrict(new Date(tool.lastCommitDate), { addSuffix: true })
+        : "N/A",
       icon: <TimerIcon />,
     },
-  ]
+  ];
 
   return (
-    <Card asChild {...props}>
+    <Card {...props}>
       <Link href={`/${tool.slug}`} className="group">
         <CardHeader>
           <Favicon src={tool.faviconUrl} title={tool.name} />
 
-          <H4 as="h3" className="truncate">
-            {tool.name}
-          </H4>
+          <H4 as="h3" className="truncate">{tool.name}</H4>
 
           <ToolBadges tool={tool} className="ml-auto">
-            {tool.discountAmount && <Badge variant="success">Get {tool.discountAmount}!</Badge>}
+            {typeof tool.discountAmount === "string" && (
+              <Badge variant="success">
+                Get {tool.discountAmount.includes("%") ? tool.discountAmount : `${tool.discountAmount}%`}!
+              </Badge>
+            )}
           </ToolBadges>
         </CardHeader>
+
+        {/* Hiển thị Pricing Type thay vì Stars */}
+        <div className="flex flex-row justify-between items-center">
+          {/* <h3>{tool.name}</h3> */}
+          <span className={`badge ${tool.pricingType?.toLowerCase() || "default"}`}>
+            {tool.pricingType || "Free"} {tool.priceRange ? `(${tool.priceRange})` : ""}
+          </span>
+        </div>
 
         <div className="relative size-full flex flex-col">
           <Stack
@@ -59,7 +70,7 @@ const ToolCard = ({ className, tool, isRelated, ...props }: ToolCardProps) => {
               <CardDescription className="line-clamp-4">{tool.description}</CardDescription>
             )}
 
-            {!!tool.alternatives.length && (
+            {tool.alternatives?.length ? (
               <Stack className="mt-auto text-sm">
                 <span>
                   <span className="sr-only">Open Source </span>Alternative to:
@@ -72,7 +83,7 @@ const ToolCard = ({ className, tool, isRelated, ...props }: ToolCardProps) => {
                   </Stack>
                 ))}
               </Stack>
-            )}
+            ) : null}
           </Stack>
 
           <Stack
@@ -86,21 +97,27 @@ const ToolCard = ({ className, tool, isRelated, ...props }: ToolCardProps) => {
         </div>
       </Link>
     </Card>
-  )
-}
+  );
+};
 
+// Skeleton Loader for ToolCard
 const ToolCardSkeleton = () => {
-  const insights = [
-    { label: "Stars", value: <Skeleton className="h-4 w-16" />, icon: <StarIcon /> },
-    { label: "Forks", value: <Skeleton className="h-4 w-14" />, icon: <GitForkIcon /> },
-    { label: "Last commit", value: <Skeleton className="h-4 w-20" />, icon: <TimerIcon /> },
-  ]
+  const insightData = [
+    { label: "Pricing", width: "w-16", icon: <DollarSignIcon /> },
+    { label: "Forks", width: "w-14", icon: <GitForkIcon /> },
+    { label: "Last commit", width: "w-20", icon: <TimerIcon /> },
+  ];
+
+  const insights = insightData.map(({ label, width, icon }) => ({
+    label,
+    value: <Skeleton className={`h-4 ${width}`} />,
+    icon,
+  }));
 
   return (
     <Card hover={false} className="items-stretch select-none">
       <CardHeader>
         <Favicon src="/favicon.png" className="animate-pulse opacity-50" />
-
         <H4 className="w-2/3">
           <Skeleton>&nbsp;</Skeleton>
         </H4>
@@ -115,7 +132,7 @@ const ToolCardSkeleton = () => {
         <Insights insights={insights} className="mt-auto animate-pulse" />
       </Stack>
     </Card>
-  )
-}
+  );
+};
 
-export { ToolCard, ToolCardSkeleton }
+export { ToolCard, ToolCardSkeleton };

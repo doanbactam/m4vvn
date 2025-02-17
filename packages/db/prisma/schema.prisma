@@ -1,6 +1,6 @@
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["driverAdapters", "postgresqlExtensions", "fullTextSearchPostgres"]
+  previewFeatures = ["driverAdapters", "fullTextSearchPostgres", "postgresqlExtensions"]
 }
 
 datasource db {
@@ -10,64 +10,19 @@ datasource db {
   extensions = [citext, pg_trgm]
 }
 
-enum AdType {
-  Banner
-  Homepage
-  ToolPage
-  BlogPost
-  All
-}
-
-enum ToolStatus {
-  Draft
-  Scheduled
-  Published
-  Deleted
-}
-
-enum StackType {
-  Tool
-  SaaS
-  Cloud
-  ETL
-  Analytics
-  Language
-  DB
-  CI
-  Framework
-  Hosting
-  API
-  Storage
-  Monitoring
-  Messaging
-  App
-  Network
-}
-
-enum ReportType {
-  BrokenLink
-  WrongCategory
-  WrongAlternative
-  Outdated
-  Other
-}
-
 model User {
-  id            String   @id @default(cuid())
+  id            String     @id @default(cuid())
   name          String
-  email         String   @unique
-  emailVerified Boolean  @default(false)
+  email         String     @unique
+  emailVerified Boolean    @default(false)
   image         String?
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+  accounts      Account[]
+  bookmarks     Bookmark[]
+  sessions      Session[]
+  tools         Tool[]
 
-  // Relations
-  accounts  Account[]
-  sessions  Session[]
-  bookmarks Bookmark[]
-  tools     Tool[]
-
-  // Indexes
   @@index([id])
 }
 
@@ -80,11 +35,8 @@ model Session {
   userAgent String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  // Relations
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  // Indexes
   @@index([userId])
 }
 
@@ -102,11 +54,8 @@ model Account {
   password              String?
   createdAt             DateTime  @default(now())
   updatedAt             DateTime  @updatedAt
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  // Relations
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  // Indexes
   @@index([userId])
 }
 
@@ -154,6 +103,8 @@ model Tool {
   submitterEmail  String?
   submitterNote   String?
   hostingUrl      String?
+  pricingType     PricingStatus            @default(Free)  // Sử dụng enum PricingStatus
+  priceRange      String?
   discountCode    String?
   discountAmount  String?
   firstCommitDate DateTime?
@@ -163,18 +114,16 @@ model Tool {
   createdAt       DateTime                 @default(now())
   updatedAt       DateTime                 @updatedAt
   searchVector    Unsupported("tsvector")?
-
-  // Relations
-  alternatives Alternative[]
-  categories   Category[]
-  topics       Topic[]
-  stacks       Stack[]
-  license      License?      @relation(fields: [licenseId], references: [id])
-  licenseId    String?
-  bookmarkedBy Bookmark[]
-  reports      Report[]
-  owner        User?         @relation(fields: [ownerId], references: [id])
-  ownerId      String?
+  licenseId       String?
+  ownerId         String?
+  bookmarkedBy    Bookmark[]
+  reports         Report[]
+  license         License?                 @relation(fields: [licenseId], references: [id])
+  owner           User?                    @relation(fields: [ownerId], references: [id])
+  alternatives    Alternative[]            @relation("AlternativeToTool")
+  categories      Category[]               @relation("CategoryToTool")
+  stacks          Stack[]                  @relation("StackToTool")
+  topics          Topic[]                  @relation("ToolToTopic")
 
   @@index([id, slug])
   @@index([name])
@@ -196,11 +145,8 @@ model Alternative {
   discountAmount String?
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
+  tools          Tool[]   @relation("AlternativeToTool")
 
-  // Implicit relation
-  tools Tool[]
-
-  // Indexes
   @@index([slug])
 }
 
@@ -211,11 +157,8 @@ model Category {
   label     String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  tools     Tool[]   @relation("CategoryToTool")
 
-  // Implicit relation
-  tools Tool[]
-
-  // Indexes
   @@index([slug])
 }
 
@@ -223,11 +166,8 @@ model Topic {
   slug      String   @id @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  tools     Tool[]   @relation("ToolToTopic")
 
-  // Implicit relation
-  tools Tool[]
-
-  // Indexes
   @@index([slug])
 }
 
@@ -239,11 +179,8 @@ model License {
   content     String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+  tools       Tool[]
 
-  // Relations
-  tools Tool[]
-
-  // Indexes
   @@index([slug])
 }
 
@@ -257,11 +194,8 @@ model Stack {
   faviconUrl  String?
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
+  tools       Tool[]    @relation("StackToTool")
 
-  // Relations
-  tools Tool[]
-
-  // Indexes
   @@index([slug])
 }
 
@@ -272,11 +206,8 @@ model Report {
   message   String?
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
+  tool      Tool       @relation(fields: [toolId], references: [id], onDelete: Cascade)
 
-  // Relations
-  tool Tool @relation(fields: [toolId], references: [id], onDelete: Cascade)
-
-  // Indexes
   @@index([toolId])
 }
 
@@ -285,13 +216,57 @@ model Bookmark {
   userId    String
   toolId    String
   createdAt DateTime @default(now())
+  tool      Tool     @relation(fields: [toolId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  // Relations
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  tool Tool @relation(fields: [toolId], references: [id], onDelete: Cascade)
-
-  // Indexes
   @@unique([userId, toolId])
   @@index([userId])
   @@index([toolId])
+}
+
+enum AdType {
+  Banner
+  Homepage
+  ToolPage
+  BlogPost
+  All
+}
+
+enum ToolStatus {
+  Draft
+  Scheduled
+  Published
+  Deleted
+}
+enum PricingStatus  {
+  Free
+  Paid
+  FreeTrial
+}
+
+enum StackType {
+  Tool
+  SaaS
+  Cloud
+  ETL
+  Analytics
+  Language
+  DB
+  CI
+  Framework
+  Hosting
+  API
+  Storage
+  Monitoring
+  Messaging
+  App
+  Network
+}
+
+enum ReportType {
+  BrokenLink
+  WrongCategory
+  WrongAlternative
+  Outdated
+  Other
 }

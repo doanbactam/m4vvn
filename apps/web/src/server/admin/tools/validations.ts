@@ -1,4 +1,5 @@
-import { type Tool, ToolStatus } from "@openalternative/db/client"
+import { type Tool, ToolStatus} from "@openalternative/db/client"
+import { PricingStatus } from "@prisma/client"; // Đảm bảo import từ Prisma
 import {
   createSearchParamsCache,
   parseAsArrayOf,
@@ -16,6 +17,7 @@ export const searchParamsCache = createSearchParamsCache({
   sort: getSortingStateParser<Tool>().withDefault([{ id: "createdAt", desc: true }]),
   name: parseAsString.withDefault(""),
   status: parseAsArrayOf(z.nativeEnum(ToolStatus)).withDefault([]),
+  pricing: parseAsArrayOf(z.nativeEnum(PricingStatus)).withDefault([]),
   from: parseAsString.withDefault(""),
   to: parseAsString.withDefault(""),
   operator: parseAsStringEnum(["and", "or"]).withDefault("and"),
@@ -40,6 +42,8 @@ export const toolSchema = z.object({
   submitterEmail: z.string().optional(),
   submitterNote: z.string().optional(),
   hostingUrl: z.string().url().optional().or(z.literal("")),
+  pricingType: z.nativeEnum(PricingStatus).default(PricingStatus.Free),
+  priceRange: z.string().optional().default(""),
   discountCode: z.string().optional(),
   discountAmount: z.string().optional(),
   publishedAt: z.coerce.date().nullish(),

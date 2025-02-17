@@ -11,8 +11,9 @@ export const findTools = async (search: GetToolsSchema) => {
   const offset = (page - 1) * perPage
 
   // Column and order to sort by
-  const orderBy = sort.map(item => ({ [item.id]: item.desc ? "desc" : "asc" }) as const)
-
+  const orderBy = sort?.length
+  ? sort.map(item => ({ [item.id]: item.desc ? "desc" : "asc" }) as const)
+  : [{ createdAt: "desc" }] // Mặc định sắp xếp theo createdAt
   // Convert the date strings to date objects
   const fromDate = from ? startOfDay(new Date(from)) : undefined
   const toDate = to ? endOfDay(new Date(to)) : undefined
@@ -22,14 +23,14 @@ export const findTools = async (search: GetToolsSchema) => {
     name ? { name: { contains: name, mode: "insensitive" } } : undefined,
 
     // Filter tasks by status
-    status.length > 0 ? { status: { in: status } } : undefined,
+    Array.isArray(status) && status.length > 0 ? { status: { in: status } } : undefined,
 
     // Filter by createdAt
     fromDate || toDate ? { createdAt: { gte: fromDate, lte: toDate } } : undefined,
   ]
 
   const where: Prisma.ToolWhereInput = {
-    [operator.toUpperCase()]: expressions.filter(isTruthy),
+    [(operator?.toUpperCase() || "AND")]: expressions.filter(isTruthy),
   }
 
   // Transaction is used to ensure both queries are executed in a single transaction
@@ -66,11 +67,12 @@ export const findToolList = async () => {
 }
 
 export const findToolBySlug = async (slug: string) => {
-  return db.tool.findUnique({
+  return db.tool.findFirst({
     where: { slug },
     include: {
       alternatives: true,
       categories: true,
     },
-  })
+  }) ?? { error: "Tool not found" }
 }
+

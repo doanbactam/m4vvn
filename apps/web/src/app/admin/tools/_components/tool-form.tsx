@@ -342,6 +342,44 @@ export function ToolForm({
             </FormItem>
           )}
         />
+        <FormField
+  control={form.control}
+  name="pricingType"
+  render={({ field }) => (
+    <FormItem>
+      <FormLabel>Loại Giá</FormLabel>
+      <Select onValueChange={field.onChange} value={field.value}>
+        <SelectTrigger>
+          <SelectValue placeholder="Chọn loại giá" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="Free">Miễn phí</SelectItem>
+          <SelectItem value="Paid">Trả phí</SelectItem>
+          <SelectItem value="Open Source">Mã nguồn mở</SelectItem>
+        </SelectContent>
+      </Select>
+      <FormMessage />
+    </FormItem>
+  )}
+/>
+
+{form.watch("pricingType") === "Paid" && (
+  <FormField
+  control={form.control}
+  name="priceRange"
+  render={({ field }) => (
+    <FormItem>
+      <FormLabel>Khoảng Giá ($)</FormLabel>
+      <FormControl>
+        <Input type="text" {...field} value={field.value || ""} placeholder="VD: $25 - $50" />
+      </FormControl>
+      <FormMessage />
+    </FormItem>
+  )}
+/>
+
+)}
+
 
         <FormField
           control={form.control}
