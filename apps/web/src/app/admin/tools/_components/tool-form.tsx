@@ -2,12 +2,14 @@
 
 import { zodResolver } from "@hookform/resolvers/zod"
 import { ToolStatus } from "@openalternative/db/client"
+import { PricingStatus } from "@prisma/client"
 import { formatDate } from "date-fns"
 import { redirect } from "next/navigation"
 import type React from "react"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
 import { useServerAction } from "zsa-react"
+import { motion } from "framer-motion";
 import { RelationSelector } from "~/components/admin/relation-selector"
 import { Button } from "~/components/common/button"
 import {
@@ -72,6 +74,48 @@ export function ToolForm({
     },
   })
 
+  const renderInputField = (name: keyof ToolSchema, label: string, type: string = "text") => (
+    <FormField
+      control={form.control}
+      name={name}
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel>{label}</FormLabel>
+          <FormControl>
+            <Input type={type} {...field} />
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+  );
+  const renderSelectField = (name: keyof ToolSchema, label: string, options: string[]) => (
+    <FormField
+      control={form.control}
+      name={name}
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel>{label}</FormLabel>
+          <Select onValueChange={field.onChange} value={field.value || ""}>
+            <SelectTrigger>
+              <SelectValue placeholder={`Select ${label}`} />
+            </SelectTrigger>
+            <SelectContent>
+              {options.map((option) => (
+                <SelectItem key={option} value={option}>
+                  {option}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+  );
+  
+  
+
   // Update tool
   const { execute: updateToolAction, isPending: isUpdatingTool } = useServerAction(updateTool, {
     onSuccess: ({ data }) => {
@@ -98,117 +142,53 @@ export function ToolForm({
         noValidate
         {...props}
       >
-        <FormField
-          control={form.control}
-          name="name"
-          render={({ field }) => (
-            <FormItem className="flex-1">
-              <FormLabel>Name</FormLabel>
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
 
-        <FormField
-          control={form.control}
-          name="slug"
-          render={({ field }) => (
-            <FormItem className="flex-1">
-              <FormLabel>Slug</FormLabel>
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
 
-        <FormField
-          control={form.control}
-          name="websiteUrl"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Website URL</FormLabel>
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+<fieldset className="border border-gray-300 rounded-lg p-4">
+  <legend className="text-lg font-semibold text-gray-700 px-2">Basic Info</legend>
+  {renderInputField("name", "Tool Name")}
+  {renderInputField("slug", "Slug")}
+  {renderInputField("websiteUrl", "Website URL", "url", "https://example.com")}
+  {renderInputField("affiliateUrl", "Affiliate URL")}
+  {renderInputField("tagline", "Tagline")}
+</fieldset>
+<fieldset className="border border-gray-300 rounded-lg p-4">
+        <legend className="text-lg font-semibold text-gray-700 px-2">Submit Info</legend>
+{renderInputField("submitterName", "Submitter Name")}
+{renderInputField("submitterEmail", "Submitter Email")}
+{renderInputField("submitterNote", "Note")}
+{renderInputField("faviconUrl", "Favico Url","url")}
+{renderInputField("screenshotUrl", "Screenshot Url", "url")}
+{renderInputField("discountCode", "discountCode")}
+{renderInputField("discountAmount", "discountAmount")}
+</fieldset>
+<FormField
+  control={form.control}
+  name="description"
+  render={({ field }) => (
+    <FormItem className="col-span-full">
+      <FormLabel>Description</FormLabel>
+      <FormControl>
+        <TextArea className="min-h-[150px] max-h-[400px] resize-y" {...field} />
+      </FormControl>
+      <FormMessage />
+    </FormItem>
+  )}
+/>
 
-        <FormField
-          control={form.control}
-          name="affiliateUrl"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Affiliate URL</FormLabel>
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="repositoryUrl"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Repository URL</FormLabel>
-              <FormControl>
-                <Input type="url" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="tagline"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Tagline</FormLabel>
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="description"
-          render={({ field }) => (
-            <FormItem className="col-span-full">
-              <FormLabel>Description</FormLabel>
-              <FormControl>
-                <TextArea {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="content"
-          render={({ field }) => (
-            <FormItem className="col-span-full">
-              <FormLabel>Content</FormLabel>
-              <FormControl>
-                <TextArea {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+<FormField
+  control={form.control}
+  name="content"
+  render={({ field }) => (
+    <FormItem className="col-span-full">
+      <FormLabel>Content</FormLabel>
+      <FormControl>
+        <TextArea className="min-h-[200px] max-h-[500px] resize-y" {...field} />
+      </FormControl>
+      <FormMessage />
+    </FormItem>
+  )}
+/>
 
         <div className="flex flex-row gap-4 max-sm:contents">
           <FormField
@@ -241,24 +221,25 @@ export function ToolForm({
         </div>
 
         <div className="flex flex-row gap-4 max-sm:contents">
-          <FormField
-            control={form.control}
-            name="publishedAt"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Published At</FormLabel>
-                <FormControl>
-                  <Input
-                    type="datetime-local"
-                    {...field}
-                    value={field.value ? formatDate(field.value, "yyyy-MM-dd HH:mm") : undefined}
-                    onChange={e => field.onChange(e.target.value ? new Date(e.target.value) : null)}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+        <FormField
+  control={form.control}
+  name="publishedAt"
+  render={({ field }) => (
+    <FormItem>
+      <FormLabel>Published At</FormLabel>
+      <FormControl>
+        <Input
+          type="datetime-local"
+          {...field}
+          value={field.value || new Date().toISOString().slice(0, 16)}
+          onChange={e => field.onChange(e.target.value)}
+        />
+      </FormControl>
+      <FormMessage />
+    </FormItem>
+  )}
+/>
+
 
           <FormField
             control={form.control}
@@ -287,113 +268,56 @@ export function ToolForm({
           />
         </div>
 
-        <FormField
-          control={form.control}
-          name="submitterName"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Submitter Name</FormLabel>
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="submitterEmail"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Submitter Email</FormLabel>
-              <FormControl>
-                <Input type="email" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="submitterNote"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Submitter Note</FormLabel>
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="hostingUrl"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Hosting URL</FormLabel>
-              <FormControl>
-                <Input type="url" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-  control={form.control}
-  name="pricingType"
-  render={({ field }) => (
-    <FormItem>
-      <FormLabel>Loại Giá</FormLabel>
-      <Select onValueChange={field.onChange} value={field.value}>
-        <SelectTrigger>
-          <SelectValue placeholder="Chọn loại giá" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="Free">Miễn phí</SelectItem>
-          <SelectItem value="Paid">Trả phí</SelectItem>
-          <SelectItem value="Open Source">Mã nguồn mở</SelectItem>
-        </SelectContent>
-      </Select>
-      <FormMessage />
-    </FormItem>
-  )}
-/>
+<fieldset className="border border-gray-300 rounded-lg p-4">
+      <legend className="text-lg font-semibold text-gray-700 px-2">Pricing Details</legend>
+      {renderSelectField("pricingType", "Pricing Type", Object.values(PricingStatus))}
+      {form.watch("pricingType") === "Paid" && (
+        <motion.div
+          initial={{ opacity: 0, height: 0 }}
+          animate={{ opacity: 1, height: "auto" }}
+          exit={{ opacity: 0, height: 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          {renderInputField("priceRange", "Price Range ($)", "text")}
+        </motion.div>
+      )}
+    </fieldset>
 
 {form.watch("pricingType") === "Paid" && (
   <FormField
   control={form.control}
   name="priceRange"
-  render={({ field }) => (
+  rules={{
+    pattern: {
+      value: /^\$?\d+(\.\d{1,2})?\s*-\s*\$?\d+(\.\d{1,2})?$/,
+      message: "Khoảng giá không hợp lệ. Vui lòng nhập đúng định dạng (VD: $10 - $50).",
+    },
+    validate: (value) => {
+      if (!value) return true; // Không bắt buộc nhập
+      const [min, max] = value.replace(/\$/g, "").split("-").map(v => parseFloat(v.trim()));
+      return min < max || "Giá trị tối thiểu phải nhỏ hơn giá trị tối đa.";
+    }
+  }}
+  render={({ field, fieldState }) => (
     <FormItem>
       <FormLabel>Khoảng Giá ($)</FormLabel>
       <FormControl>
-        <Input type="text" {...field} value={field.value || ""} placeholder="VD: $25 - $50" />
+        <Input
+          type="text"
+          {...field}
+          value={field.value || ""}
+          placeholder="VD: $25 - $50"
+        />
       </FormControl>
-      <FormMessage />
+      <FormMessage>{fieldState.error?.message}</FormMessage>
     </FormItem>
   )}
 />
 
+
 )}
 
 
-        <FormField
-          control={form.control}
-          name="faviconUrl"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Favicon URL</FormLabel>
-              <FormControl>
-                <Input type="url" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
 
         <FormField
           control={form.control}
@@ -403,34 +327,6 @@ export function ToolForm({
               <FormLabel>Screenshot URL</FormLabel>
               <FormControl>
                 <Input type="url" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="discountCode"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Discount Code</FormLabel>
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="discountAmount"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Discount Amount</FormLabel>
-              <FormControl>
-                <Input {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>

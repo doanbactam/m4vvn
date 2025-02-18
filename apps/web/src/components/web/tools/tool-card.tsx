@@ -1,6 +1,6 @@
 import { formatNumber } from "@curiousleaf/utils";
 import { formatDistanceToNowStrict } from "date-fns";
-import { GitForkIcon, TimerIcon, DollarSignIcon } from "lucide-react";
+import { GitForkIcon, TimerIcon, DollarSignIcon,BadgeInfo} from "lucide-react";
 import type { ComponentProps } from "react";
 import { H4 } from "~/components/common/heading";
 import { Link } from "~/components/common/link";
@@ -13,6 +13,7 @@ import { Favicon } from "~/components/web/ui/favicon";
 import { Insights } from "~/components/web/ui/insights";
 import type { ToolMany } from "~/server/web/tools/payloads";
 
+
 type ToolCardProps = ComponentProps<typeof Card> & {
   tool: ToolMany;
   isRelated?: boolean;
@@ -23,17 +24,14 @@ const ToolCard = ({ className, tool, isRelated, ...props }: ToolCardProps) => {
     {
       label: "Pricing",
       value: tool.pricingType || "Free",
-      icon: <DollarSignIcon />,
+      icon: <DollarSignIcon className="text-green-500" />,
     },
-    { label: "Forks", value: tool.forks || 0, icon: <GitForkIcon /> },
     {
-      label: "Last commit",
-      value: tool.lastCommitDate
-        ? formatDistanceToNowStrict(new Date(tool.lastCommitDate), { addSuffix: true })
-        : "N/A",
-      icon: <TimerIcon />,
+      label: "Price Range",
+      value: tool.priceRange || "N/A",
+      icon: <BadgeInfo className="text-blue-500" />,
     },
-  ];
+  ];  
 
   return (
     <Card {...props}>
@@ -52,13 +50,6 @@ const ToolCard = ({ className, tool, isRelated, ...props }: ToolCardProps) => {
           </ToolBadges>
         </CardHeader>
 
-        {/* Hiển thị Pricing Type thay vì Stars */}
-        <div className="flex flex-row justify-between items-center">
-          {/* <h3>{tool.name}</h3> */}
-          <span className={`badge ${tool.pricingType?.toLowerCase() || "default"}`}>
-            {tool.pricingType || "Free"} {tool.priceRange ? `(${tool.priceRange})` : ""}
-          </span>
-        </div>
 
         <div className="relative size-full flex flex-col">
           <Stack
@@ -104,8 +95,7 @@ const ToolCard = ({ className, tool, isRelated, ...props }: ToolCardProps) => {
 const ToolCardSkeleton = () => {
   const insightData = [
     { label: "Pricing", width: "w-16", icon: <DollarSignIcon /> },
-    { label: "Forks", width: "w-14", icon: <GitForkIcon /> },
-    { label: "Last commit", width: "w-20", icon: <TimerIcon /> },
+    {label: "Price Range", width: "w-16", icon: <BadgeInfo />},
   ];
 
   const insights = insightData.map(({ label, width, icon }) => ({

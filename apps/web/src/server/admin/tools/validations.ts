@@ -42,8 +42,17 @@ export const toolSchema = z.object({
   submitterEmail: z.string().optional(),
   submitterNote: z.string().optional(),
   hostingUrl: z.string().url().optional().or(z.literal("")),
-  pricingType: z.nativeEnum(PricingStatus).default(PricingStatus.Free),
-  priceRange: z.string().optional().default(""),
+  pricingType: z.nativeEnum(PricingStatus)
+  .default(PricingStatus.Free)
+  .refine(val => Object.values(PricingStatus).includes(val), {
+    message: "Invalid pricing type",
+  }),
+
+  priceRange: z.string().optional().default("").refine(val => {
+    return val === "" || /^\$?\d+(\.\d{1,2})?\s*-\s*\$?\d+(\.\d{1,2})?$/.test(val);
+  }, {
+    message: "Invalid price range format. Use format: $10 - $50"
+  }),
   discountCode: z.string().optional(),
   discountAmount: z.string().optional(),
   publishedAt: z.coerce.date().nullish(),

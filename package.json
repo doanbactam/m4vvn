@@ -29,5 +29,9 @@
     "apps/*",
     "packages/*"
   ],
-  "packageManager": "bun@1.2.2"
+  "packageManager": "bun@1.2.2",
+  "dependencies": {
+    "framer-motion": "^12.4.3",
+    "motion": "^12.4.3"
+  }
 }

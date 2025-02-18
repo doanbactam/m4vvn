@@ -30,8 +30,8 @@ export const searchTools = async (
     status: ToolStatus.Published,
     ...(alternative.length && { alternatives: { some: { slug: { in: alternative } } } }),
     ...(category.length && { categories: { some: { slug: { in: category } } } }),
-    ...(stack.length && { stacks: { some: { slug: { in: stack } } } }),
-    ...(license.length && { license: { slug: { in: license } } }),
+    // ...(stack.length && { stacks: { some: { slug: { in: stack } } } }),
+    // ...(license.length && { license: { slug: { in: license } } }),
   }
 
   // Use full-text search when query exists
@@ -48,7 +48,7 @@ export const searchTools = async (
   const [tools, totalCount] = await db.$transaction([
     db.tool.findMany({
       ...args,
-      orderBy: sortBy ? { [sortBy]: sortOrder } : [{ isFeatured: "desc" }, { score: "desc" }],
+      orderBy: sortBy ? { [sortBy]: sortOrder } : [{ isFeatured: "desc" }],
       where: { ...whereQuery, ...where },
       select: toolManyPayload,
       take,
@@ -110,7 +110,7 @@ export const findTools = async ({ where, orderBy, ...args }: Prisma.ToolFindMany
   return db.tool.findMany({
     ...args,
     where: { status: ToolStatus.Published, ...where },
-    orderBy: orderBy ?? [{ isFeatured: "desc" }, { score: "desc" }],
+    orderBy: orderBy ?? [{ isFeatured: "desc" }],
     select: toolManyPayload,
   })
 }
@@ -164,8 +164,8 @@ export const findTool = async ({ where, ...args }: Prisma.ToolFindFirstArgs = {}
 
 export const findRandomTool = async () => {
   const tools = await db.$queryRaw<Array<Tool>>`
-    SELECT "id", "name", "slug", "websiteUrl", "repositoryUrl", "tagline", "description", "content", "stars", "forks", "score",
-           "faviconUrl", "screenshotUrl", "firstCommitDate", "lastCommitDate", "status", "publishedAt", "createdAt", "updatedAt"
+    SELECT "id", "name", "slug", "websiteUrl", "repositoryUrl", "tagline", "description", "content", "score",
+           "faviconUrl", "screenshotUrl", "status", "publishedAt", "createdAt", "updatedAt"
     FROM "Tool"
     WHERE status = 'Published'
     GROUP BY id

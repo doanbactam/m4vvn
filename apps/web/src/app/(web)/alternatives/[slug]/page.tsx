@@ -75,7 +75,7 @@ export default async function AlternativePage(props: PageProps) {
 
     findToolsWithCategories({
       where: { alternatives: { some: { slug: (await props.params).slug } } },
-      orderBy: [{ isFeatured: "desc" }, { score: "desc" }],
+      orderBy: [{ isFeatured: "desc" }],
     }),
   ])
 

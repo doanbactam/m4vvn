@@ -33,21 +33,18 @@ export const toolOnePayload = Prisma.validator<Prisma.ToolSelect>()({
   tagline: true,
   description: true,
   content: true,
-  stars: true,
-  forks: true,
   faviconUrl: true,
   screenshotUrl: true,
   isFeatured: true,
   hostingUrl: true,
   discountCode: true,
   discountAmount: true,
-  firstCommitDate: true,
-  lastCommitDate: true,
   status: true,
   publishedAt: true,
   updatedAt: true,
-  license: true,
   owner: true,
+  pricingType: true,
+  priceRange: true,
   alternatives: toolAlternativesPayload,
   categories: toolCategoriesPayload,
   topics: toolTopicsPayload,
@@ -62,6 +59,8 @@ export const toolManyPayload = Prisma.validator<Prisma.ToolSelect>()({
   description: true,
   stars: true,
   forks: true,
+  pricingType: true, // ✅ Thêm pricingType
+  priceRange: true, // ✅ Đảm bảo đúng tên
   faviconUrl: true,
   discountAmount: true,
   firstCommitDate: true,
@@ -85,6 +84,8 @@ export const toolManyExtendedPayload = Prisma.validator<Prisma.ToolSelect>()({
   publishedAt: true,
   updatedAt: true,
   categories: true,
+  pricingType: true, // ✅ Thêm pricingType
+  priceRange: true, // ✅ Thêm priceRange
 })
 
 export type ToolOne = Prisma.ToolGetPayload<{ select: typeof toolOnePayload }>

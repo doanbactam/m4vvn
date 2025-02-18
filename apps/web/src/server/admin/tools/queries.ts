@@ -4,6 +4,7 @@ import { type Prisma, ToolStatus } from "@openalternative/db/client"
 import { endOfDay, startOfDay } from "date-fns"
 import type { GetToolsSchema } from "./validations"
 
+
 export const findTools = async (search: GetToolsSchema) => {
   const { page, perPage, sort, name, status, operator, from, to } = search
 
@@ -13,7 +14,7 @@ export const findTools = async (search: GetToolsSchema) => {
   // Column and order to sort by
   const orderBy = sort?.length
   ? sort.map(item => ({ [item.id]: item.desc ? "desc" : "asc" }) as const)
-  : [{ createdAt: "desc" }] // Mặc định sắp xếp theo createdAt
+  : [{ createdAt: "desc" }];
   // Convert the date strings to date objects
   const fromDate = from ? startOfDay(new Date(from)) : undefined
   const toDate = to ? endOfDay(new Date(to)) : undefined
@@ -55,7 +56,7 @@ export const findScheduledTools = async () => {
   return db.tool.findMany({
     where: { status: ToolStatus.Scheduled },
     select: { slug: true, name: true, publishedAt: true },
-    orderBy: { publishedAt: "asc" },
+    orderBy: { publishedAt: "asc" }
   })
 }
 

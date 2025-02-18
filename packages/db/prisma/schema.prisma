@@ -88,13 +88,9 @@ model Tool {
   slug            String                   @unique
   websiteUrl      String                   @unique
   affiliateUrl    String?
-  repositoryUrl   String                   @unique
   tagline         String?
   description     String?
   content         String?
-  stars           Int                      @default(0)
-  forks           Int                      @default(0)
-  score           Int                      @default(0)
   faviconUrl      String?
   screenshotUrl   String?
   isFeatured      Boolean                  @default(false)
@@ -103,12 +99,10 @@ model Tool {
   submitterEmail  String?
   submitterNote   String?
   hostingUrl      String?
-  pricingType     PricingStatus            @default(Free)  // Sử dụng enum PricingStatus
+  pricingType     PricingStatus            @default(Free)
   priceRange      String?
   discountCode    String?
   discountAmount  String?
-  firstCommitDate DateTime?
-  lastCommitDate  DateTime?
   status          ToolStatus               @default(Draft)
   publishedAt     DateTime?
   createdAt       DateTime                 @default(now())
@@ -118,17 +112,15 @@ model Tool {
   ownerId         String?
   bookmarkedBy    Bookmark[]
   reports         Report[]
-  license         License?                 @relation(fields: [licenseId], references: [id])
   owner           User?                    @relation(fields: [ownerId], references: [id])
   alternatives    Alternative[]            @relation("AlternativeToTool")
   categories      Category[]               @relation("CategoryToTool")
-  stacks          Stack[]                  @relation("StackToTool")
   topics          Topic[]                  @relation("ToolToTopic")
 
   @@index([id, slug])
   @@index([name])
   @@index([status])
-  @@index([isFeatured, score])
+  @@index([isFeatured])
   @@index([searchVector], type: Gin)
   @@index([ownerId])
 }
@@ -171,33 +163,6 @@ model Topic {
   @@index([slug])
 }
 
-model License {
-  id          String   @id @default(cuid())
-  name        String   @unique @db.Citext
-  slug        String   @unique
-  description String?
-  content     String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  tools       Tool[]
-
-  @@index([slug])
-}
-
-model Stack {
-  id          String    @id @default(cuid())
-  name        String    @db.Citext
-  slug        String    @unique
-  type        StackType @default(Language)
-  description String?
-  website     String?
-  faviconUrl  String?
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  tools       Tool[]    @relation("StackToTool")
-
-  @@index([slug])
-}
 
 model Report {
   id        String     @id @default(cuid())
