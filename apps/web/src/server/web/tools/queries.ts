@@ -20,7 +20,7 @@ export const searchTools = async (
   cacheTag("tools")
   cacheLife("max")
 
-  const { q, alternative, category, stack, license, page, sort, perPage } = search
+  const { q, alternative, category, page, sort, perPage } = search
   const start = performance.now()
   const skip = (page - 1) * perPage
   const take = perPage
@@ -30,8 +30,6 @@ export const searchTools = async (
     status: ToolStatus.Published,
     ...(alternative.length && { alternatives: { some: { slug: { in: alternative } } } }),
     ...(category.length && { categories: { some: { slug: { in: category } } } }),
-    // ...(stack.length && { stacks: { some: { slug: { in: stack } } } }),
-    // ...(license.length && { license: { slug: { in: license } } }),
   }
 
   // Use full-text search when query exists
@@ -87,7 +85,7 @@ export const findRelatedTools = async ({
   const take = 3
   const itemCount = await db.tool.count({ where: relatedWhereClause })
   const skip = Math.max(0, Math.floor(Math.random() * itemCount) - take)
-  const properties = ["id", "name", "score"] satisfies (keyof Prisma.ToolOrderByWithRelationInput)[]
+  const properties = ["id", "name"] satisfies (keyof Prisma.ToolOrderByWithRelationInput)[]
   const orderBy = getRandomElement(properties)
   const orderDir = getRandomElement(["asc", "desc"] as const)
 
@@ -164,7 +162,7 @@ export const findTool = async ({ where, ...args }: Prisma.ToolFindFirstArgs = {}
 
 export const findRandomTool = async () => {
   const tools = await db.$queryRaw<Array<Tool>>`
-    SELECT "id", "name", "slug", "websiteUrl", "repositoryUrl", "tagline", "description", "content", "score",
+    SELECT "id", "name", "slug", "websiteUrl", "repositoryUrl", "tagline", "description", "content",
            "faviconUrl", "screenshotUrl", "status", "publishedAt", "createdAt", "updatedAt"
     FROM "Tool"
     WHERE status = 'Published'

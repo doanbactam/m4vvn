@@ -81,12 +81,6 @@ export const ToolActions = ({ className, tool, setRowAction, ...props }: ToolAct
           </Link>
         </DropdownMenuItem>
 
-        <DropdownMenuItem asChild>
-          <Link href={tool.repositoryUrl} target="_blank">
-            Visit repository
-          </Link>
-        </DropdownMenuItem>
-
         <DropdownMenuSeparator />
 
         <DropdownMenuItem

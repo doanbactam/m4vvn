@@ -130,7 +130,7 @@ model Alternative {
   name           String   @db.Citext
   slug           String   @unique
   description    String?
-  websiteUrl     String   @unique
+  websiteUrl     String   @unique 
   faviconUrl     String?
   isFeatured     Boolean  @default(false)
   discountCode   String?

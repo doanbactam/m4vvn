@@ -117,18 +117,8 @@ export const Header = ({ children, className, ...props }: HTMLAttributes<HTMLEle
                 </NavLink>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
-                <NavLink href="/stacks">
-                  <BlocksIcon className="shrink-0 size-4 opacity-75" /> Tech Stacks
-                </NavLink>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild>
                 <NavLink href="/topics">
                   <TagIcon className="shrink-0 size-4 opacity-75" /> Topics
-                </NavLink>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <NavLink href="/licenses">
-                  <CopyrightIcon className="shrink-0 size-4 opacity-75" /> Licenses
                 </NavLink>
               </DropdownMenuItem>
             </DropdownMenuContent>
@@ -197,9 +187,6 @@ export const Header = ({ children, className, ...props }: HTMLAttributes<HTMLEle
         </NavLink>
         <NavLink href="/self-hosted" className="text-base">
           Self-hosted
-        </NavLink>
-        <NavLink href="/stacks" className="text-base">
-          Tech Stacks
         </NavLink>
         <NavLink href="/topics" className="text-base">
           Topics

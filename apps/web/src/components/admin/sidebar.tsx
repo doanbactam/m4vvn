@@ -72,11 +72,6 @@ export const Sidebar = () => {
               href: "/admin/categories",
               prefix: <GalleryHorizontalEndIcon />,
             },
-            {
-              title: "Licenses",
-              href: "/admin/licenses",
-              prefix: <CopyrightIcon />,
-            },
           ]}
         />
       </Nav>

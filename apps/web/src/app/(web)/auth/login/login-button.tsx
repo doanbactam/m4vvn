@@ -8,7 +8,7 @@ import { Button } from "~/components/common/button"
 import { signIn } from "~/lib/auth-client"
 
 type LoginButtonProps = ComponentProps<typeof Button> & {
-  provider: "google" | "github"
+  provider: "google"
 }
 
 export const LoginButton = ({ provider, ...props }: LoginButtonProps) => {

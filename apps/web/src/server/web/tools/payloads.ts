@@ -1,7 +1,6 @@
 import { Prisma } from "@openalternative/db/client"
 import { alternativeManyPayload } from "~/server/web/alternatives/payloads"
 import { categoryManyPayload } from "~/server/web/categories/payloads"
-import { stackManyPayload } from "~/server/web/stacks/payloads"
 import { topicManyPayload } from "~/server/web/topics/payloads"
 
 export const toolAlternativesPayload = Prisma.validator<Prisma.Tool$alternativesArgs>()({
@@ -19,17 +18,12 @@ export const toolTopicsPayload = Prisma.validator<Prisma.Tool$topicsArgs>()({
   orderBy: { slug: "asc" },
 })
 
-export const toolStackPayload = Prisma.validator<Prisma.Tool$stacksArgs>()({
-  select: stackManyPayload,
-  orderBy: [{ tools: { _count: "desc" } }, { slug: "asc" }],
-})
 
 export const toolOnePayload = Prisma.validator<Prisma.ToolSelect>()({
   name: true,
   slug: true,
   websiteUrl: true,
   affiliateUrl: true,
-  repositoryUrl: true,
   tagline: true,
   description: true,
   content: true,
@@ -48,7 +42,6 @@ export const toolOnePayload = Prisma.validator<Prisma.ToolSelect>()({
   alternatives: toolAlternativesPayload,
   categories: toolCategoriesPayload,
   topics: toolTopicsPayload,
-  stacks: toolStackPayload,
 })
 
 export const toolManyPayload = Prisma.validator<Prisma.ToolSelect>()({
@@ -57,14 +50,10 @@ export const toolManyPayload = Prisma.validator<Prisma.ToolSelect>()({
   websiteUrl: true,
   tagline: true,
   description: true,
-  stars: true,
-  forks: true,
-  pricingType: true, // ✅ Thêm pricingType
-  priceRange: true, // ✅ Đảm bảo đúng tên
+  pricingType: true,
+  priceRange: true,
   faviconUrl: true,
   discountAmount: true,
-  firstCommitDate: true,
-  lastCommitDate: true,
   publishedAt: true,
   updatedAt: true,
   alternatives: { ...toolAlternativesPayload, take: 1 },
@@ -84,8 +73,8 @@ export const toolManyExtendedPayload = Prisma.validator<Prisma.ToolSelect>()({
   publishedAt: true,
   updatedAt: true,
   categories: true,
-  pricingType: true, // ✅ Thêm pricingType
-  priceRange: true, // ✅ Thêm priceRange
+  pricingType: true,
+  priceRange: true,
 })
 
 export type ToolOne = Prisma.ToolGetPayload<{ select: typeof toolOnePayload }>

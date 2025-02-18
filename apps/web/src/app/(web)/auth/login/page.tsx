@@ -3,7 +3,6 @@ import type { Metadata } from "next"
 import { Suspense } from "react"
 import { LoginButton } from "~/app/(web)/auth/login/login-button"
 import { LoginForm } from "~/app/(web)/auth/login/login-form"
-import { BrandGitHubIcon } from "~/components/common/icons/brand-github"
 import { BrandGoogleIcon } from "~/components/common/icons/brand-google"
 import { Stack } from "~/components/common/stack"
 import { Intro, IntroDescription, IntroTitle } from "~/components/web/ui/intro"
@@ -34,7 +33,6 @@ export default function LoginPage() {
           </div>
 
           <LoginButton provider="google" suffix={<BrandGoogleIcon />} />
-          <LoginButton provider="github" suffix={<BrandGitHubIcon />} />
         </Stack>
       </Suspense>
     </>
