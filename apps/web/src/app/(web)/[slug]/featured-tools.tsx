@@ -30,13 +30,13 @@ export const FeaturedTools = async ({ ...props }: ComponentProps<typeof Card>) =
                   {tool.name}
                 </H6>
               </Stack>
-
+{/* 
               <Stack size="xs">
                 <StarIcon className="size-3" />
                 <span className="text-xs text-muted-foreground tabular-nums">
                   {formatNumber(tool.stars, "standard")}
                 </span>
-              </Stack>
+              </Stack> */}
             </Link>
           </Stack>
         ))}

@@ -1,6 +1,6 @@
 "use client"
 
-import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu"
+import { DropdownMenu as DropdownMenuPrimitive } from "radix-ui"
 import { CheckIcon, ChevronRightIcon, CircleIcon } from "lucide-react"
 import type { ComponentProps } from "react"
 import { cx, popoverAnimationClasses } from "~/utils/cva"

@@ -1,9 +1,9 @@
 "use client"
 
-import * as SelectPrimitive from "@radix-ui/react-select"
+import { Select as SelectPrimitive } from "radix-ui"
 import { CheckIcon, ChevronDownIcon, ChevronUpIcon, ChevronsUpDownIcon } from "lucide-react"
 import type { ComponentProps } from "react"
-import { cx, popoverAnimationClasses, type VariantProps } from "~/utils/cva"
+import { type VariantProps, cx, popoverAnimationClasses } from "~/utils/cva"
 import { Box } from "~/components/common/box"
 import { inputVariants } from "./input"
 

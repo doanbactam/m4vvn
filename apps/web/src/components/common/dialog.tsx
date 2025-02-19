@@ -1,8 +1,8 @@
 "use client"
 
-import * as DialogPrimitive from "@radix-ui/react-dialog"
 import { XIcon } from "lucide-react"
 import type { ComponentProps } from "react"
+import { Dialog as DialogPrimitive } from "radix-ui"
 import { H4 } from "~/components/common/heading"
 import { Prose } from "~/components/web/ui/prose"
 import { cx } from "~/utils/cva"

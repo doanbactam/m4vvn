@@ -5,7 +5,7 @@ import { ToolStatus } from "@openalternative/db/client"
 import { PricingStatus } from "@prisma/client"
 import { formatDate } from "date-fns"
 import { redirect } from "next/navigation"
-import type React from "react"
+import type { ComponentProps } from "react"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
 import { useServerAction } from "zsa-react"
@@ -39,7 +39,7 @@ import { type ToolSchema, toolSchema } from "~/server/admin/tools/validations"
 import { cx } from "~/utils/cva"
 import { nullsToUndefined } from "~/utils/helpers"
 
-type ToolFormProps = React.HTMLAttributes<HTMLFormElement> & {
+type ToolFormProps = ComponentProps<"form"> & {
   tool?: Awaited<ReturnType<typeof findToolBySlug>>
   alternatives: ReturnType<typeof findAlternativeList>
   categories: ReturnType<typeof findCategoryList>
@@ -253,7 +253,7 @@ export function ToolForm({
                       <SelectValue />
                     </SelectTrigger>
 
-                    <SelectContent side="top" className="tabular-nums">
+                    <SelectContent className="tabular-nums">
                       {Object.values(ToolStatus).map(status => (
                         <SelectItem key={status} value={status}>
                           {status}

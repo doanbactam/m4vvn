@@ -1,5 +1,5 @@
-import { Slot } from "@radix-ui/react-slot"
-import { type ElementType, type HTMLProps, isValidElement } from "react"
+import { Slot } from "radix-ui"
+import { type ComponentProps, type ElementType, isValidElement } from "react"
 import { type VariantProps, cva, cx } from "~/utils/cva"
 
 const headingVariants = cva({
@@ -21,7 +21,7 @@ const headingVariants = cva({
   },
 })
 
-export type HeadingProps = Omit<HTMLProps<HTMLHeadingElement>, "size"> &
+export type HeadingProps = Omit<ComponentProps<"h1">, "size"> &
   VariantProps<typeof headingVariants> & {
     /**
      * If set to `true`, the button will be rendered as a child within the component.
@@ -38,7 +38,7 @@ export type HeadingProps = Omit<HTMLProps<HTMLHeadingElement>, "size"> &
 
 const Heading = ({ className, as, asChild, size, ...props }: HeadingProps) => {
   const useAsChild = asChild && isValidElement(props.children)
-  const Comp = useAsChild ? Slot : (as ?? size ?? "h2")
+  const Comp = useAsChild ? Slot.Root : (as ?? size ?? "h2")
 
   return <Comp className={cx(headingVariants({ size, className }))} {...props} />
 }
