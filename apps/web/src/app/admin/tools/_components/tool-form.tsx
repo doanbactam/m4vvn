@@ -60,20 +60,29 @@ export function ToolForm({
       alternatives: tool?.alternatives.map(({ id }) => id),
       categories: tool?.categories.map(({ id }) => id),
     },
-  })
+  });
 
   // Create tool
   const { execute: createToolAction, isPending: isCreatingTool } = useServerAction(createTool, {
     onSuccess: ({ data }) => {
-      toast.success("Tool successfully created")
-      redirect(`/admin/tools/${data.slug}`)
+      toast.success(`Created: ${data.name} (${data.slug})`);
+      redirect(`/admin/tools/${data.slug}`);
     },
-
     onError: ({ err }) => {
-      toast.error(err.message)
+      console.error("Error creating tool:", err);
+      toast.error(`Error: ${err.message || "Something went wrong"}`);
     },
-  })
+  });
+  
 
+  const normalizeFieldValue = (value: any, type: string) => {
+    if (value === null || value === undefined) return "";
+    if (typeof value === "boolean") return value.toString();
+    if (value instanceof Date) return value.toISOString().slice(0, 16);
+    if (Array.isArray(value)) return value.join(", ");
+    return value;
+  };
+  
   const renderInputField = (name: keyof ToolSchema, label: string, type: string = "text") => (
     <FormField
       control={form.control}
@@ -82,37 +91,51 @@ export function ToolForm({
         <FormItem>
           <FormLabel>{label}</FormLabel>
           <FormControl>
-            <Input type={type} {...field} />
+            <Input
+              type={type}
+              {...field}
+              value={normalizeFieldValue(field.value, type)}
+              onChange={(e) =>
+                field.onChange(type === "number" ? Number(e.target.value) || 0 : e.target.value)
+              }
+            />
           </FormControl>
           <FormMessage />
         </FormItem>
       )}
     />
   );
+  
+  
   const renderSelectField = (name: keyof ToolSchema, label: string, options: string[]) => (
     <FormField
       control={form.control}
       name={name}
-      render={({ field }) => (
-        <FormItem>
-          <FormLabel>{label}</FormLabel>
-          <Select onValueChange={field.onChange} value={field.value || ""}>
-            <SelectTrigger>
-              <SelectValue placeholder={`Select ${label}`} />
-            </SelectTrigger>
-            <SelectContent>
-              {options.map((option) => (
-                <SelectItem key={option} value={option}>
-                  {option}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          <FormMessage />
-        </FormItem>
-      )}
+      render={({ field }) => {
+        const value = typeof field.value === "string" ? field.value : "";
+  
+        return (
+          <FormItem>
+            <FormLabel>{label}</FormLabel>
+            <Select onValueChange={field.onChange} value={value}>
+              <SelectTrigger>
+                <SelectValue placeholder={`Select ${label}`} />
+              </SelectTrigger>
+              <SelectContent>
+                {options.map((option) => (
+                  <SelectItem key={option} value={option}>
+                    {option}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <FormMessage />
+          </FormItem>
+        );
+      }}
     />
   );
+  
   
   
 
@@ -129,8 +152,13 @@ export function ToolForm({
   })
 
   const onSubmit = form.handleSubmit(data => {
-    tool ? updateToolAction({ id: tool.id, ...data }) : createToolAction(data)
-  })
+    if (!tool?.id) {
+      toast.error("ID is required.");
+      return;
+    }
+    updateToolAction({ id: tool.id, ...data });
+  });
+  
 
   const isPending = isCreatingTool || isUpdatingTool
 
@@ -148,7 +176,7 @@ export function ToolForm({
   <legend className="text-lg font-semibold text-gray-700 px-2">Basic Info</legend>
   {renderInputField("name", "Tool Name")}
   {renderInputField("slug", "Slug")}
-  {renderInputField("websiteUrl", "Website URL", "url", "https://example.com")}
+  {renderInputField("websiteUrl", "Website URL", "url")}
   {renderInputField("affiliateUrl", "Affiliate URL")}
   {renderInputField("tagline", "Tagline")}
 </fieldset>
@@ -191,19 +219,20 @@ export function ToolForm({
 />
 
         <div className="flex flex-row gap-4 max-sm:contents">
-          <FormField
-            control={form.control}
-            name="isFeatured"
-            render={({ field }) => (
-              <FormItem className="flex-1">
-                <FormLabel>Featured</FormLabel>
-                <FormControl>
-                  <Switch onCheckedChange={field.onChange} checked={field.value} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+        <FormField
+  control={form.control}
+  name="isFeatured"
+  render={({ field }) => (
+    <FormItem className="flex-1">
+      <FormLabel>Featured</FormLabel>
+      <FormControl>
+        <Switch onCheckedChange={field.onChange} checked={!!field.value} />
+      </FormControl>
+      <FormMessage />
+    </FormItem>
+  )}
+/>
+
 
           <FormField
             control={form.control}
@@ -224,20 +253,26 @@ export function ToolForm({
         <FormField
   control={form.control}
   name="publishedAt"
-  render={({ field }) => (
-    <FormItem>
-      <FormLabel>Published At</FormLabel>
-      <FormControl>
-        <Input
-          type="datetime-local"
-          {...field}
-          value={field.value || new Date().toISOString().slice(0, 16)}
-          onChange={e => field.onChange(e.target.value)}
-        />
-      </FormControl>
-      <FormMessage />
-    </FormItem>
-  )}
+  render={({ field }) => {
+    const value = field.value
+      ? new Date(field.value).toISOString().slice(0, 16)
+      : new Date().toISOString().slice(0, 16);
+
+    return (
+      <FormItem>
+        <FormLabel>Published At</FormLabel>
+        <FormControl>
+          <Input
+            type="datetime-local"
+            {...field}
+            value={value}
+            onChange={(e) => field.onChange(e.target.value)}
+          />
+        </FormControl>
+        <FormMessage />
+      </FormItem>
+    );
+  }}
 />
 
 
@@ -282,42 +317,6 @@ export function ToolForm({
         </motion.div>
       )}
     </fieldset>
-
-{form.watch("pricingType") === "Paid" && (
-  <FormField
-  control={form.control}
-  name="priceRange"
-  rules={{
-    pattern: {
-      value: /^\$?\d+(\.\d{1,2})?\s*-\s*\$?\d+(\.\d{1,2})?$/,
-      message: "Khoảng giá không hợp lệ. Vui lòng nhập đúng định dạng (VD: $10 - $50).",
-    },
-    validate: (value) => {
-      if (!value) return true; // Không bắt buộc nhập
-      const [min, max] = value.replace(/\$/g, "").split("-").map(v => parseFloat(v.trim()));
-      return min < max || "Giá trị tối thiểu phải nhỏ hơn giá trị tối đa.";
-    }
-  }}
-  render={({ field, fieldState }) => (
-    <FormItem>
-      <FormLabel>Khoảng Giá ($)</FormLabel>
-      <FormControl>
-        <Input
-          type="text"
-          {...field}
-          value={field.value || ""}
-          placeholder="VD: $25 - $50"
-        />
-      </FormControl>
-      <FormMessage>{fieldState.error?.message}</FormMessage>
-    </FormItem>
-  )}
-/>
-
-
-)}
-
-
 
         <FormField
           control={form.control}

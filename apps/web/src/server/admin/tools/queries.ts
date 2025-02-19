@@ -1,38 +1,41 @@
-import { isTruthy } from "@curiousleaf/utils"
-import { db } from "@openalternative/db"
-import { type Prisma, ToolStatus } from "@openalternative/db/client"
-import { endOfDay, startOfDay } from "date-fns"
-import type { GetToolsSchema } from "./validations"
-
+import { isTruthy } from '@curiousleaf/utils';
+import { db } from '@openalternative/db';
+import { type Prisma, ToolStatus } from '@openalternative/db/client';
+import { endOfDay, startOfDay } from 'date-fns';
+import type { GetToolsSchema } from './validations';
 
 export const findTools = async (search: GetToolsSchema) => {
-  const { page, perPage, sort, name, status, operator, from, to } = search
+  const { page, perPage, sort, name, status, operator, from, to } = search;
 
   // Offset to paginate the results
-  const offset = (page - 1) * perPage
+  const offset = (page - 1) * perPage;
 
   // Column and order to sort by
   const orderBy = sort?.length
-  ? sort.map(item => ({ [item.id]: item.desc ? "desc" : "asc" }) as const)
-  : [{ createdAt: "desc" }];
+    ? sort.map((item) => ({ [item.id]: item.desc ? 'desc' : 'asc' }) as const)
+    : [{ createdAt: 'desc' }];
   // Convert the date strings to date objects
-  const fromDate = from ? startOfDay(new Date(from)) : undefined
-  const toDate = to ? endOfDay(new Date(to)) : undefined
+  const fromDate = from ? startOfDay(new Date(from)) : undefined;
+  const toDate = to ? endOfDay(new Date(to)) : undefined;
 
   const expressions: (Prisma.ToolWhereInput | undefined)[] = [
     // Filter by name
-    name ? { name: { contains: name, mode: "insensitive" } } : undefined,
+    name ? { name: { contains: name, mode: 'insensitive' } } : undefined,
 
     // Filter tasks by status
-    Array.isArray(status) && status.length > 0 ? { status: { in: status } } : undefined,
+    Array.isArray(status) && status.length > 0
+      ? { status: { in: status } }
+      : undefined,
 
     // Filter by createdAt
-    fromDate || toDate ? { createdAt: { gte: fromDate, lte: toDate } } : undefined,
-  ]
+    fromDate || toDate
+      ? { createdAt: { gte: fromDate, lte: toDate } }
+      : undefined,
+  ];
 
   const where: Prisma.ToolWhereInput = {
-    [(operator?.toUpperCase() || "AND")]: expressions.filter(isTruthy),
-  }
+    [operator?.toUpperCase() || 'AND']: expressions.filter(isTruthy),
+  };
 
   // Transaction is used to ensure both queries are executed in a single transaction
   const [tools, toolsTotal] = await db.$transaction([
@@ -46,34 +49,35 @@ export const findTools = async (search: GetToolsSchema) => {
     db.tool.count({
       where,
     }),
-  ])
+  ]);
 
-  const pageCount = Math.ceil(toolsTotal / perPage)
-  return { tools, toolsTotal, pageCount }
-}
+  const pageCount = Math.ceil(toolsTotal / perPage);
+  return { tools, toolsTotal, pageCount };
+};
 
 export const findScheduledTools = async () => {
   return db.tool.findMany({
     where: { status: ToolStatus.Scheduled },
     select: { slug: true, name: true, publishedAt: true },
-    orderBy: { publishedAt: "asc" }
-  })
-}
+    orderBy: { publishedAt: 'asc' },
+  });
+};
 
 export const findToolList = async () => {
   return db.tool.findMany({
     select: { id: true, name: true },
-    orderBy: { name: "asc" },
-  })
-}
+    orderBy: { name: 'asc' },
+  });
+};
 
 export const findToolBySlug = async (slug: string) => {
-  return db.tool.findFirst({
-    where: { slug },
-    include: {
-      alternatives: true,
-      categories: true,
-    },
-  }) ?? { error: "Tool not found" }
-}
-
+  return (
+    db.tool.findFirst({
+      where: { slug },
+      include: {
+        alternatives: true,
+        categories: true,
+      },
+    }) ?? { error: 'Tool not found' }
+  );
+};

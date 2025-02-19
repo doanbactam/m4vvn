@@ -1,23 +1,28 @@
-import { Prisma } from "@openalternative/db/client"
-import { alternativeManyPayload } from "~/server/web/alternatives/payloads"
-import { categoryManyPayload } from "~/server/web/categories/payloads"
-import { topicManyPayload } from "~/server/web/topics/payloads"
+import { Prisma } from '@openalternative/db/client';
+import { alternativeManyPayload } from '~/server/web/alternatives/payloads';
+import { categoryManyPayload } from '~/server/web/categories/payloads';
+import { topicManyPayload } from '~/server/web/topics/payloads';
 
-export const toolAlternativesPayload = Prisma.validator<Prisma.Tool$alternativesArgs>()({
-  select: alternativeManyPayload,
-  orderBy: [{ tools: { _count: "desc" } }, { isFeatured: "desc" }, { name: "asc" }],
-})
+export const toolAlternativesPayload =
+  Prisma.validator<Prisma.Tool$alternativesArgs>()({
+    select: alternativeManyPayload,
+    orderBy: [
+      { tools: { _count: 'desc' } },
+      { isFeatured: 'desc' },
+      { name: 'asc' },
+    ],
+  });
 
-export const toolCategoriesPayload = Prisma.validator<Prisma.Tool$categoriesArgs>()({
-  select: categoryManyPayload,
-  orderBy: { name: "asc" },
-})
+export const toolCategoriesPayload =
+  Prisma.validator<Prisma.Tool$categoriesArgs>()({
+    select: categoryManyPayload,
+    orderBy: { name: 'asc' },
+  });
 
 export const toolTopicsPayload = Prisma.validator<Prisma.Tool$topicsArgs>()({
   select: topicManyPayload,
-  orderBy: { slug: "asc" },
-})
-
+  orderBy: { slug: 'asc' },
+});
 
 export const toolOnePayload = Prisma.validator<Prisma.ToolSelect>()({
   name: true,
@@ -42,7 +47,7 @@ export const toolOnePayload = Prisma.validator<Prisma.ToolSelect>()({
   alternatives: toolAlternativesPayload,
   categories: toolCategoriesPayload,
   topics: toolTopicsPayload,
-})
+});
 
 export const toolManyPayload = Prisma.validator<Prisma.ToolSelect>()({
   name: true,
@@ -57,7 +62,7 @@ export const toolManyPayload = Prisma.validator<Prisma.ToolSelect>()({
   publishedAt: true,
   updatedAt: true,
   alternatives: { ...toolAlternativesPayload, take: 1 },
-})
+});
 
 export const toolManyExtendedPayload = Prisma.validator<Prisma.ToolSelect>()({
   name: true,
@@ -75,8 +80,12 @@ export const toolManyExtendedPayload = Prisma.validator<Prisma.ToolSelect>()({
   categories: true,
   pricingType: true,
   priceRange: true,
-})
+});
 
-export type ToolOne = Prisma.ToolGetPayload<{ select: typeof toolOnePayload }>
-export type ToolMany = Prisma.ToolGetPayload<{ select: typeof toolManyPayload }>
-export type ToolManyExtended = Prisma.ToolGetPayload<{ select: typeof toolManyExtendedPayload }>
+export type ToolOne = Prisma.ToolGetPayload<{ select: typeof toolOnePayload }>;
+export type ToolMany = Prisma.ToolGetPayload<{
+  select: typeof toolManyPayload;
+}>;
+export type ToolManyExtended = Prisma.ToolGetPayload<{
+  select: typeof toolManyExtendedPayload;
+}>;

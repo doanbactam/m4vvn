@@ -1,15 +1,18 @@
-import { formatNumber } from "@curiousleaf/utils"
-import Image from "next/image"
-import type { ComponentProps } from "react"
-import { config } from "~/config"
-import { cx } from "~/utils/cva"
+import { formatNumber } from '@curiousleaf/utils';
+import Image from 'next/image';
+import type { ComponentProps } from 'react';
+import { config } from '~/config';
+import { cx } from '~/utils/cva';
 
-export const NewsletterProof = ({ className, ...props }: ComponentProps<"div">) => {
+export const NewsletterProof = ({
+  className,
+  ...props
+}: ComponentProps<'div'>) => {
   return (
     <div
       className={cx(
-        "flex flex-wrap items-center justify-center text-center gap-y-1 -space-x-1.5",
-        className,
+        'flex flex-wrap items-center justify-center text-center gap-y-1 -space-x-1.5',
+        className
       )}
       {...props}
     >
@@ -26,9 +29,13 @@ export const NewsletterProof = ({ className, ...props }: ComponentProps<"div">) 
       ))}
 
       <p className="w-full text-xs text-muted-foreground">
-        Join {formatNumber(config.stats.subscribers + config.stats.stars, "standard")}+ open source
-        enthusiasts
+        Join{' '}
+        {formatNumber(
+          config.stats.subscribers + config.stats.stars,
+          'standard'
+        )}
+        + open source enthusiasts
       </p>
     </div>
-  )
-}
+  );
+};

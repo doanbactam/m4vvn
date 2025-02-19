@@ -1,26 +1,36 @@
-"use client"
+'use client';
 
-import { Select as SelectPrimitive } from "radix-ui"
-import { CheckIcon, ChevronDownIcon, ChevronUpIcon, ChevronsUpDownIcon } from "lucide-react"
-import type { ComponentProps } from "react"
-import { type VariantProps, cx, popoverAnimationClasses } from "~/utils/cva"
-import { Box } from "~/components/common/box"
-import { inputVariants } from "./input"
+import { Select as SelectPrimitive } from 'radix-ui';
+import {
+  CheckIcon,
+  ChevronDownIcon,
+  ChevronUpIcon,
+  ChevronsUpDownIcon,
+} from 'lucide-react';
+import type { ComponentProps } from 'react';
+import { type VariantProps, cx, popoverAnimationClasses } from '~/utils/cva';
+import { Box } from '~/components/common/box';
+import { inputVariants } from './input';
 
-const Select = SelectPrimitive.Root
-const SelectGroup = SelectPrimitive.Group
-const SelectValue = SelectPrimitive.Value
+const Select = SelectPrimitive.Root;
+const SelectGroup = SelectPrimitive.Group;
+const SelectValue = SelectPrimitive.Value;
 
 const SelectTrigger = ({
   children,
   className,
   size,
   ...props
-}: ComponentProps<typeof SelectPrimitive.Trigger> & VariantProps<typeof inputVariants>) => {
+}: ComponentProps<typeof SelectPrimitive.Trigger> &
+  VariantProps<typeof inputVariants>) => {
   return (
     <Box hover focus>
       <SelectPrimitive.Trigger
-        className={cx(inputVariants({ size }), "flex items-center justify-between", className)}
+        className={cx(
+          inputVariants({ size }),
+          'flex items-center justify-between',
+          className
+        )}
         {...props}
       >
         {children}
@@ -29,8 +39,8 @@ const SelectTrigger = ({
         </SelectPrimitive.Icon>
       </SelectPrimitive.Trigger>
     </Box>
-  )
-}
+  );
+};
 
 const SelectScrollUpButton = ({
   className,
@@ -38,13 +48,16 @@ const SelectScrollUpButton = ({
 }: ComponentProps<typeof SelectPrimitive.ScrollUpButton>) => {
   return (
     <SelectPrimitive.ScrollUpButton
-      className={cx("flex cursor-pointer items-center justify-center py-1", className)}
+      className={cx(
+        'flex cursor-pointer items-center justify-center py-1',
+        className
+      )}
       {...props}
     >
       <ChevronUpIcon />
     </SelectPrimitive.ScrollUpButton>
-  )
-}
+  );
+};
 
 const SelectScrollDownButton = ({
   className,
@@ -52,29 +65,32 @@ const SelectScrollDownButton = ({
 }: ComponentProps<typeof SelectPrimitive.ScrollDownButton>) => {
   return (
     <SelectPrimitive.ScrollDownButton
-      className={cx("flex cursor-pointer items-center justify-center py-1", className)}
+      className={cx(
+        'flex cursor-pointer items-center justify-center py-1',
+        className
+      )}
       {...props}
     >
       <ChevronDownIcon />
     </SelectPrimitive.ScrollDownButton>
-  )
-}
+  );
+};
 
 const SelectContent = ({
   className,
   children,
-  position = "popper",
+  position = 'popper',
   ...props
 }: ComponentProps<typeof SelectPrimitive.Content>) => {
   return (
     <SelectPrimitive.Portal>
       <SelectPrimitive.Content
         className={cx(
-          "relative z-50 max-h-96 min-w-32 overflow-hidden rounded-md border bg-popover text-popover-foreground shadow-md",
+          'relative z-50 max-h-96 min-w-32 overflow-hidden rounded-md border bg-popover text-popover-foreground shadow-md',
           popoverAnimationClasses,
-          position === "popper" &&
-            "data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1",
-          className,
+          position === 'popper' &&
+            'data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1',
+          className
         )}
         position={position}
         {...props}
@@ -82,9 +98,9 @@ const SelectContent = ({
         <SelectScrollUpButton />
         <SelectPrimitive.Viewport
           className={cx(
-            "p-1",
-            position === "popper" &&
-              "h-[var(--radix-select-trigger-height)] w-full min-w-[var(--radix-select-trigger-width)]",
+            'p-1',
+            position === 'popper' &&
+              'h-[var(--radix-select-trigger-height)] w-full min-w-[var(--radix-select-trigger-width)]'
           )}
         >
           {children}
@@ -92,17 +108,20 @@ const SelectContent = ({
         <SelectScrollDownButton />
       </SelectPrimitive.Content>
     </SelectPrimitive.Portal>
-  )
-}
+  );
+};
 
-const SelectLabel = ({ className, ...props }: ComponentProps<typeof SelectPrimitive.Label>) => {
+const SelectLabel = ({
+  className,
+  ...props
+}: ComponentProps<typeof SelectPrimitive.Label>) => {
   return (
     <SelectPrimitive.Label
-      className={cx("px-2 py-1.5 text-sm font-medium", className)}
+      className={cx('px-2 py-1.5 text-sm font-medium', className)}
       {...props}
     />
-  )
-}
+  );
+};
 
 const SelectItem = ({
   className,
@@ -112,8 +131,8 @@ const SelectItem = ({
   return (
     <SelectPrimitive.Item
       className={cx(
-        "relative flex w-full cursor-pointer select-none items-center rounded-sm py-1.5 pl-2 pr-8 text-sm text-secondary-foreground outline-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
-        className,
+        'relative flex w-full cursor-pointer select-none items-center rounded-sm py-1.5 pl-2 pr-8 text-sm text-secondary-foreground outline-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
+        className
       )}
       {...props}
     >
@@ -124,17 +143,20 @@ const SelectItem = ({
       </span>
       <SelectPrimitive.ItemText>{children}</SelectPrimitive.ItemText>
     </SelectPrimitive.Item>
-  )
-}
+  );
+};
 
 const SelectSeparator = ({
   className,
   ...props
 }: ComponentProps<typeof SelectPrimitive.Separator>) => {
   return (
-    <SelectPrimitive.Separator className={cx("-mx-1 my-1 h-px bg-border", className)} {...props} />
-  )
-}
+    <SelectPrimitive.Separator
+      className={cx('-mx-1 my-1 h-px bg-border', className)}
+      {...props}
+    />
+  );
+};
 
 export {
   Select,
@@ -147,4 +169,4 @@ export {
   SelectSeparator,
   SelectScrollUpButton,
   SelectScrollDownButton,
-}
+};

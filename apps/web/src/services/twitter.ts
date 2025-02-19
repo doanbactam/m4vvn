@@ -1,5 +1,5 @@
-import crypto from "node:crypto"
-import { env, isProd } from "~/env"
+import crypto from 'node:crypto';
+import { env, isProd } from '~/env';
 
 /**
  * Generate a Base64-encoded HMAC-SHA1 signature for OAuth 1.0a
@@ -15,26 +15,29 @@ const generateOAuthSignature = (
   baseUrl: string,
   consumerSecret: string,
   tokenSecret: string,
-  params: Record<string, string>,
+  params: Record<string, string>
 ) => {
   // Normalize parameters
   const normalizedParams = Object.keys(params)
     .sort()
-    .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(params[key] || "")}`)
-    .join("&")
+    .map(
+      (key) =>
+        `${encodeURIComponent(key)}=${encodeURIComponent(params[key] || '')}`
+    )
+    .join('&');
 
   // Create the base string
-  const baseString = `${httpMethod.toUpperCase()}&${encodeURIComponent(baseUrl)}&${encodeURIComponent(normalizedParams)}`
+  const baseString = `${httpMethod.toUpperCase()}&${encodeURIComponent(baseUrl)}&${encodeURIComponent(normalizedParams)}`;
 
   // Create the signing key
-  const signingKey = `${encodeURIComponent(consumerSecret)}&${encodeURIComponent(tokenSecret)}`
+  const signingKey = `${encodeURIComponent(consumerSecret)}&${encodeURIComponent(tokenSecret)}`;
 
   // Generate HMAC-SHA1 signature
-  const hmac = crypto.createHmac("sha1", signingKey)
-  hmac.update(baseString)
+  const hmac = crypto.createHmac('sha1', signingKey);
+  hmac.update(baseString);
 
-  return hmac.digest("base64")
-}
+  return hmac.digest('base64');
+};
 
 /**
  * Make an authenticated request to an API endpoint using OAuth 1.0a
@@ -45,7 +48,7 @@ const generateOAuthSignature = (
 const makeOAuthRequest = async (
   httpMethod: string,
   baseUrl: string,
-  jsonBody?: Record<string, unknown>,
+  jsonBody?: Record<string, unknown>
 ) => {
   if (
     !env.TWITTER_API_KEY ||
@@ -53,20 +56,20 @@ const makeOAuthRequest = async (
     !env.TWITTER_API_SECRET ||
     !env.TWITTER_ACCESS_SECRET
   ) {
-    return
+    return;
   }
 
-  const consumerSecret = env.TWITTER_API_SECRET
-  const tokenSecret = env.TWITTER_ACCESS_SECRET
+  const consumerSecret = env.TWITTER_API_SECRET;
+  const tokenSecret = env.TWITTER_ACCESS_SECRET;
 
   const params = {
     oauth_consumer_key: env.TWITTER_API_KEY,
     oauth_token: env.TWITTER_ACCESS_TOKEN,
-    oauth_nonce: crypto.randomBytes(16).toString("base64"),
-    oauth_signature_method: "HMAC-SHA1",
+    oauth_nonce: crypto.randomBytes(16).toString('base64'),
+    oauth_signature_method: 'HMAC-SHA1',
     oauth_timestamp: Math.floor(Date.now() / 1000).toString(),
-    oauth_version: "1.0",
-  }
+    oauth_version: '1.0',
+  };
 
   // Generate the OAuth signature
   const oauthSignature = generateOAuthSignature(
@@ -74,23 +77,26 @@ const makeOAuthRequest = async (
     baseUrl,
     consumerSecret,
     tokenSecret,
-    params,
-  )
+    params
+  );
 
   // Construct the OAuth header
   const oauthHeader = Object.entries({
     ...params,
     oauth_signature: oauthSignature,
   })
-    .map(([key, value]) => `${encodeURIComponent(key)}="${encodeURIComponent(value)}"`)
-    .join(", ")
+    .map(
+      ([key, value]) =>
+        `${encodeURIComponent(key)}="${encodeURIComponent(value)}"`
+    )
+    .join(', ');
 
   const headers: Record<string, string> = {
     Authorization: `OAuth ${oauthHeader}`,
-  }
+  };
 
   if (jsonBody) {
-    headers["Content-Type"] = "application/json"
+    headers['Content-Type'] = 'application/json';
   }
 
   try {
@@ -99,20 +105,20 @@ const makeOAuthRequest = async (
       method: httpMethod,
       headers,
       body: jsonBody ? JSON.stringify(jsonBody) : undefined,
-    })
+    });
 
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`)
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    const data = await response.json()
-    console.log("Response:", data)
-    return data
+    const data = await response.json();
+    console.log('Response:', data);
+    return data;
   } catch (error) {
-    console.error("Error:", error)
-    throw error
+    console.error('Error:', error);
+    throw error;
   }
-}
+};
 
 /**
  * Send a post to Twitter
@@ -120,12 +126,12 @@ const makeOAuthRequest = async (
  */
 export const sendTwitterPost = async (text: string) => {
   if (!isProd) {
-    console.log(text)
-    return
+    console.log(text);
+    return;
   }
 
-  const httpMethod = "POST"
-  const baseUrl = "https://api.twitter.com/2/tweets"
+  const httpMethod = 'POST';
+  const baseUrl = 'https://api.twitter.com/2/tweets';
 
-  await makeOAuthRequest(httpMethod, baseUrl, { text })
-}
+  await makeOAuthRequest(httpMethod, baseUrl, { text });
+};

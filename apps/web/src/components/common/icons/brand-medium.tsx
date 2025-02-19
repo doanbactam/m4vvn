@@ -1,4 +1,4 @@
-import type { SVGAttributes } from "react"
+import type { SVGAttributes } from 'react';
 
 export const BrandMediumIcon = ({ ...props }: SVGAttributes<SVGSVGElement>) => {
   return (
@@ -50,5 +50,5 @@ export const BrandMediumIcon = ({ ...props }: SVGAttributes<SVGSVGElement>) => {
         strokeWidth="16"
       />
     </svg>
-  )
-}
+  );
+};

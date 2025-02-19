@@ -1,28 +1,42 @@
-import { formatDate } from "@curiousleaf/utils"
-import { differenceInDays } from "date-fns"
-import { BellPlusIcon, ClockIcon, SparklesIcon } from "lucide-react"
-import type { ComponentProps } from "react"
-import { Stack } from "~/components/common/stack"
-import { Tooltip, TooltipProvider } from "~/components/common/tooltip"
-import type { ToolMany, ToolManyExtended } from "~/server/web/tools/payloads"
-import { cx } from "~/utils/cva"
+import { formatDate } from '@curiousleaf/utils';
+import { differenceInDays } from 'date-fns';
+import { BellPlusIcon, ClockIcon, SparklesIcon } from 'lucide-react';
+import type { ComponentProps } from 'react';
+import { Stack } from '~/components/common/stack';
+import { Tooltip, TooltipProvider } from '~/components/common/tooltip';
+import type { ToolMany, ToolManyExtended } from '~/server/web/tools/payloads';
+import { cx } from '~/utils/cva';
 
 type ToolBadgesProps = ComponentProps<typeof Stack> & {
-  tool: ToolMany | ToolManyExtended
-}
+  tool: ToolMany | ToolManyExtended;
+};
 
-export const ToolBadges = ({ tool, children, className, ...props }: ToolBadgesProps) => {
-  const { firstCommitDate, publishedAt } = tool
-  const commitDiff = firstCommitDate ? differenceInDays(new Date(), firstCommitDate) : null
-  const publishedDiff = publishedAt ? differenceInDays(new Date(), publishedAt) : null
+export const ToolBadges = ({
+  tool,
+  children,
+  className,
+  ...props
+}: ToolBadgesProps) => {
+  const { firstCommitDate, publishedAt } = tool;
+  const commitDiff = firstCommitDate
+    ? differenceInDays(new Date(), firstCommitDate)
+    : null;
+  const publishedDiff = publishedAt
+    ? differenceInDays(new Date(), publishedAt)
+    : null;
 
-  const isNew = commitDiff !== null && commitDiff <= 365
-  const isFresh = publishedDiff !== null && publishedDiff <= 30 && publishedDiff >= 0
-  const isScheduled = publishedAt !== null && publishedAt > new Date()
+  const isNew = commitDiff !== null && commitDiff <= 365;
+  const isFresh =
+    publishedDiff !== null && publishedDiff <= 30 && publishedDiff >= 0;
+  const isScheduled = publishedAt !== null && publishedAt > new Date();
 
   return (
     <TooltipProvider delayDuration={500}>
-      <Stack size="sm" className={cx("flex-nowrap justify-end text-sm", className)} {...props}>
+      <Stack
+        size="sm"
+        className={cx('flex-nowrap justify-end text-sm', className)}
+        {...props}
+      >
         {isNew && (
           <Tooltip tooltip="Repo is less than 1 year old">
             <SparklesIcon className="text-yellow-500" />
@@ -44,5 +58,5 @@ export const ToolBadges = ({ tool, children, className, ...props }: ToolBadgesPr
         {children}
       </Stack>
     </TooltipProvider>
-  )
-}
+  );
+};

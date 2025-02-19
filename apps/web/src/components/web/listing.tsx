@@ -1,15 +1,15 @@
-import { ArrowRightIcon } from "lucide-react"
-import type { ComponentProps, ReactNode } from "react"
-import { H4 } from "~/components/common/heading"
-import { Stack } from "~/components/common/stack"
-import { Button } from "~/components/common/button"
-import { cx } from "~/utils/cva"
+import { ArrowRightIcon } from 'lucide-react';
+import type { ComponentProps, ReactNode } from 'react';
+import { H4 } from '~/components/common/heading';
+import { Stack } from '~/components/common/stack';
+import { Button } from '~/components/common/button';
+import { cx } from '~/utils/cva';
 
 type ListingProps = ComponentProps<typeof Stack> & {
-  title?: string
-  button?: ReactNode
-  separated?: boolean
-}
+  title?: string;
+  button?: ReactNode;
+  separated?: boolean;
+};
 
 export const Listing = ({
   children,
@@ -23,7 +23,12 @@ export const Listing = ({
     <>
       {separated && <hr />}
 
-      <Stack size="lg" direction="column" className={cx("items-stretch", className)} {...props}>
+      <Stack
+        size="lg"
+        direction="column"
+        className={cx('items-stretch', className)}
+        {...props}
+      >
         <Stack className="w-full justify-between">
           {title && <H4 as="h3">{title}</H4>}
 
@@ -43,5 +48,5 @@ export const Listing = ({
         {children}
       </Stack>
     </>
-  )
-}
+  );
+};

@@ -1,12 +1,12 @@
-"use client"
+'use client';
 
-import { Separator as SeparatorPrimitive } from "radix-ui"
-import type { ComponentProps } from "react"
-import { cx } from "~/utils/cva"
+import { Separator as SeparatorPrimitive } from 'radix-ui';
+import type { ComponentProps } from 'react';
+import { cx } from '~/utils/cva';
 
 const Separator = ({
   className,
-  orientation = "horizontal",
+  orientation = 'horizontal',
   decorative = true,
   ...props
 }: ComponentProps<typeof SeparatorPrimitive.Root>) => {
@@ -15,13 +15,13 @@ const Separator = ({
       decorative={decorative}
       orientation={orientation}
       className={cx(
-        "shrink-0 bg-border",
-        orientation === "horizontal" ? "h-px w-full" : "h-full w-px",
-        className,
+        'shrink-0 bg-border',
+        orientation === 'horizontal' ? 'h-px w-full' : 'h-full w-px',
+        className
       )}
       {...props}
     />
-  )
-}
+  );
+};
 
-export { Separator }
+export { Separator };

@@ -1,12 +1,12 @@
-import Image from "next/image"
-import type { ComponentProps } from "react"
-import { Stack } from "~/components/common/stack"
+import Image from 'next/image';
+import type { ComponentProps } from 'react';
+import { Stack } from '~/components/common/stack';
 
 type AuthorProps = ComponentProps<typeof Stack> & {
-  name: string
-  image: string
-  title?: string
-}
+  name: string;
+  image: string;
+  title?: string;
+};
 
 export const Author = ({ name, image, title, ...props }: AuthorProps) => {
   return (
@@ -21,8 +21,10 @@ export const Author = ({ name, image, title, ...props }: AuthorProps) => {
 
       <div>
         <h3 className="font-medium text-base truncate">{name}</h3>
-        {title && <div className="text-muted-foreground text-sm/tight">{title}</div>}
+        {title && (
+          <div className="text-muted-foreground text-sm/tight">{title}</div>
+        )}
       </div>
     </Stack>
-  )
-}
+  );
+};

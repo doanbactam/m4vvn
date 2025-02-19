@@ -1,29 +1,31 @@
-import { allPosts } from "content-collections"
-import type { Metadata } from "next"
-import { PostCard } from "~/components/web/posts/post-card"
-import { Breadcrumbs } from "~/components/web/ui/breadcrumbs"
-import { Grid } from "~/components/web/ui/grid"
-import { Intro, IntroDescription, IntroTitle } from "~/components/web/ui/intro"
-import { metadataConfig } from "~/config/metadata"
+import { allPosts } from 'content-collections';
+import type { Metadata } from 'next';
+import { PostCard } from '~/components/web/posts/post-card';
+import { Breadcrumbs } from '~/components/web/ui/breadcrumbs';
+import { Grid } from '~/components/web/ui/grid';
+import { Intro, IntroDescription, IntroTitle } from '~/components/web/ui/intro';
+import { metadataConfig } from '~/config/metadata';
 
 export const metadata: Metadata = {
-  title: "Blog",
+  title: 'Blog',
   description:
-    "A collection of useful articles for developers and open source enthusiasts. Learn about the latest trends and technologies in the open source community.",
-  openGraph: { ...metadataConfig.openGraph, url: "/blog" },
-  alternates: { ...metadataConfig.alternates, canonical: "/blog" },
-}
+    'A collection of useful articles for developers and open source enthusiasts. Learn about the latest trends and technologies in the open source community.',
+  openGraph: { ...metadataConfig.openGraph, url: '/blog' },
+  alternates: { ...metadataConfig.alternates, canonical: '/blog' },
+};
 
 export default function BlogPage() {
-  const posts = allPosts.sort((a, b) => b.publishedAt.localeCompare(a.publishedAt))
+  const posts = allPosts.sort((a, b) =>
+    b.publishedAt.localeCompare(a.publishedAt)
+  );
 
   return (
     <>
       <Breadcrumbs
         items={[
           {
-            href: "/blog",
-            name: "Blog",
+            href: '/blog',
+            name: 'Blog',
           },
         ]}
       />
@@ -35,7 +37,7 @@ export default function BlogPage() {
 
       {posts.length ? (
         <Grid size="lg">
-          {allPosts.map(post => (
+          {allPosts.map((post) => (
             <PostCard key={post._meta.path} post={post} />
           ))}
         </Grid>
@@ -43,5 +45,5 @@ export default function BlogPage() {
         <p>No posts found.</p>
       )}
     </>
-  )
+  );
 }

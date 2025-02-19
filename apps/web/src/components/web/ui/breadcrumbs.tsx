@@ -1,14 +1,14 @@
-"use client"
+'use client';
 
-import { Home } from "lucide-react"
-import type { ComponentProps, ReactNode } from "react"
-import type { Graph } from "schema-dts"
-import { Stack } from "~/components/common/stack"
-import { NavLink } from "~/components/web/ui/nav-link"
-import { config } from "~/config"
-import { cx } from "~/utils/cva"
+import { Home } from 'lucide-react';
+import type { ComponentProps, ReactNode } from 'react';
+import type { Graph } from 'schema-dts';
+import { Stack } from '~/components/common/stack';
+import { NavLink } from '~/components/web/ui/nav-link';
+import { config } from '~/config';
+import { cx } from '~/utils/cva';
 
-const BreadcrumbsSeparator = ({ ...props }: ComponentProps<"span">) => {
+const BreadcrumbsSeparator = ({ ...props }: ComponentProps<'span'>) => {
   return (
     <span
       className="text-sm text-secondary-foreground invert pointer-events-none select-none"
@@ -16,49 +16,57 @@ const BreadcrumbsSeparator = ({ ...props }: ComponentProps<"span">) => {
     >
       /
     </span>
-  )
-}
+  );
+};
 
 type Breadcrumb = {
-  href: string
-  name: string | ReactNode
-}
+  href: string;
+  name: string | ReactNode;
+};
 
 type BreadcrumbsProps = ComponentProps<typeof Stack> & {
-  items: Breadcrumb[]
-}
+  items: Breadcrumb[];
+};
 
-export const Breadcrumbs = ({ children, className, items, ...props }: BreadcrumbsProps) => {
+export const Breadcrumbs = ({
+  children,
+  className,
+  items,
+  ...props
+}: BreadcrumbsProps) => {
   const breadcrumbItems = [
     {
-      href: "/",
+      href: '/',
       name: <Home aria-label="Home" />,
     },
     ...items,
-  ]
+  ];
 
   const jsonLd: Graph = {
-    "@context": "https://schema.org",
-    "@graph": [
+    '@context': 'https://schema.org',
+    '@graph': [
       {
-        "@type": "BreadcrumbList",
+        '@type': 'BreadcrumbList',
         itemListElement: breadcrumbItems.map(({ href, name }, index) => ({
-          "@type": "ListItem",
+          '@type': 'ListItem',
           position: index + 1,
           item: {
-            "@type": "WebPage",
-            "@id": `${config.site.url}${href}`,
-            name: typeof name === "string" ? name : config.site.name,
+            '@type': 'WebPage',
+            '@id': `${config.site.url}${href}`,
+            name: typeof name === 'string' ? name : config.site.name,
           },
         })),
       },
     ],
-  }
+  };
 
   return (
     <Stack
       size="lg"
-      className={cx("w-full justify-between -mb-2 md:-mb-6 lg:-mb-8", className)}
+      className={cx(
+        'w-full justify-between -mb-2 md:-mb-6 lg:-mb-8',
+        className
+      )}
       {...props}
     >
       <Stack size="sm" asChild>
@@ -81,5 +89,5 @@ export const Breadcrumbs = ({ children, className, items, ...props }: Breadcrumb
 
       {children}
     </Stack>
-  )
-}
+  );
+};

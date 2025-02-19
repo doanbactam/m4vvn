@@ -1,10 +1,10 @@
-"use client"
+'use client';
 
-import type { Category } from "@openalternative/db/client"
-import { TrashIcon } from "lucide-react"
-import { toast } from "sonner"
-import { useServerAction } from "zsa-react"
-import { Button } from "~/components/common/button"
+import type { Category } from '@openalternative/db/client';
+import { TrashIcon } from 'lucide-react';
+import { toast } from 'sonner';
+import { useServerAction } from 'zsa-react';
+import { Button } from '~/components/common/button';
 import {
   Dialog,
   DialogClose,
@@ -14,13 +14,14 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "~/components/common/dialog"
-import { deleteCategories } from "~/server/admin/categories/actions"
+} from '~/components/common/dialog';
+import { deleteCategories } from '~/server/admin/categories/actions';
 
-interface CategoriesDeleteDialogProps extends React.ComponentPropsWithoutRef<typeof Dialog> {
-  categories: Category[]
-  showTrigger?: boolean
-  onSuccess?: () => void
+interface CategoriesDeleteDialogProps
+  extends React.ComponentPropsWithoutRef<typeof Dialog> {
+  categories: Category[];
+  showTrigger?: boolean;
+  onSuccess?: () => void;
 }
 
 export const CategoriesDeleteDialog = ({
@@ -31,15 +32,15 @@ export const CategoriesDeleteDialog = ({
 }: CategoriesDeleteDialogProps) => {
   const { execute, isPending } = useServerAction(deleteCategories, {
     onSuccess: () => {
-      props.onOpenChange?.(false)
-      toast.success("Categories deleted")
-      onSuccess?.()
+      props.onOpenChange?.(false);
+      toast.success('Categories deleted');
+      onSuccess?.();
     },
 
     onError: ({ err }) => {
-      toast.error(err.message)
+      toast.error(err.message);
     },
-  })
+  });
 
   return (
     <Dialog {...props}>
@@ -55,9 +56,10 @@ export const CategoriesDeleteDialog = ({
         <DialogHeader>
           <DialogTitle>Are you absolutely sure?</DialogTitle>
           <DialogDescription>
-            This action cannot be undone. This will permanently delete your{" "}
+            This action cannot be undone. This will permanently delete your{' '}
             <span className="font-medium">{categories.length}</span>
-            {categories.length === 1 ? " category" : " categories"} from our servers.
+            {categories.length === 1 ? ' category' : ' categories'} from our
+            servers.
           </DialogDescription>
         </DialogHeader>
 
@@ -79,5 +81,5 @@ export const CategoriesDeleteDialog = ({
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  )
-}
+  );
+};

@@ -1,16 +1,16 @@
-import { db } from "@openalternative/db"
-import { betterAuth } from "better-auth"
-import { prismaAdapter } from "better-auth/adapters/prisma"
-import { customSession, magicLink } from "better-auth/plugins"
-import { config } from "~/config"
-import EmailLoginLink from "~/emails/login-link"
-import { env } from "~/env"
-import { sendEmails } from "~/lib/email"
-import { isAdminEmail } from "~/utils/auth"
+import { db } from '@openalternative/db';
+import { betterAuth } from 'better-auth';
+import { prismaAdapter } from 'better-auth/adapters/prisma';
+import { customSession, magicLink } from 'better-auth/plugins';
+import { config } from '~/config';
+import EmailLoginLink from '~/emails/login-link';
+import { env } from '~/env';
+import { sendEmails } from '~/lib/email';
+import { isAdminEmail } from '~/utils/auth';
 
 export const auth = betterAuth({
   database: prismaAdapter(db, {
-    provider: "postgresql",
+    provider: 'postgresql',
   }),
 
   socialProviders: {
@@ -29,10 +29,14 @@ export const auth = betterAuth({
   plugins: [
     magicLink({
       sendMagicLink: async ({ email, url }) => {
-        const to = email
-        const subject = `Your ${config.site.name} Login Link`
+        const to = email;
+        const subject = `Your ${config.site.name} Login Link`;
 
-        await sendEmails({ to, subject, react: EmailLoginLink({ to, subject, url }) })
+        await sendEmails({
+          to,
+          subject,
+          react: EmailLoginLink({ to, subject, url }),
+        });
       },
     }),
 
@@ -41,4 +45,4 @@ export const auth = betterAuth({
       session,
     })),
   ],
-})
+});

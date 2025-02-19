@@ -9,15 +9,20 @@ import {
   Link,
   Tailwind,
   Text,
-} from "@react-email/components"
-import { config } from "~/config"
+} from '@react-email/components';
+import { config } from '~/config';
 
 export type EmailWrapperProps = ContainerProps & {
-  to: string
-  subject: string
-}
+  to: string;
+  subject: string;
+};
 
-export const EmailWrapper = ({ to, subject, children, ...props }: EmailWrapperProps) => {
+export const EmailWrapper = ({
+  to,
+  subject,
+  children,
+  ...props
+}: EmailWrapperProps) => {
   return (
     <Html>
       <Head />
@@ -39,17 +44,20 @@ export const EmailWrapper = ({ to, subject, children, ...props }: EmailWrapperPr
             <Hr />
 
             <Text className="text-xs/normal text-gray-500">
-              This email was intended for <span className="text-foreground">{to}</span>. If you were
-              not expecting this email, you can ignore it. If you are concerned about your accounts
-              safety, please reply to this email to get in touch with us.
+              This email was intended for{' '}
+              <span className="text-foreground">{to}</span>. If you were not
+              expecting this email, you can ignore it. If you are concerned
+              about your accounts safety, please reply to this email to get in
+              touch with us.
             </Text>
 
             <Text className="text-xs/normal text-gray-500">
-              Any questions? Please feel free to reach us at {config.site.email}.
+              Any questions? Please feel free to reach us at {config.site.email}
+              .
             </Text>
           </Container>
         </Body>
       </Tailwind>
     </Html>
-  )
-}
+  );
+};

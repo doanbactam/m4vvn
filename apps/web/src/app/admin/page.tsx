@@ -1,8 +1,8 @@
-import { AnalyticsCard } from "~/app/admin/_components/analytics-card"
-import { ScheduledCard } from "~/app/admin/_components/scheduled-card"
-import { StatsCard } from "~/app/admin/_components/stats-card"
-import { SubscribersCard } from "~/app/admin/_components/subscribers-card"
-import { H3 } from "~/components/common/heading"
+import { AnalyticsCard } from '~/app/admin/_components/analytics-card';
+import { ScheduledCard } from '~/app/admin/_components/scheduled-card';
+import { StatsCard } from '~/app/admin/_components/stats-card';
+import { SubscribersCard } from '~/app/admin/_components/subscribers-card';
+import { H3 } from '~/components/common/heading';
 
 export default function DashboardPage() {
   return (
@@ -16,5 +16,5 @@ export default function DashboardPage() {
         <ScheduledCard className="col-span-full lg:col-span-3" />
       </div>
     </>
-  )
+  );
 }

@@ -1,14 +1,14 @@
-import { env } from "~/env"
+import { env } from '~/env';
 
 export const siteConfig = {
-  name: "OpenAlternative",
-  tagline: "Open Source Alternatives to Popular Software",
+  name: 'OpenAlternative',
+  tagline: 'Open Source Alternatives to Popular Software',
   description:
-    "A curated collection of the best open source alternatives to everyday SaaS products. Save money with reliable tools hand-picked for you.",
+    'A curated collection of the best open source alternatives to everyday SaaS products. Save money with reliable tools hand-picked for you.',
   email: env.NEXT_PUBLIC_SITE_EMAIL,
   url: env.NEXT_PUBLIC_SITE_URL,
 
-  alphabet: "abcdefghijklmnopqrstuvwxyz",
+  alphabet: 'abcdefghijklmnopqrstuvwxyz',
 
-  affiliateUrl: "https://go.openalternative.co",
-}
+  affiliateUrl: 'https://go.openalternative.co',
+};

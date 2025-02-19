@@ -1,42 +1,45 @@
-import { differenceInDays } from "date-fns"
-import { revalidateTag } from "next/cache"
-import { config } from "~/config"
-import EmailToolExpediteReminder from "~/emails/tool-expedite-reminder"
-import EmailToolScheduled from "~/emails/tool-scheduled"
-import { sendEmails } from "~/lib/email"
-import { generateContent } from "~/lib/generate-content"
-import { uploadFavicon, uploadScreenshot } from "~/lib/media"
-import { getToolRepositoryData } from "~/lib/repositories"
-import { firecrawlClient } from "~/services/firecrawl"
-import { inngest } from "~/services/inngest"
-import { ensureFreeSubmissions } from "~/utils/functions"
+import { differenceInDays } from 'date-fns';
+import { revalidateTag } from 'next/cache';
+import { config } from '~/config';
+import EmailToolExpediteReminder from '~/emails/tool-expedite-reminder';
+import EmailToolScheduled from '~/emails/tool-scheduled';
+import { sendEmails } from '~/lib/email';
+import { generateContent } from '~/lib/generate-content';
+import { uploadFavicon, uploadScreenshot } from '~/lib/media';
+import { getToolRepositoryData } from '~/lib/repositories';
+import { firecrawlClient } from '~/services/firecrawl';
+import { inngest } from '~/services/inngest';
+import { ensureFreeSubmissions } from '~/utils/functions';
 
 export const toolScheduled = inngest.createFunction(
-  { id: "tool.scheduled", concurrency: { limit: 2 } },
-  { event: "tool.scheduled" },
+  { id: 'tool.scheduled', concurrency: { limit: 2 } },
+  { event: 'tool.scheduled' },
 
   async ({ event, step, db, logger }) => {
-    const tool = await step.run("find-tool", async () => {
-      return db.tool.findUniqueOrThrow({ where: { slug: event.data.slug } })
-    })
+    const tool = await step.run('find-tool', async () => {
+      return db.tool.findUniqueOrThrow({ where: { slug: event.data.slug } });
+    });
 
     // Scrape website
-    const scrapedData = await step.run("scrape-website", async () => {
-      const data = await firecrawlClient.scrapeUrl(tool.websiteUrl, { formats: ["markdown"] })
+    const scrapedData = await step.run('scrape-website', async () => {
+      const data = await firecrawlClient.scrapeUrl(tool.websiteUrl, {
+        formats: ['markdown'],
+      });
 
       if (!data.success) {
-        throw new Error(data.error)
+        throw new Error(data.error);
       }
 
-      logger.info(`Scraped website for ${tool.name}`, { data })
+      logger.info(`Scraped website for ${tool.name}`, { data });
 
-      return data
-    })
+      return data;
+    });
 
     // Run steps in parallel
     await Promise.all([
-      step.run("generate-content", async () => {
-        const { categories, alternatives, ...content } = await generateContent(scrapedData)
+      step.run('generate-content', async () => {
+        const { categories, alternatives, ...content } =
+          await generateContent(scrapedData);
 
         return await db.tool.update({
           where: { id: tool.id },
@@ -45,105 +48,134 @@ export const toolScheduled = inngest.createFunction(
             categories: { connect: categories.map(({ id }) => ({ id })) },
             alternatives: { connect: alternatives.map(({ id }) => ({ id })) },
           },
-        })
+        });
       }),
 
-      step.run("fetch-repository-data", async () => {
-        const data = await getToolRepositoryData(tool.repositoryUrl)
+      step.run('fetch-repository-data', async () => {
+        const data = await getToolRepositoryData(tool.repositoryUrl);
 
-        if (!data) return
+        if (!data) return;
 
         return await db.tool.update({
           where: { id: tool.id },
           data,
-        })
+        });
       }),
 
-
-      step.run("upload-favicon", async () => {
-        const { id, slug, websiteUrl } = tool
-        const faviconUrl = await uploadFavicon(websiteUrl, `tools/${slug}/favicon`)
+      step.run('upload-favicon', async () => {
+        const { id, slug, websiteUrl } = tool;
+        const faviconUrl = await uploadFavicon(
+          websiteUrl,
+          `tools/${slug}/favicon`
+        );
 
         return await db.tool.update({
           where: { id },
           data: { faviconUrl },
-        })
+        });
       }),
 
-      step.run("upload-screenshot", async () => {
-        const { id, slug, websiteUrl } = tool
-        const screenshotUrl = await uploadScreenshot(websiteUrl, `tools/${slug}/screenshot`)
+      step.run('upload-screenshot', async () => {
+        const { id, slug, websiteUrl } = tool;
+        const screenshotUrl = await uploadScreenshot(
+          websiteUrl,
+          `tools/${slug}/screenshot`
+        );
 
         return await db.tool.update({
           where: { id },
           data: { screenshotUrl },
-        })
+        });
       }),
-    ])
+    ]);
 
     // Disconnect from DB
-    await step.run("disconnect-from-db", async () => {
-      return await db.$disconnect()
-    })
+    await step.run('disconnect-from-db', async () => {
+      return await db.$disconnect();
+    });
 
     // Revalidate cache
-    await step.run("revalidate-cache", async () => {
-      revalidateTag("schedule")
-      revalidateTag(`tool-${tool.slug}`)
-    })
+    await step.run('revalidate-cache', async () => {
+      revalidateTag('schedule');
+      revalidateTag(`tool-${tool.slug}`);
+    });
 
     // If no submitter email, return early
     if (!tool.submitterEmail) {
-      return
+      return;
     }
 
-    const to = tool.submitterEmail
+    const to = tool.submitterEmail;
 
     // Send initial email
-    await step.run("send-email", async () => {
-      const subject = `Great news! ${tool.name} is scheduled for publication on ${config.site.name} 🎉`
+    await step.run('send-email', async () => {
+      const subject = `Great news! ${tool.name} is scheduled for publication on ${config.site.name} 🎉`;
 
       return await sendEmails({
         to,
         subject,
         react: EmailToolScheduled({ to, subject, tool }),
-      })
-    })
+      });
+    });
 
     // Wait for 1 month and check if tool was expedited
-    if (tool.publishedAt && differenceInDays(new Date(), tool.publishedAt) < 30) {
-      const isFreeAfterOneMonth = await ensureFreeSubmissions(step, tool.slug, "30d")
+    if (
+      tool.publishedAt &&
+      differenceInDays(new Date(), tool.publishedAt) < 30
+    ) {
+      const isFreeAfterOneMonth = await ensureFreeSubmissions(
+        step,
+        tool.slug,
+        '30d'
+      );
 
       // Send first reminder if not expedited
-      await step.run("send-first-reminder", async () => {
+      await step.run('send-first-reminder', async () => {
         if (isFreeAfterOneMonth) {
-          const subject = `Skip the queue for ${tool.name} on ${config.site.name} 🚀`
+          const subject = `Skip the queue for ${tool.name} on ${config.site.name} 🚀`;
 
           return await sendEmails({
             to,
             subject,
-            react: EmailToolExpediteReminder({ to, subject, tool, monthsWaiting: 1 }),
-          })
+            react: EmailToolExpediteReminder({
+              to,
+              subject,
+              tool,
+              monthsWaiting: 1,
+            }),
+          });
         }
-      })
+      });
     }
 
     // Wait for another month and check if tool was expedited
-    if (tool.publishedAt && differenceInDays(new Date(), tool.publishedAt) < 60) {
-      const isFreeAfterTwoMonths = await ensureFreeSubmissions(step, tool.slug, "30d")
+    if (
+      tool.publishedAt &&
+      differenceInDays(new Date(), tool.publishedAt) < 60
+    ) {
+      const isFreeAfterTwoMonths = await ensureFreeSubmissions(
+        step,
+        tool.slug,
+        '30d'
+      );
 
       // Send second reminder if not expedited
-      await step.run("send-second-reminder", async () => {
+      await step.run('send-second-reminder', async () => {
         if (isFreeAfterTwoMonths) {
-          const subject = `Last chance to expedite ${tool.name} on ${config.site.name} ⚡️`
+          const subject = `Last chance to expedite ${tool.name} on ${config.site.name} ⚡️`;
 
           return await sendEmails({
             to,
             subject,
-            react: EmailToolExpediteReminder({ to, subject, tool, monthsWaiting: 2 }),
-          })
+            react: EmailToolExpediteReminder({
+              to,
+              subject,
+              tool,
+              monthsWaiting: 2,
+            }),
+          });
         }
-      })
+      });
     }
-  },
-)
+  }
+);

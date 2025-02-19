@@ -1,26 +1,44 @@
-"use client"
+'use client';
 
-import { formatDate } from "@curiousleaf/utils"
-import type { ComponentProps } from "react"
-import { Bar, BarChart, Cell, Label, Rectangle, ReferenceLine, XAxis } from "recharts"
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from "~/components/common/chart"
-import { Skeleton } from "~/components/common/skeleton"
-import { cx } from "~/utils/cva"
+import { formatDate } from '@curiousleaf/utils';
+import type { ComponentProps } from 'react';
+import {
+  Bar,
+  BarChart,
+  Cell,
+  Label,
+  Rectangle,
+  ReferenceLine,
+  XAxis,
+} from 'recharts';
+import {
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from '~/components/common/chart';
+import { Skeleton } from '~/components/common/skeleton';
+import { cx } from '~/utils/cva';
 
 export type ChartData = {
-  date: string
-  value: number
-}
+  date: string;
+  value: number;
+};
 
 type ChartProps = Partial<ComponentProps<typeof ChartContainer>> & {
-  data: ChartData[]
-  average?: number
-  cellClassName?: string
-}
+  data: ChartData[];
+  average?: number;
+  cellClassName?: string;
+};
 
-export const Chart = ({ cellClassName, data, average, config, ...props }: ChartProps) => {
+export const Chart = ({
+  cellClassName,
+  data,
+  average,
+  config,
+  ...props
+}: ChartProps) => {
   if (data.length === 0) {
-    return <Skeleton className="size-full" />
+    return <Skeleton className="size-full" />;
   }
 
   return (
@@ -35,7 +53,10 @@ export const Chart = ({ cellClassName, data, average, config, ...props }: ChartP
           {data.map((entry, index) => (
             <Cell
               key={`cell-${index}`}
-              className={cx(cellClassName, index === data.length - 1 && "opacity-50")}
+              className={cx(
+                cellClassName,
+                index === data.length - 1 && 'opacity-50'
+              )}
             />
           ))}
         </Bar>
@@ -45,12 +66,17 @@ export const Chart = ({ cellClassName, data, average, config, ...props }: ChartP
           tickLine={false}
           axisLine={false}
           tickMargin={4}
-          tickFormatter={value => new Date(value).toLocaleDateString("en-US", { weekday: "short" })}
+          tickFormatter={(value) =>
+            new Date(value).toLocaleDateString('en-US', { weekday: 'short' })
+          }
         />
 
         <ChartTooltip
           content={
-            <ChartTooltipContent hideIndicator labelFormatter={value => formatDate(value)} />
+            <ChartTooltipContent
+              hideIndicator
+              labelFormatter={(value) => formatDate(value)}
+            />
           }
           cursor={false}
         />
@@ -74,5 +100,5 @@ export const Chart = ({ cellClassName, data, average, config, ...props }: ChartP
         )}
       </BarChart>
     </ChartContainer>
-  )
-}
+  );
+};

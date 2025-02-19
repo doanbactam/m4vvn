@@ -1,27 +1,32 @@
-"use client"
+'use client';
 
+import { Command as CommandPrimitive } from 'cmdk';
+import { SearchIcon } from 'lucide-react';
+import type { ComponentProps } from 'react';
+import type {} from 'radix-ui';
+import { Dialog, DialogContent, DialogTitle } from '~/components/common/dialog';
+import { ScrollArea } from '~/components/common/scroll-area';
+import { cx } from '~/utils/cva';
 
-import { Command as CommandPrimitive } from "cmdk"
-import { SearchIcon } from "lucide-react"
-import type { ComponentProps } from "react"
-import type {} from "radix-ui"
-import { Dialog, DialogContent, DialogTitle } from "~/components/common/dialog"
-import { ScrollArea } from "~/components/common/scroll-area"
-import { cx } from "~/utils/cva"
-
-const Command = ({ className, ...props }: ComponentProps<typeof CommandPrimitive>) => {
+const Command = ({
+  className,
+  ...props
+}: ComponentProps<typeof CommandPrimitive>) => {
   return (
     <CommandPrimitive
       className={cx(
-        "flex size-full flex-col overflow-hidden rounded-md bg-popover text-popover-foreground",
-        className,
+        'flex size-full flex-col overflow-hidden rounded-md bg-popover text-popover-foreground',
+        className
       )}
       {...props}
     />
-  )
-}
+  );
+};
 
-const CommandDialog = ({ children, ...props }: ComponentProps<typeof Dialog>) => {
+const CommandDialog = ({
+  children,
+  ...props
+}: ComponentProps<typeof Dialog>) => {
   return (
     <Dialog {...props}>
       <DialogTitle className="sr-only">Command Menu</DialogTitle>
@@ -31,75 +36,100 @@ const CommandDialog = ({ children, ...props }: ComponentProps<typeof Dialog>) =>
         </Command>
       </DialogContent>
     </Dialog>
-  )
-}
+  );
+};
 
-const CommandInput = ({ className, ...props }: ComponentProps<typeof CommandPrimitive.Input>) => {
+const CommandInput = ({
+  className,
+  ...props
+}: ComponentProps<typeof CommandPrimitive.Input>) => {
   return (
-    <div className="flex items-center gap-2 border-b px-3" cmdk-input-wrapper="">
+    <div
+      className="flex items-center gap-2 border-b px-3"
+      cmdk-input-wrapper=""
+    >
       <SearchIcon className="size-4 shrink-0 opacity-50" />
       <CommandPrimitive.Input
         className={cx(
-          "flex h-10 w-full rounded-md bg-transparent py-3 text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50",
-          className,
+          'flex h-10 w-full rounded-md bg-transparent py-3 text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50',
+          className
         )}
         {...props}
       />
     </div>
-  )
-}
+  );
+};
 
-const CommandList = ({ className, ...props }: ComponentProps<typeof CommandPrimitive.List>) => {
+const CommandList = ({
+  className,
+  ...props
+}: ComponentProps<typeof CommandPrimitive.List>) => {
   return (
     <ScrollArea>
-      <CommandPrimitive.List className={cx("max-h-72", className)} {...props} />
+      <CommandPrimitive.List className={cx('max-h-72', className)} {...props} />
     </ScrollArea>
-  )
-}
+  );
+};
 
 const CommandEmpty = (props: ComponentProps<typeof CommandPrimitive.Empty>) => {
-  return <CommandPrimitive.Empty className="py-6 text-center text-sm" {...props} />
-}
+  return (
+    <CommandPrimitive.Empty className="py-6 text-center text-sm" {...props} />
+  );
+};
 
-const CommandGroup = ({ className, ...props }: ComponentProps<typeof CommandPrimitive.Group>) => {
+const CommandGroup = ({
+  className,
+  ...props
+}: ComponentProps<typeof CommandPrimitive.Group>) => {
   return (
     <CommandPrimitive.Group
       className={cx(
-        "overflow-hidden p-1 text-foreground [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-1.5 [&_[cmdk-group-heading]]:text-xs [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-muted-foreground",
-        className,
+        'overflow-hidden p-1 text-foreground [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-1.5 [&_[cmdk-group-heading]]:text-xs [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-muted-foreground',
+        className
       )}
       {...props}
     />
-  )
-}
+  );
+};
 
 const CommandSeparator = ({
   className,
   ...props
 }: ComponentProps<typeof CommandPrimitive.Separator>) => {
-  return <CommandPrimitive.Separator className={cx("-mx-1 h-px bg-border", className)} {...props} />
-}
+  return (
+    <CommandPrimitive.Separator
+      className={cx('-mx-1 h-px bg-border', className)}
+      {...props}
+    />
+  );
+};
 
-const CommandItem = ({ className, ...props }: ComponentProps<typeof CommandPrimitive.Item>) => {
+const CommandItem = ({
+  className,
+  ...props
+}: ComponentProps<typeof CommandPrimitive.Item>) => {
   return (
     <CommandPrimitive.Item
       className={cx(
         "relative flex cursor-pointer select-none items-center rounded-sm px-2 py-1.5 scroll-m-2 text-sm outline-none aria-selected:bg-accent aria-selected:text-accent-foreground data-[disabled='true']:pointer-events-none data-[disabled='true']:opacity-50",
-        className,
+        className
       )}
       {...props}
     />
-  )
-}
+  );
+};
 
-const CommandShortcut = ({ className, ...props }: ComponentProps<"span">) => {
+const CommandShortcut = ({ className, ...props }: ComponentProps<'span'>) => {
   return (
     <span
-      className={cx("ml-auto text-xs tracking-widest text-accent-foreground", className)}
+      className={cx(
+        'ml-auto text-xs tracking-widest text-accent-foreground',
+        className
+      )}
       {...props}
     />
-  )
-}
+  );
+};
 
 export {
   Command,
@@ -111,4 +141,4 @@ export {
   CommandList,
   CommandSeparator,
   CommandShortcut,
-}
+};

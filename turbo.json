@@ -48,7 +48,13 @@
   "tasks": {
     "build": {
       "dependsOn": ["^db:generate"],
-      "outputs": ["dist/**", "build/**", ".next/**", "!.next/cache/**", "public/build/**"],
+      "outputs": [
+        "dist/**",
+        "build/**",
+        ".next/**",
+        "!.next/cache/**",
+        "public/build/**"
+      ],
       "cache": false
     },
     "dev": {

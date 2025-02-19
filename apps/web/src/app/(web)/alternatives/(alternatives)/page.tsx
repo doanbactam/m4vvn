@@ -1,22 +1,23 @@
-import type { Metadata } from "next"
-import type { SearchParams } from "nuqs/server"
-import { Suspense } from "react"
-import { AlternativeListing } from "~/app/(web)/alternatives/(alternatives)/listing"
-import { AlternativeQuerySkeleton } from "~/components/web/alternatives/alternative-query"
-import { Breadcrumbs } from "~/components/web/ui/breadcrumbs"
-import { Intro, IntroDescription, IntroTitle } from "~/components/web/ui/intro"
-import { metadataConfig } from "~/config/metadata"
+import type { Metadata } from 'next';
+import type { SearchParams } from 'nuqs/server';
+import { Suspense } from 'react';
+import { AlternativeListing } from '~/app/(web)/alternatives/(alternatives)/listing';
+import { AlternativeQuerySkeleton } from '~/components/web/alternatives/alternative-query';
+import { Breadcrumbs } from '~/components/web/ui/breadcrumbs';
+import { Intro, IntroDescription, IntroTitle } from '~/components/web/ui/intro';
+import { metadataConfig } from '~/config/metadata';
 
 type PageProps = {
-  searchParams: Promise<SearchParams>
-}
+  searchParams: Promise<SearchParams>;
+};
 
 export const metadata: Metadata = {
-  title: "Open Source Software Alternatives",
-  description: "Discover top open source alternatives to 275+ popular proprietary software tools.",
-  openGraph: { ...metadataConfig.openGraph, url: "/alternatives" },
-  alternates: { ...metadataConfig.alternates, canonical: "/alternatives" },
-}
+  title: 'Open Source Software Alternatives',
+  description:
+    'Discover top open source alternatives to 275+ popular proprietary software tools.',
+  openGraph: { ...metadataConfig.openGraph, url: '/alternatives' },
+  alternates: { ...metadataConfig.alternates, canonical: '/alternatives' },
+};
 
 export default function Alternatives({ searchParams }: PageProps) {
   return (
@@ -24,8 +25,8 @@ export default function Alternatives({ searchParams }: PageProps) {
       <Breadcrumbs
         items={[
           {
-            href: "/alternatives",
-            name: "Alternatives",
+            href: '/alternatives',
+            name: 'Alternatives',
           },
         ]}
       />
@@ -39,5 +40,5 @@ export default function Alternatives({ searchParams }: PageProps) {
         <AlternativeListing searchParams={searchParams} />
       </Suspense>
     </>
-  )
+  );
 }

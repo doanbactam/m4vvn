@@ -1,35 +1,45 @@
-"use client"
+'use client';
 
-import { EllipsisIcon, ShieldPlusIcon, SparklesIcon, TriangleAlertIcon } from "lucide-react"
-import Link from "next/link"
-import type { ComponentProps } from "react"
-import { useState } from "react"
-import { Button } from "~/components/common/button"
+import {
+  EllipsisIcon,
+  ShieldPlusIcon,
+  SparklesIcon,
+  TriangleAlertIcon,
+} from 'lucide-react';
+import Link from 'next/link';
+import type { ComponentProps } from 'react';
+import { useState } from 'react';
+import { Button } from '~/components/common/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "~/components/common/dropdown-menu"
-import { Stack } from "~/components/common/stack"
-import { TooltipProvider } from "~/components/common/tooltip"
-import { ToolClaimDialog } from "~/components/web/dialogs/tool-claim-dialog"
-import { ToolReportDialog } from "~/components/web/dialogs/tool-report-dialog"
-import { Beam } from "~/components/web/ui/beam"
-import { navLinkVariants } from "~/components/web/ui/nav-link"
-import { useSession } from "~/lib/auth-client"
-import type { ToolOne } from "~/server/web/tools/payloads"
-import { cx } from "~/utils/cva"
+} from '~/components/common/dropdown-menu';
+import { Stack } from '~/components/common/stack';
+import { TooltipProvider } from '~/components/common/tooltip';
+import { ToolClaimDialog } from '~/components/web/dialogs/tool-claim-dialog';
+import { ToolReportDialog } from '~/components/web/dialogs/tool-report-dialog';
+import { Beam } from '~/components/web/ui/beam';
+import { navLinkVariants } from '~/components/web/ui/nav-link';
+import { useSession } from '~/lib/auth-client';
+import type { ToolOne } from '~/server/web/tools/payloads';
+import { cx } from '~/utils/cva';
 
 type ToolActionsProps = ComponentProps<typeof Stack> & {
-  tool: ToolOne
-}
+  tool: ToolOne;
+};
 
-export const ToolActions = ({ tool, children, className, ...props }: ToolActionsProps) => {
-  const { data: session } = useSession()
+export const ToolActions = ({
+  tool,
+  children,
+  className,
+  ...props
+}: ToolActionsProps) => {
+  const { data: session } = useSession();
   // const [bookmarked, setBookmarked] = useOptimistic(isBookmarked)
-  const [isReportOpen, setIsReportOpen] = useState(false)
-  const [isClaimOpen, setIsClaimOpen] = useState(false)
+  const [isReportOpen, setIsReportOpen] = useState(false);
+  const [isClaimOpen, setIsClaimOpen] = useState(false);
 
   // const handleBookmark = async () => {
   //   startTransition(() => setBookmarked(!bookmarked))
@@ -38,15 +48,25 @@ export const ToolActions = ({ tool, children, className, ...props }: ToolActions
 
   return (
     <TooltipProvider delayDuration={250}>
-      <Stack size="sm" className={cx("flex-nowrap justify-end", className)} {...props}>
-        {!tool.isFeatured && tool.owner && tool.owner?.email === session?.user.email && (
-          <Button variant="secondary" prefix={<SparklesIcon className="text-yellow-500" />} asChild>
-            <Link href={`/submit/${tool.slug}`}>
-              Promote
-              <Beam />
-            </Link>
-          </Button>
-        )}
+      <Stack
+        size="sm"
+        className={cx('flex-nowrap justify-end', className)}
+        {...props}
+      >
+        {!tool.isFeatured &&
+          tool.owner &&
+          tool.owner?.email === session?.user.email && (
+            <Button
+              variant="secondary"
+              prefix={<SparklesIcon className="text-yellow-500" />}
+              asChild
+            >
+              <Link href={`/submit/${tool.slug}`}>
+                Promote
+                <Beam />
+              </Link>
+            </Button>
+          )}
 
         {!tool.owner && (
           <Button
@@ -88,11 +108,19 @@ export const ToolActions = ({ tool, children, className, ...props }: ToolActions
         {children}
       </Stack>
 
-      <ToolReportDialog tool={tool} isOpen={isReportOpen} setIsOpen={setIsReportOpen} />
+      <ToolReportDialog
+        tool={tool}
+        isOpen={isReportOpen}
+        setIsOpen={setIsReportOpen}
+      />
 
       {!tool.owner && (
-        <ToolClaimDialog tool={tool} isOpen={isClaimOpen} setIsOpen={setIsClaimOpen} />
+        <ToolClaimDialog
+          tool={tool}
+          isOpen={isClaimOpen}
+          setIsOpen={setIsClaimOpen}
+        />
       )}
     </TooltipProvider>
-  )
-}
+  );
+};

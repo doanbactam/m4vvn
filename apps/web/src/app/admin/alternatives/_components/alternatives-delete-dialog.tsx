@@ -1,11 +1,11 @@
-"use client"
+'use client';
 
-import type { Alternative } from "@openalternative/db/client"
-import { TrashIcon } from "lucide-react"
-import type * as React from "react"
-import { toast } from "sonner"
-import { useServerAction } from "zsa-react"
-import { Button } from "~/components/common/button"
+import type { Alternative } from '@openalternative/db/client';
+import { TrashIcon } from 'lucide-react';
+import type * as React from 'react';
+import { toast } from 'sonner';
+import { useServerAction } from 'zsa-react';
+import { Button } from '~/components/common/button';
 import {
   Dialog,
   DialogClose,
@@ -15,13 +15,14 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "~/components/common/dialog"
-import { deleteAlternatives } from "~/server/admin/alternatives/actions"
+} from '~/components/common/dialog';
+import { deleteAlternatives } from '~/server/admin/alternatives/actions';
 
-interface AlternativesDeleteDialogProps extends React.ComponentPropsWithoutRef<typeof Dialog> {
-  alternatives: Alternative[]
-  showTrigger?: boolean
-  onSuccess?: () => void
+interface AlternativesDeleteDialogProps
+  extends React.ComponentPropsWithoutRef<typeof Dialog> {
+  alternatives: Alternative[];
+  showTrigger?: boolean;
+  onSuccess?: () => void;
 }
 
 export const AlternativesDeleteDialog = ({
@@ -32,15 +33,15 @@ export const AlternativesDeleteDialog = ({
 }: AlternativesDeleteDialogProps) => {
   const { execute, isPending } = useServerAction(deleteAlternatives, {
     onSuccess: () => {
-      props.onOpenChange?.(false)
-      toast.success("Alternatives deleted")
-      onSuccess?.()
+      props.onOpenChange?.(false);
+      toast.success('Alternatives deleted');
+      onSuccess?.();
     },
 
     onError: ({ err }) => {
-      toast.error(err.message)
+      toast.error(err.message);
     },
-  })
+  });
 
   return (
     <Dialog {...props}>
@@ -56,9 +57,10 @@ export const AlternativesDeleteDialog = ({
         <DialogHeader>
           <DialogTitle>Are you absolutely sure?</DialogTitle>
           <DialogDescription>
-            This action cannot be undone. This will permanently delete your{" "}
+            This action cannot be undone. This will permanently delete your{' '}
             <span className="font-medium">{alternatives.length}</span>
-            {alternatives.length === 1 ? " alternative" : " alternatives"} from our servers.
+            {alternatives.length === 1 ? ' alternative' : ' alternatives'} from
+            our servers.
           </DialogDescription>
         </DialogHeader>
 
@@ -80,5 +82,5 @@ export const AlternativesDeleteDialog = ({
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  )
-}
+  );
+};

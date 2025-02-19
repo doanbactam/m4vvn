@@ -1,34 +1,34 @@
-"use server"
+'use server';
 
-import { db } from "@openalternative/db"
-import { z } from "zod"
-import { adminProcedure } from "~/lib/safe-actions"
+import { db } from '@openalternative/db';
+import { z } from 'zod';
+import { adminProcedure } from '~/lib/safe-actions';
 
 export const searchItems = adminProcedure
   .createServerAction()
   .input(z.object({ query: z.string() }))
   .handler(async ({ input: { query } }) => {
-    const start = performance.now()
+    const start = performance.now();
 
     const [tools, alternatives, categories] = await Promise.all([
       db.tool.findMany({
-        where: { name: { contains: query, mode: "insensitive" } },
-        orderBy: { name: "asc" },
+        where: { name: { contains: query, mode: 'insensitive' } },
+        orderBy: { name: 'asc' },
         take: 5,
       }),
       db.alternative.findMany({
-        where: { name: { contains: query, mode: "insensitive" } },
-        orderBy: { name: "asc" },
+        where: { name: { contains: query, mode: 'insensitive' } },
+        orderBy: { name: 'asc' },
         take: 5,
       }),
       db.category.findMany({
-        where: { name: { contains: query, mode: "insensitive" } },
-        orderBy: { name: "asc" },
+        where: { name: { contains: query, mode: 'insensitive' } },
+        orderBy: { name: 'asc' },
         take: 5,
       }),
-    ])
+    ]);
 
-    console.log("Admin search:", performance.now() - start)
+    console.log('Admin search:', performance.now() - start);
 
-    return { tools, alternatives, categories }
-  })
+    return { tools, alternatives, categories };
+  });

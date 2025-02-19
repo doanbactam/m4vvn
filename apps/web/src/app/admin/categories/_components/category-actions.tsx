@@ -1,24 +1,24 @@
-"use client"
+'use client';
 
-import type { Category } from "@openalternative/db/client"
-import { EllipsisIcon } from "lucide-react"
-import type { ComponentProps, Dispatch, SetStateAction } from "react"
-import { Button } from "~/components/common/button"
+import type { Category } from '@openalternative/db/client';
+import { EllipsisIcon } from 'lucide-react';
+import type { ComponentProps, Dispatch, SetStateAction } from 'react';
+import { Button } from '~/components/common/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "~/components/common/dropdown-menu"
-import { Link } from "~/components/common/link"
-import type { DataTableRowAction } from "~/types"
-import { cx } from "~/utils/cva"
+} from '~/components/common/dropdown-menu';
+import { Link } from '~/components/common/link';
+import type { DataTableRowAction } from '~/types';
+import { cx } from '~/utils/cva';
 
 type CategoryActionsProps = ComponentProps<typeof Button> & {
-  category: Category
-  setRowAction: Dispatch<SetStateAction<DataTableRowAction<Category> | null>>
-}
+  category: Category;
+  setRowAction: Dispatch<SetStateAction<DataTableRowAction<Category> | null>>;
+};
 
 export const CategoryActions = ({
   category,
@@ -34,7 +34,7 @@ export const CategoryActions = ({
           variant="secondary"
           size="sm"
           prefix={<EllipsisIcon />}
-          className={cx("data-[state=open]:bg-accent", className)}
+          className={cx('data-[state=open]:bg-accent', className)}
           {...props}
         />
       </DropdownMenuTrigger>
@@ -53,12 +53,12 @@ export const CategoryActions = ({
         <DropdownMenuSeparator />
 
         <DropdownMenuItem
-          onSelect={() => setRowAction({ data: category, type: "delete" })}
+          onSelect={() => setRowAction({ data: category, type: 'delete' })}
           className="text-red-500"
         >
           Delete
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
-  )
-}
+  );
+};

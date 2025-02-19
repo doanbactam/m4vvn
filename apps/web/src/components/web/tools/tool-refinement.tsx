@@ -1,4 +1,4 @@
-"use client"
+'use client';
 
 import {
   Command,
@@ -8,20 +8,20 @@ import {
   CommandItem,
   CommandList,
   CommandLoading,
-} from "cmdk"
-import type { ComponentProps } from "react"
-import { Badge } from "~/components/common/badge"
-import { useToolFilters } from "~/contexts/tool-filter-context"
-import type { FilterOption, FilterType } from "~/types/search"
-import { cx } from "~/utils/cva"
+} from 'cmdk';
+import type { ComponentProps } from 'react';
+import { Badge } from '~/components/common/badge';
+import { useToolFilters } from '~/contexts/tool-filter-context';
+import type { FilterOption, FilterType } from '~/types/search';
+import { cx } from '~/utils/cva';
 
-type ToolRefinementProps = Omit<ComponentProps<typeof Command>, "filter"> & {
-  filter: FilterType
-  items: FilterOption[]
-  isPending?: boolean
-  disabled?: boolean
-  defaultValue?: string
-}
+type ToolRefinementProps = Omit<ComponentProps<typeof Command>, 'filter'> & {
+  filter: FilterType;
+  items: FilterOption[];
+  isPending?: boolean;
+  disabled?: boolean;
+  defaultValue?: string;
+};
 
 export const ToolRefinement = ({
   filter,
@@ -32,13 +32,15 @@ export const ToolRefinement = ({
   className,
   ...props
 }: ToolRefinementProps) => {
-  const { getFilterValues, updateFilters } = useToolFilters()
-  const selectedValues = getFilterValues(filter)
+  const { getFilterValues, updateFilters } = useToolFilters();
+  const selectedValues = getFilterValues(filter);
 
   return (
     <Command
-      filter={(value, search) => (value.toLowerCase().includes(search.toLowerCase()) ? 1 : 0)}
-      className={cx("size-full border rounded-md", className)}
+      filter={(value, search) =>
+        value.toLowerCase().includes(search.toLowerCase()) ? 1 : 0
+      }
+      className={cx('size-full border rounded-md', className)}
       {...props}
     >
       <CommandInput
@@ -58,14 +60,15 @@ export const ToolRefinement = ({
               onSelect={() =>
                 updateFilters({
                   [filter]: selectedValues.includes(item.slug)
-                    ? selectedValues.filter(v => v !== item.slug)
+                    ? selectedValues.filter((v) => v !== item.slug)
                     : [...selectedValues, item.slug],
                 })
               }
               className={cx(
-                "flex items-center gap-2.5 select-none text-[13px] cursor-pointer text-secondary-foreground py-1 px-2 -mx-1 rounded-sm data-[selected=true]:bg-accent data-[selected=true]:text-foreground",
-                disabled && "opacity-50 pointer-events-none",
-                selectedValues.includes(item.slug) && "bg-accent text-foreground",
+                'flex items-center gap-2.5 select-none text-[13px] cursor-pointer text-secondary-foreground py-1 px-2 -mx-1 rounded-sm data-[selected=true]:bg-accent data-[selected=true]:text-foreground',
+                disabled && 'opacity-50 pointer-events-none',
+                selectedValues.includes(item.slug) &&
+                  'bg-accent text-foreground'
               )}
               disabled={disabled}
             >
@@ -88,9 +91,11 @@ export const ToolRefinement = ({
         )}
 
         {isPending && (
-          <CommandLoading className="px-1 text-sm text-muted-foreground">Loading...</CommandLoading>
+          <CommandLoading className="px-1 text-sm text-muted-foreground">
+            Loading...
+          </CommandLoading>
         )}
       </CommandList>
     </Command>
-  )
-}
+  );
+};

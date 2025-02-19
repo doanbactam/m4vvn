@@ -1,34 +1,39 @@
-"use client"
+'use client';
 
-import { formatDate } from "@curiousleaf/utils"
-import type { Alternative } from "@openalternative/db/client"
-import type { ColumnDef } from "@tanstack/react-table"
-import type { Dispatch, SetStateAction } from "react"
-import { AlternativeActions } from "~/app/admin/alternatives/_components/alternative-actions"
-import { DataTableColumnHeader } from "~/components/admin/data-table/data-table-column-header"
-import { DataTableLink } from "~/components/admin/data-table/data-table-link"
-import { DataTableThumbnail } from "~/components/admin/data-table/data-table-thumbnail"
-import type { DataTableRowAction } from "~/types"
+import { formatDate } from '@curiousleaf/utils';
+import type { Alternative } from '@openalternative/db/client';
+import type { ColumnDef } from '@tanstack/react-table';
+import type { Dispatch, SetStateAction } from 'react';
+import { AlternativeActions } from '~/app/admin/alternatives/_components/alternative-actions';
+import { DataTableColumnHeader } from '~/components/admin/data-table/data-table-column-header';
+import { DataTableLink } from '~/components/admin/data-table/data-table-link';
+import { DataTableThumbnail } from '~/components/admin/data-table/data-table-thumbnail';
+import type { DataTableRowAction } from '~/types';
 
 type GetColumnsProps = {
-  setRowAction: Dispatch<SetStateAction<DataTableRowAction<Alternative> | null>>
-}
+  setRowAction: Dispatch<
+    SetStateAction<DataTableRowAction<Alternative> | null>
+  >;
+};
 
-export const getColumns = ({ setRowAction }: GetColumnsProps): ColumnDef<Alternative>[] => {
+export const getColumns = ({
+  setRowAction,
+}: GetColumnsProps): ColumnDef<Alternative>[] => {
   return [
     {
-      id: "select",
+      id: 'select',
       header: ({ table }) => (
         <input
           type="checkbox"
           checked={table.getIsAllPageRowsSelected()}
-          ref={input => {
+          ref={(input) => {
             if (input) {
               input.indeterminate =
-                table.getIsSomePageRowsSelected() && !table.getIsAllPageRowsSelected()
+                table.getIsSomePageRowsSelected() &&
+                !table.getIsAllPageRowsSelected();
             }
           }}
-          onChange={e => table.toggleAllPageRowsSelected(e.target.checked)}
+          onChange={(e) => table.toggleAllPageRowsSelected(e.target.checked)}
           aria-label="Select all"
           className="translate-y-0.5 ml-1.5"
         />
@@ -37,7 +42,7 @@ export const getColumns = ({ setRowAction }: GetColumnsProps): ColumnDef<Alterna
         <input
           type="checkbox"
           checked={row.getIsSelected()}
-          onChange={e => row.toggleSelected(e.target.checked)}
+          onChange={(e) => row.toggleSelected(e.target.checked)}
           aria-label="Select row"
           className="translate-y-0.5 ml-1.5"
         />
@@ -47,33 +52,45 @@ export const getColumns = ({ setRowAction }: GetColumnsProps): ColumnDef<Alterna
       enableHiding: false,
     },
     {
-      accessorKey: "name",
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Name" />,
+      accessorKey: 'name',
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Name" />
+      ),
       cell: ({ row }) => (
         <DataTableLink href={`/admin/alternatives/${row.original.slug}`}>
-          {row.original.faviconUrl && <DataTableThumbnail src={row.original.faviconUrl} />}
-          {row.getValue("name")}
+          {row.original.faviconUrl && (
+            <DataTableThumbnail src={row.original.faviconUrl} />
+          )}
+          {row.getValue('name')}
         </DataTableLink>
       ),
     },
     {
-      accessorKey: "description",
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Description" />,
+      accessorKey: 'description',
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Description" />
+      ),
       cell: ({ row }) => (
-        <div className="max-w-96 truncate text-muted-foreground">{row.getValue("description")}</div>
+        <div className="max-w-96 truncate text-muted-foreground">
+          {row.getValue('description')}
+        </div>
       ),
       enableSorting: false,
     },
     {
-      accessorKey: "createdAt",
-      header: ({ column }) => <DataTableColumnHeader column={column} title="Created At" />,
+      accessorKey: 'createdAt',
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Created At" />
+      ),
       cell: ({ row }) => (
-        <span className="text-muted-foreground">{formatDate(row.getValue<Date>("createdAt"))}</span>
+        <span className="text-muted-foreground">
+          {formatDate(row.getValue<Date>('createdAt'))}
+        </span>
       ),
       size: 0,
     },
     {
-      id: "actions",
+      id: 'actions',
       cell: ({ row }) => (
         <AlternativeActions
           alternative={row.original}
@@ -83,5 +100,5 @@ export const getColumns = ({ setRowAction }: GetColumnsProps): ColumnDef<Alterna
       ),
       size: 0,
     },
-  ]
-}
+  ];
+};

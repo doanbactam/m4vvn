@@ -1,35 +1,44 @@
-"use client"
+'use client';
 
-import { type Values, useQueryStates } from "nuqs"
-import { type PropsWithChildren, createContext, use, useTransition } from "react"
-import { alternativesSearchParams } from "~/server/web/alternatives/search-params"
+import { type Values, useQueryStates } from 'nuqs';
+import {
+  type PropsWithChildren,
+  createContext,
+  use,
+  useTransition,
+} from 'react';
+import { alternativesSearchParams } from '~/server/web/alternatives/search-params';
 
 export type AlternativeFiltersContextType = {
-  filters: Values<typeof alternativesSearchParams>
-  isLoading: boolean
-  updateFilters: (values: Partial<Values<typeof alternativesSearchParams>>) => void
-}
+  filters: Values<typeof alternativesSearchParams>;
+  isLoading: boolean;
+  updateFilters: (
+    values: Partial<Values<typeof alternativesSearchParams>>
+  ) => void;
+};
 
-const AlternativeFiltersContext = createContext<AlternativeFiltersContextType | undefined>(
-  undefined,
-)
+const AlternativeFiltersContext = createContext<
+  AlternativeFiltersContextType | undefined
+>(undefined);
 
 const AlternativeFiltersProvider = ({ children }: PropsWithChildren) => {
-  const [isLoading, startTransition] = useTransition()
+  const [isLoading, startTransition] = useTransition();
 
   const [filters, setFilters] = useQueryStates(alternativesSearchParams, {
     shallow: false,
     throttleMs: 300,
     startTransition,
-  })
+  });
 
-  const updateFilters = (values: Partial<Values<typeof alternativesSearchParams>>) => {
-    setFilters(prev => ({
+  const updateFilters = (
+    values: Partial<Values<typeof alternativesSearchParams>>
+  ) => {
+    setFilters((prev) => ({
       ...prev,
       ...values,
       page: null,
-    }))
-  }
+    }));
+  };
 
   return (
     <AlternativeFiltersContext.Provider
@@ -41,17 +50,19 @@ const AlternativeFiltersProvider = ({ children }: PropsWithChildren) => {
     >
       {children}
     </AlternativeFiltersContext.Provider>
-  )
-}
+  );
+};
 
 const useAlternativeFilters = () => {
-  const context = use(AlternativeFiltersContext)
+  const context = use(AlternativeFiltersContext);
 
   if (context === undefined) {
-    throw new Error("useAlternativeFilter must be used within a AlternativeFilterProvider")
+    throw new Error(
+      'useAlternativeFilter must be used within a AlternativeFilterProvider'
+    );
   }
 
-  return context
-}
+  return context;
+};
 
-export { AlternativeFiltersProvider, useAlternativeFilters }
+export { AlternativeFiltersProvider, useAlternativeFilters };

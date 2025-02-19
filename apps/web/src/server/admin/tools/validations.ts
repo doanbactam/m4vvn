@@ -1,36 +1,39 @@
-import { type Tool, ToolStatus} from "@openalternative/db/client"
-import { PricingStatus } from "@prisma/client"; // Đảm bảo import từ Prisma
+import { type Tool, ToolStatus } from '@openalternative/db/client';
+import { PricingStatus } from '@prisma/client'; // Đảm bảo import từ Prisma
 import {
   createSearchParamsCache,
   parseAsArrayOf,
   parseAsInteger,
   parseAsString,
   parseAsStringEnum,
-} from "nuqs/server"
-import * as z from "zod"
-import { getSortingStateParser } from "~/lib/parsers"
-import { repositorySchema } from "~/server/schemas"
+} from 'nuqs/server';
+import * as z from 'zod';
+import { getSortingStateParser } from '~/lib/parsers';
+import { repositorySchema } from '~/server/schemas';
 
 export const searchParamsCache = createSearchParamsCache({
   page: parseAsInteger.withDefault(1),
   perPage: parseAsInteger.withDefault(25),
-  sort: getSortingStateParser<Tool>().withDefault([{ id: "createdAt", desc: true }]),
-  name: parseAsString.withDefault(""),
+  sort: getSortingStateParser<Tool>().withDefault([
+    { id: 'createdAt', desc: true },
+  ]),
+  name: parseAsString.withDefault(''),
   status: parseAsArrayOf(z.nativeEnum(ToolStatus)).withDefault([]),
   pricing: parseAsArrayOf(z.nativeEnum(PricingStatus)).withDefault([]),
-  from: parseAsString.withDefault(""),
-  to: parseAsString.withDefault(""),
-  operator: parseAsStringEnum(["and", "or"]).withDefault("and"),
-})
+  from: parseAsString.withDefault(''),
+  to: parseAsString.withDefault(''),
+  operator: parseAsStringEnum(['and', 'or']).withDefault('and'),
+});
 
-export type GetToolsSchema = Awaited<ReturnType<typeof searchParamsCache.parse>>
+export type GetToolsSchema = Awaited<
+  ReturnType<typeof searchParamsCache.parse>
+>;
 
 export const toolSchema = z.object({
-  name: z.string().min(1, "Name is required"),
+  name: z.string().min(1, 'Name is required'),
   slug: z.string().optional(),
-  websiteUrl: z.string().min(1, "Website is required").url(),
-  affiliateUrl: z.string().url().optional().or(z.literal("")).default(""),
-  repositoryUrl: repositorySchema,
+  websiteUrl: z.string().min(1, 'Website is required').url(),
+  affiliateUrl: z.string().url().optional().or(z.literal('')).default(''),
   tagline: z.string().optional(),
   description: z.string().optional(),
   content: z.string().optional(),
@@ -41,24 +44,35 @@ export const toolSchema = z.object({
   submitterName: z.string().optional(),
   submitterEmail: z.string().optional(),
   submitterNote: z.string().optional(),
-  hostingUrl: z.string().url().optional().or(z.literal("")),
-  pricingType: z.nativeEnum(PricingStatus)
-  .default(PricingStatus.Free)
-  .refine(val => Object.values(PricingStatus).includes(val), {
-    message: "Invalid pricing type",
-  }),
+  hostingUrl: z.string().url().optional().or(z.literal('')),
+  pricingType: z
+    .nativeEnum(PricingStatus)
+    .default(PricingStatus.Free)
+    .refine((val) => Object.values(PricingStatus).includes(val), {
+      message: 'Invalid pricing type',
+    }),
 
-  priceRange: z.string().optional().default("").refine(val => {
-    return val === "" || /^\$?\d+(\.\d{1,2})?\s*-\s*\$?\d+(\.\d{1,2})?$/.test(val);
-  }, {
-    message: "Invalid price range format. Use format: $10 - $50"
-  }),
+  priceRange: z
+    .string()
+    .optional()
+    .default('')
+    .refine(
+      (val) => {
+        return (
+          val === '' ||
+          /^\$?\d+(\.\d{1,2})?\s*-\s*\$?\d+(\.\d{1,2})?$/.test(val)
+        );
+      },
+      {
+        message: 'Invalid price range format. Use format: $10 - $50',
+      }
+    ),
   discountCode: z.string().optional(),
   discountAmount: z.string().optional(),
   publishedAt: z.coerce.date().nullish(),
-  status: z.nativeEnum(ToolStatus).default("Draft"),
+  status: z.nativeEnum(ToolStatus).default('Draft'),
   alternatives: z.array(z.string()).optional(),
   categories: z.array(z.string()).optional(),
-})
+});
 
-export type ToolSchema = z.infer<typeof toolSchema>
+export type ToolSchema = z.infer<typeof toolSchema>;

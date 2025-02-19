@@ -1,96 +1,96 @@
-import { ArrowUpRightIcon, HashIcon } from "lucide-react"
-import type { Metadata } from "next"
-import Image from "next/image"
-import { notFound } from "next/navigation"
-import { Suspense, cache } from "react"
-import type { ImageObject } from "schema-dts"
-import { FeaturedTools } from "~/app/(web)/[slug]/featured-tools"
-import { RelatedTools } from "~/app/(web)/[slug]/related-tools"
-import { Button } from "~/components/common/button"
-import { H1, H4, H5 } from "~/components/common/heading"
-import { Stack } from "~/components/common/stack"
-import { AdCard, AdCardSkeleton } from "~/components/web/ads/ad-card"
-import { ExternalLink } from "~/components/web/external-link"
-import { Listing } from "~/components/web/listing"
-import { Markdown } from "~/components/web/markdown"
-import { RepositoryDetails } from "~/components/web/repository-details"
-import { ShareButtons } from "~/components/web/share-buttons"
-import { ToolActions } from "~/components/web/tools/tool-actions"
-import { ToolAlternatives } from "~/components/web/tools/tool-alternatives"
-import { ToolListSkeleton } from "~/components/web/tools/tool-list"
-import { Breadcrumbs } from "~/components/web/ui/breadcrumbs"
-import { FaviconImage } from "~/components/web/ui/favicon"
-import { IntroDescription } from "~/components/web/ui/intro"
-import { Section } from "~/components/web/ui/section"
-import { Tag } from "~/components/web/ui/tag"
-import { metadataConfig } from "~/config/metadata"
-import { getToolSuffix } from "~/lib/tools"
-import type { ToolOne } from "~/server/web/tools/payloads"
-import { findTool, findToolSlugs } from "~/server/web/tools/queries"
+import { ArrowUpRightIcon, HashIcon } from 'lucide-react';
+import type { Metadata } from 'next';
+import Image from 'next/image';
+import { notFound } from 'next/navigation';
+import { Suspense, cache } from 'react';
+import type { ImageObject } from 'schema-dts';
+import { FeaturedTools } from '~/app/(web)/[slug]/featured-tools';
+import { RelatedTools } from '~/app/(web)/[slug]/related-tools';
+import { Button } from '~/components/common/button';
+import { H1, H4, H5 } from '~/components/common/heading';
+import { Stack } from '~/components/common/stack';
+import { AdCard, AdCardSkeleton } from '~/components/web/ads/ad-card';
+import { ExternalLink } from '~/components/web/external-link';
+import { Listing } from '~/components/web/listing';
+import { Markdown } from '~/components/web/markdown';
+import { RepositoryDetails } from '~/components/web/repository-details';
+import { ShareButtons } from '~/components/web/share-buttons';
+import { ToolActions } from '~/components/web/tools/tool-actions';
+import { ToolAlternatives } from '~/components/web/tools/tool-alternatives';
+import { ToolListSkeleton } from '~/components/web/tools/tool-list';
+import { Breadcrumbs } from '~/components/web/ui/breadcrumbs';
+import { FaviconImage } from '~/components/web/ui/favicon';
+import { IntroDescription } from '~/components/web/ui/intro';
+import { Section } from '~/components/web/ui/section';
+import { Tag } from '~/components/web/ui/tag';
+import { metadataConfig } from '~/config/metadata';
+import { getToolSuffix } from '~/lib/tools';
+import type { ToolOne } from '~/server/web/tools/payloads';
+import { findTool, findToolSlugs } from '~/server/web/tools/queries';
 
 type PageProps = {
-  params: Promise<{ slug: string }>
-}
+  params: Promise<{ slug: string }>;
+};
 
 const getTool = cache(async ({ params }: PageProps) => {
-  const { slug } = await params
-  const tool = await findTool({ where: { slug } })
+  const { slug } = await params;
+  const tool = await findTool({ where: { slug } });
 
   if (!tool) {
-    notFound()
+    notFound();
   }
 
-  return tool
-})
+  return tool;
+});
 
 const getMetadata = (tool: ToolOne): Metadata => {
   return {
     title: `${tool.name}: ${getToolSuffix(tool)}`,
     description: tool.description,
-  }
-}
+  };
+};
 
 export const generateStaticParams = async () => {
-  const tools = await findToolSlugs({})
-  return tools.map(({ slug }) => ({ slug }))
-}
+  const tools = await findToolSlugs({});
+  return tools.map(({ slug }) => ({ slug }));
+};
 
 export const generateMetadata = async (props: PageProps): Promise<Metadata> => {
-  const tool = await getTool(props)
-  const url = `/${tool.slug}`
+  const tool = await getTool(props);
+  const url = `/${tool.slug}`;
 
   return {
     ...getMetadata(tool),
     alternates: { ...metadataConfig.alternates, canonical: url },
-    openGraph: { url, type: "website" },
-  }
-}
+    openGraph: { url, type: 'website' },
+  };
+};
 
 export default async function ToolPage(props: PageProps) {
-  const tool = await getTool(props)
-  const { title } = getMetadata(tool)
-  const jsonLd: ImageObject[] = []
+  const tool = await getTool(props);
+  const { title } = getMetadata(tool);
+  const jsonLd: ImageObject[] = [];
 
   if (tool.screenshotUrl) {
     jsonLd.push({
-      "@type": "ImageObject",
+      '@type': 'ImageObject',
       url: tool.screenshotUrl,
       contentUrl: tool.screenshotUrl,
-      width: "1280",
-      height: "720",
+      width: '1280',
+      height: '720',
       caption: `A screenshot of ${tool.name}`,
-    })
+    });
   }
 
   if (tool.faviconUrl) {
     jsonLd.push({
-      "@type": "ImageObject",
+      '@type': 'ImageObject',
       url: tool.faviconUrl,
       contentUrl: tool.faviconUrl,
-      width: "144",
-      height: "144",
+      width: '144',
+      height: '144',
       caption: `A favicon of ${tool.name}`,
-    })
+    });
   }
 
   return (
@@ -98,8 +98,8 @@ export default async function ToolPage(props: PageProps) {
       <Breadcrumbs
         items={[
           {
-            href: "/#tools",
-            name: "Open Source Tools",
+            href: '/#tools',
+            name: 'Open Source Tools',
           },
           {
             href: `/${tool.slug}`,
@@ -123,16 +123,22 @@ export default async function ToolPage(props: PageProps) {
                   <ToolActions tool={tool} />
                 </Stack>
 
-                {tool.description && <IntroDescription>{tool.description}</IntroDescription>}
+                {tool.description && (
+                  <IntroDescription>{tool.description}</IntroDescription>
+                )}
               </div>
 
               <ToolAlternatives alternatives={tool.alternatives} />
 
               <Stack className="w-full">
-                <Button suffix={<ArrowUpRightIcon />} className="sm:min-w-36" asChild>
+                <Button
+                  suffix={<ArrowUpRightIcon />}
+                  className="sm:min-w-36"
+                  asChild
+                >
                   <ExternalLink
                     href={tool.affiliateUrl || tool.websiteUrl}
-                    rel={tool.isFeatured ? "noopener noreferrer" : undefined}
+                    rel={tool.isFeatured ? 'noopener noreferrer' : undefined}
                     eventName="click_website"
                     eventProps={{ url: tool.websiteUrl }}
                   >
@@ -141,11 +147,15 @@ export default async function ToolPage(props: PageProps) {
                 </Button>
 
                 {tool.hostingUrl && (
-                  <Button variant="secondary" suffix={<ArrowUpRightIcon />} asChild>
+                  <Button
+                    variant="secondary"
+                    suffix={<ArrowUpRightIcon />}
+                    asChild
+                  >
                     <ExternalLink
                       href={tool.hostingUrl}
                       eventName="click_ad"
-                      eventProps={{ url: tool.hostingUrl, type: "ToolPage" }}
+                      eventProps={{ url: tool.hostingUrl, type: 'ToolPage' }}
                     >
                       Self-host with Easypanel
                     </ExternalLink>
@@ -174,16 +184,26 @@ export default async function ToolPage(props: PageProps) {
               />
             )}
 
-            {tool.content && <Markdown code={tool.content} className="max-md:order-5" />}
+            {tool.content && (
+              <Markdown code={tool.content} className="max-md:order-5" />
+            )}
 
             {/* Categories */}
             {!!tool.categories.length && (
-              <Stack size="lg" direction="column" className="w-full max-md:order-7">
+              <Stack
+                size="lg"
+                direction="column"
+                className="w-full max-md:order-7"
+              >
                 <H5 as="strong">Categories:</H5>
 
                 <Stack>
                   {tool.categories?.map(({ slug, name }) => (
-                    <Tag key={slug} href={`/categories/${slug}`} prefix={<HashIcon />}>
+                    <Tag
+                      key={slug}
+                      href={`/categories/${slug}`}
+                      prefix={<HashIcon />}
+                    >
                       {name}
                     </Tag>
                   ))}
@@ -193,12 +213,20 @@ export default async function ToolPage(props: PageProps) {
 
             {/* Topics */}
             {!!tool.topics.length && (
-              <Stack size="lg" direction="column" className="w-full max-md:order-8">
+              <Stack
+                size="lg"
+                direction="column"
+                className="w-full max-md:order-8"
+              >
                 <H5 as="strong">Related topics:</H5>
 
                 <Stack>
                   {tool.topics.map(({ slug }) => (
-                    <Tag key={slug} href={`/topics/${slug}`} prefix={<HashIcon />}>
+                    <Tag
+                      key={slug}
+                      href={`/topics/${slug}`}
+                      prefix={<HashIcon />}
+                    >
                       {slug}
                     </Tag>
                   ))}
@@ -227,7 +255,9 @@ export default async function ToolPage(props: PageProps) {
         {/* Related */}
         <Suspense
           fallback={
-            <Listing title={`Open source alternatives similar to ${tool.name}:`}>
+            <Listing
+              title={`Open source alternatives similar to ${tool.name}:`}
+            >
               <ToolListSkeleton count={3} />
             </Listing>
           }
@@ -242,5 +272,5 @@ export default async function ToolPage(props: PageProps) {
         />
       </div>
     </>
-  )
+  );
 }

@@ -1,23 +1,31 @@
-"use client"
+'use client';
 
-import type { ComponentProps } from "react"
-import { Stack } from "~/components/common/stack"
-import { Button, type ButtonProps } from "~/components/common/button"
-import { type InlineMenuItem, useInlineMenu } from "~/hooks/use-inline-menu"
-import { cx } from "~/utils/cva"
+import type { ComponentProps } from 'react';
+import { Stack } from '~/components/common/stack';
+import { Button, type ButtonProps } from '~/components/common/button';
+import { type InlineMenuItem, useInlineMenu } from '~/hooks/use-inline-menu';
+import { cx } from '~/utils/cva';
 
 type InlineMenuProps = ComponentProps<typeof Stack> & {
-  items: (InlineMenuItem & ButtonProps)[]
-}
+  items: (InlineMenuItem & ButtonProps)[];
+};
 
-export const InlineMenu = ({ children, className, items, ...props }: InlineMenuProps) => {
-  const activeId = useInlineMenu(items)
+export const InlineMenu = ({
+  children,
+  className,
+  items,
+  ...props
+}: InlineMenuProps) => {
+  const activeId = useInlineMenu(items);
 
   return (
     <Stack
       size="xs"
       direction="column"
-      className={cx("items-stretch overflow-y-auto overscroll-contain scroll-smooth", className)}
+      className={cx(
+        'items-stretch overflow-y-auto overscroll-contain scroll-smooth',
+        className
+      )}
       asChild
       {...props}
     >
@@ -27,14 +35,14 @@ export const InlineMenu = ({ children, className, items, ...props }: InlineMenuP
             key={id}
             variant="ghost"
             className={cx(
-              "ring-0!",
+              'ring-0!',
               activeId === id
-                ? "bg-accent text-foreground"
-                : "text-muted-foreground font-normal hover:text-foreground",
+                ? 'bg-accent text-foreground'
+                : 'text-muted-foreground font-normal hover:text-foreground'
             )}
-            onClick={e => {
-              e.preventDefault()
-              document.querySelector(`#${id}`)?.scrollIntoView()
+            onClick={(e) => {
+              e.preventDefault();
+              document.querySelector(`#${id}`)?.scrollIntoView();
             }}
             {...props}
             asChild
@@ -46,5 +54,5 @@ export const InlineMenu = ({ children, className, items, ...props }: InlineMenuP
         {children}
       </nav>
     </Stack>
-  )
-}
+  );
+};

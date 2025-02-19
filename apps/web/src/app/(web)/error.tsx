@@ -1,22 +1,22 @@
-"use client"
+'use client';
 
-import { useEffect } from "react"
-import { Link } from "~/components/common/link"
-import { Button } from "~/components/common/button"
-import { Intro, IntroTitle } from "~/components/web/ui/intro"
-import { Prose } from "~/components/web/ui/prose"
-import { config } from "~/config"
+import { useEffect } from 'react';
+import { Link } from '~/components/common/link';
+import { Button } from '~/components/common/button';
+import { Intro, IntroTitle } from '~/components/web/ui/intro';
+import { Prose } from '~/components/web/ui/prose';
+import { config } from '~/config';
 
 type ErrorProps = {
-  error: Error & { digest?: string }
-  reset: () => void
-}
+  error: Error & { digest?: string };
+  reset: () => void;
+};
 
 export default function Error({ error, reset }: ErrorProps) {
   useEffect(() => {
     // Log the error to an error reporting service
-    console.error(error)
-  }, [error])
+    console.error(error);
+  }, [error]);
 
   return (
     <Intro>
@@ -24,7 +24,7 @@ export default function Error({ error, reset }: ErrorProps) {
 
       <Prose>
         <p>
-          Please try again. If the problem persists, contact support at{" "}
+          Please try again. If the problem persists, contact support at{' '}
           <Link href={`mailto:${config.site.email}`}>{config.site.email}</Link>.
         </p>
       </Prose>
@@ -33,5 +33,5 @@ export default function Error({ error, reset }: ErrorProps) {
         Try again
       </Button>
     </Intro>
-  )
+  );
 }

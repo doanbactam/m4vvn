@@ -1,15 +1,16 @@
-"use client"
+'use client';
 
-import { getCurrentPage, getPageLink } from "@curiousleaf/utils"
-import { MoveLeftIcon, MoveRightIcon } from "lucide-react"
-import { usePathname, useSearchParams } from "next/navigation"
-import { type ComponentProps, useMemo } from "react"
-import { PaginationLink } from "~/components/web/pagination-link"
-import { navLinkVariants } from "~/components/web/ui/nav-link"
-import { type UsePaginationProps, usePagination } from "~/hooks/use-pagination"
-import { cx } from "~/utils/cva"
+import { getCurrentPage, getPageLink } from '@curiousleaf/utils';
+import { MoveLeftIcon, MoveRightIcon } from 'lucide-react';
+import { usePathname, useSearchParams } from 'next/navigation';
+import { type ComponentProps, useMemo } from 'react';
+import { PaginationLink } from '~/components/web/pagination-link';
+import { navLinkVariants } from '~/components/web/ui/nav-link';
+import { type UsePaginationProps, usePagination } from '~/hooks/use-pagination';
+import { cx } from '~/utils/cva';
 
-export type PaginationProps = ComponentProps<"nav"> & Omit<UsePaginationProps, "currentPage">
+export type PaginationProps = ComponentProps<'nav'> &
+  Omit<UsePaginationProps, 'currentPage'>;
 
 export const Pagination = ({
   className,
@@ -18,26 +19,32 @@ export const Pagination = ({
   siblingCount,
   ...props
 }: PaginationProps) => {
-  const pathname = usePathname()
-  const searchParams = useSearchParams()
-  const params = new URLSearchParams(searchParams)
-  const currentPage = useMemo(() => getCurrentPage(params.get("page")), [params])
-  const pageCount = Math.ceil(totalCount / pageSize)
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const params = new URLSearchParams(searchParams);
+  const currentPage = useMemo(
+    () => getCurrentPage(params.get('page')),
+    [params]
+  );
+  const pageCount = Math.ceil(totalCount / pageSize);
 
   const paginationRange = usePagination({
     currentPage,
     totalCount,
     pageSize,
     siblingCount,
-  })
+  });
 
   if (paginationRange.length <= 1) {
-    return null
+    return null;
   }
 
   return (
     <nav
-      className={cx("-mt-px flex w-full items-start justify-between md:w-auto", className)}
+      className={cx(
+        '-mt-px flex w-full items-start justify-between md:w-auto',
+        className
+      )}
       {...props}
     >
       <PaginationLink
@@ -58,9 +65,11 @@ export const Pagination = ({
 
         {paginationRange.map((page, index) => (
           <div key={`page-${index}`}>
-            {typeof page === "string" && <span className={navLinkVariants()}>{page}</span>}
+            {typeof page === 'string' && (
+              <span className={navLinkVariants()}>{page}</span>
+            )}
 
-            {typeof page === "number" && (
+            {typeof page === 'number' && (
               <PaginationLink
                 href={getPageLink(params, pathname, page)}
                 isActive={currentPage === page}
@@ -82,5 +91,5 @@ export const Pagination = ({
         next
       </PaginationLink>
     </nav>
-  )
-}
+  );
+};

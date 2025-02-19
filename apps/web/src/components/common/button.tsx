@@ -102,7 +102,7 @@ const Button = ({
               <span className="flex-1 truncate only:text-center has-[div]:contents">{child}</span>
             )}
 
-<Slot.Root className={buttonAffixVariants()}>{prefix}</Slot.Root>
+            <Slot.Root className={buttonAffixVariants()}>{suffix}</Slot.Root>
 
             {!!isPending && <LoaderIcon className="absolute size-[1.25em] animate-spin" />}
           </>

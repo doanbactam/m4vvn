@@ -1,9 +1,9 @@
-import { DeleteObjectCommand, ListObjectsV2Command } from "@aws-sdk/client-s3"
-import { Upload } from "@aws-sdk/lib-storage"
-import { stripURLSubpath } from "@curiousleaf/utils"
-import wretch from "wretch"
-import { env } from "~/env"
-import { s3Client } from "~/services/s3"
+import { DeleteObjectCommand, ListObjectsV2Command } from '@aws-sdk/client-s3';
+import { Upload } from '@aws-sdk/lib-storage';
+import { stripURLSubpath } from '@curiousleaf/utils';
+import wretch from 'wretch';
+import { env } from '~/env';
+import { s3Client } from '~/services/s3';
 
 /**
  * Uploads a file to S3 and returns the S3 location.
@@ -12,7 +12,7 @@ import { s3Client } from "~/services/s3"
  * @returns The S3 location of the uploaded file.
  */
 export const uploadToS3Storage = async (file: Buffer, key: string) => {
-  const timestamp = Date.now()
+  const timestamp = Date.now();
 
   const upload = new Upload({
     client: s3Client,
@@ -20,21 +20,21 @@ export const uploadToS3Storage = async (file: Buffer, key: string) => {
       Bucket: env.S3_BUCKET,
       Key: key,
       Body: file,
-      StorageClass: "STANDARD",
+      StorageClass: 'STANDARD',
     },
     queueSize: 4,
     partSize: 1024 * 1024 * 5,
     leavePartsOnError: false,
-  })
+  });
 
-  const result = await upload.done()
+  const result = await upload.done();
 
   if (!result.Location) {
-    throw new Error("Failed to upload")
+    throw new Error('Failed to upload');
   }
 
-  return `https://${env.S3_BUCKET}.s3.${env.S3_REGION}.amazonaws.com/${result.Key}?v=${timestamp}`
-}
+  return `https://${env.S3_BUCKET}.s3.${env.S3_REGION}.amazonaws.com/${result.Key}?v=${timestamp}`;
+};
 
 /**
  * Removes a directory from S3.
@@ -44,21 +44,21 @@ export const removeS3Directory = async (directory: string) => {
   const listCommand = new ListObjectsV2Command({
     Bucket: env.S3_BUCKET,
     Prefix: `${directory}/`,
-  })
+  });
 
-  let continuationToken: string | undefined
+  let continuationToken: string | undefined;
 
   do {
-    const listResponse = await s3Client.send(listCommand)
+    const listResponse = await s3Client.send(listCommand);
     for (const object of listResponse.Contents || []) {
       if (object.Key) {
-        await removeS3File(object.Key)
+        await removeS3File(object.Key);
       }
     }
-    continuationToken = listResponse.NextContinuationToken
-    listCommand.input.ContinuationToken = continuationToken
-  } while (continuationToken)
-}
+    continuationToken = listResponse.NextContinuationToken;
+    listCommand.input.ContinuationToken = continuationToken;
+  } while (continuationToken);
+};
 
 /**
  * Removes a file from S3.
@@ -68,10 +68,10 @@ export const removeS3File = async (key: string) => {
   const deleteCommand = new DeleteObjectCommand({
     Bucket: env.S3_BUCKET,
     Key: key,
-  })
+  });
 
-  return await s3Client.send(deleteCommand)
-}
+  return await s3Client.send(deleteCommand);
+};
 
 /**
  * Uploads a favicon to S3 and returns the S3 location.
@@ -79,26 +79,29 @@ export const removeS3File = async (key: string) => {
  * @param s3Key - The S3 key to upload the favicon to.
  * @returns The S3 location of the uploaded favicon.
  */
-export const uploadFavicon = async (url: string, s3Key: string): Promise<string | null> => {
-  const cleanedUrl = encodeURIComponent(stripURLSubpath(url) ?? "")
-  const faviconUrl = `https://www.google.com/s2/favicons?sz=128&domain_url=${cleanedUrl}`
+export const uploadFavicon = async (
+  url: string,
+  s3Key: string
+): Promise<string | null> => {
+  const cleanedUrl = encodeURIComponent(stripURLSubpath(url) ?? '');
+  const faviconUrl = `https://www.google.com/s2/favicons?sz=128&domain_url=${cleanedUrl}`;
 
   try {
     const fileBuffer = await wretch(faviconUrl)
       .get()
       .badRequest(console.error)
       .arrayBuffer()
-      .then(buffer => Buffer.from(buffer))
+      .then((buffer) => Buffer.from(buffer));
 
     // Upload to S3
-    const s3Location = await uploadToS3Storage(fileBuffer, `${s3Key}.png`)
+    const s3Location = await uploadToS3Storage(fileBuffer, `${s3Key}.png`);
 
-    return s3Location
+    return s3Location;
   } catch (error) {
-    console.error("Error fetching or uploading favicon:", error)
-    return null
+    console.error('Error fetching or uploading favicon:', error);
+    return null;
   }
-}
+};
 
 /**
  * Uploads a screenshot to S3 and returns the S3 location.
@@ -106,48 +109,53 @@ export const uploadFavicon = async (url: string, s3Key: string): Promise<string 
  * @param s3Key - The S3 key to upload the screenshot to.
  * @returns The S3 location of the uploaded screenshot.
  */
-export const uploadScreenshot = async (url: string, s3Key: string): Promise<string> => {
+export const uploadScreenshot = async (
+  url: string,
+  s3Key: string
+): Promise<string> => {
   const queryParams = new URLSearchParams({
     url,
     access_key: env.SCREENSHOTONE_ACCESS_KEY,
-    response_type: "json",
+    response_type: 'json',
 
     // Cache
-    cache: "true",
-    cache_ttl: "2592000",
+    cache: 'true',
+    cache_ttl: '2592000',
 
     // Emulations
-    dark_mode: "true",
-    reduced_motion: "true",
+    dark_mode: 'true',
+    reduced_motion: 'true',
 
     // Blockers
-    delay: "3",
-    block_ads: "true",
-    block_chats: "true",
-    block_trackers: "true",
-    block_cookie_banners: "true",
+    delay: '3',
+    block_ads: 'true',
+    block_chats: 'true',
+    block_trackers: 'true',
+    block_cookie_banners: 'true',
 
     // Image and viewport options
-    format: "webp",
-    viewport_width: "1280",
-    viewport_height: "720",
+    format: 'webp',
+    viewport_width: '1280',
+    viewport_height: '720',
 
     // Storage options
-    store: "true",
+    store: 'true',
     storage_path: s3Key,
     storage_bucket: env.S3_BUCKET,
     storage_access_key_id: env.S3_ACCESS_KEY,
     storage_secret_access_key: env.S3_SECRET_ACCESS_KEY,
-    storage_return_location: "true",
-  })
+    storage_return_location: 'true',
+  });
 
   try {
-    const endpointUrl = `https://api.screenshotone.com/take?${queryParams.toString()}`
-    const { store } = await wretch(endpointUrl).get().json<{ store: { location: string } }>()
+    const endpointUrl = `https://api.screenshotone.com/take?${queryParams.toString()}`;
+    const { store } = await wretch(endpointUrl)
+      .get()
+      .json<{ store: { location: string } }>();
 
-    return store.location
+    return store.location;
   } catch (error) {
-    console.error("Error fetching screenshot:", error)
-    throw error
+    console.error('Error fetching screenshot:', error);
+    throw error;
   }
-}
+};

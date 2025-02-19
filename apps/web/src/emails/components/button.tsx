@@ -1,4 +1,4 @@
-import { Button, type ButtonProps, Section } from "@react-email/components"
+import { Button, type ButtonProps, Section } from '@react-email/components';
 
 export const EmailButton = ({ children, ...props }: ButtonProps) => {
   return (
@@ -10,5 +10,5 @@ export const EmailButton = ({ children, ...props }: ButtonProps) => {
         {children}
       </Button>
     </Section>
-  )
-}
+  );
+};

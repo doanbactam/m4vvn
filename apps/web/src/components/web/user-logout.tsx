@@ -1,26 +1,29 @@
-"use client"
+'use client';
 
-import { LogOutIcon } from "lucide-react"
-import { useRouter } from "next/navigation"
-import type { HTMLAttributes } from "react"
-import { toast } from "sonner"
-import { navLinkVariants } from "~/components/web/ui/nav-link"
-import { signOut } from "~/lib/auth-client"
-import { cx } from "~/utils/cva"
+import { LogOutIcon } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import type { HTMLAttributes } from 'react';
+import { toast } from 'sonner';
+import { navLinkVariants } from '~/components/web/ui/nav-link';
+import { signOut } from '~/lib/auth-client';
+import { cx } from '~/utils/cva';
 
-export const UserLogout = ({ className, ...props }: HTMLAttributes<HTMLButtonElement>) => {
-  const router = useRouter()
+export const UserLogout = ({
+  className,
+  ...props
+}: HTMLAttributes<HTMLButtonElement>) => {
+  const router = useRouter();
 
   const handleSignOut = async () => {
     signOut({
       fetchOptions: {
         onSuccess: () => {
-          router.refresh()
-          toast.success("You've been signed out successfully")
+          router.refresh();
+          toast.success("You've been signed out successfully");
         },
       },
-    })
-  }
+    });
+  };
 
   return (
     <button
@@ -32,5 +35,5 @@ export const UserLogout = ({ className, ...props }: HTMLAttributes<HTMLButtonEle
       <LogOutIcon className="shrink-0 size-4 opacity-75" />
       Logout
     </button>
-  )
-}
+  );
+};

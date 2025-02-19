@@ -1,7 +1,7 @@
-import { type Table as TanstackTable, flexRender } from "@tanstack/react-table"
-import type * as React from "react"
-import type { ComponentProps } from "react"
-import { DataTablePagination } from "~/components/admin/data-table/data-table-pagination"
+import { type Table as TanstackTable, flexRender } from '@tanstack/react-table';
+import type * as React from 'react';
+import type { ComponentProps } from 'react';
+import { DataTablePagination } from '~/components/admin/data-table/data-table-pagination';
 import {
   Table,
   TableBody,
@@ -9,16 +9,16 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "~/components/common/table"
-import { getColumnPinningStyle } from "~/lib/data-table"
-import { cx } from "~/utils/cva"
+} from '~/components/common/table';
+import { getColumnPinningStyle } from '~/lib/data-table';
+import { cx } from '~/utils/cva';
 
-type DataTableProps<TData> = ComponentProps<"div"> & {
+type DataTableProps<TData> = ComponentProps<'div'> & {
   /**
    * The table instance returned from useDataTable hook with pagination, sorting, filtering, etc.
    * @type TanstackTable<TData>
    */
-  table: TanstackTable<TData>
+  table: TanstackTable<TData>;
 
   /**
    * The floating bar to render at the bottom of the table on row selection.
@@ -26,8 +26,8 @@ type DataTableProps<TData> = ComponentProps<"div"> & {
    * @type React.ReactNode | null
    * @example floatingBar={<TasksTableFloatingBar table={table} />}
    */
-  floatingBar?: React.ReactNode | null
-}
+  floatingBar?: React.ReactNode | null;
+};
 
 export function DataTable<TData>({
   table,
@@ -40,12 +40,15 @@ export function DataTable<TData>({
     <>
       {children}
 
-      <div className={cx("overflow-hidden rounded-md border", className)} {...props}>
+      <div
+        className={cx('overflow-hidden rounded-md border', className)}
+        {...props}
+      >
         <Table>
           <TableHeader>
-            {table.getHeaderGroups().map(headerGroup => (
+            {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map(header => {
+                {headerGroup.headers.map((header) => {
                   return (
                     <TableHead
                       key={header.id}
@@ -54,9 +57,12 @@ export function DataTable<TData>({
                     >
                       {header.isPlaceholder
                         ? null
-                        : flexRender(header.column.columnDef.header, header.getContext())}
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
                     </TableHead>
-                  )
+                  );
                 })}
               </TableRow>
             ))}
@@ -64,26 +70,35 @@ export function DataTable<TData>({
 
           <TableBody>
             {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map(row => (
-                <TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
-                  {row.getVisibleCells().map(cell => (
+              table.getRowModel().rows.map((row) => (
+                <TableRow
+                  key={row.id}
+                  data-state={row.getIsSelected() && 'selected'}
+                >
+                  {row.getVisibleCells().map((cell) => (
                     <TableCell
                       key={cell.id}
                       style={getColumnPinningStyle({ column: cell.column })}
                       className={cx(
                         cell.column.getIsPinned()
-                          ? "sticky z-10 bg-background group-hover/row:!bg-muted group-data-[state=selected]/row:bg-accent"
-                          : "relative",
+                          ? 'sticky z-10 bg-background group-hover/row:!bg-muted group-data-[state=selected]/row:bg-accent'
+                          : 'relative'
                       )}
                     >
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
                     </TableCell>
                   ))}
                 </TableRow>
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={table.getAllColumns().length} className="h-24 text-center">
+                <TableCell
+                  colSpan={table.getAllColumns().length}
+                  className="h-24 text-center"
+                >
                   No results.
                 </TableCell>
               </TableRow>
@@ -97,5 +112,5 @@ export function DataTable<TData>({
         {table.getFilteredSelectedRowModel().rows.length > 0 && floatingBar}
       </div>
     </>
-  )
+  );
 }

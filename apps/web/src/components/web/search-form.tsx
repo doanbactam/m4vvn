@@ -1,16 +1,25 @@
-"use client";
+'use client';
 
-import { SearchIcon } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { parseAsString, useQueryState } from "nuqs";
-import { type FormEvent, type HTMLAttributes, useRef, useState, useEffect } from "react";
-import { Input } from "~/components/common/input";
-import { cx } from "~/utils/cva";
-import { useDebounce } from "~/hooks/useDebounce"; // Thêm Debounce hook
+import { SearchIcon } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { parseAsString, useQueryState } from 'nuqs';
+import {
+  type FormEvent,
+  type HTMLAttributes,
+  useRef,
+  useState,
+  useEffect,
+} from 'react';
+import { Input } from '~/components/common/input';
+import { cx } from '~/utils/cva';
+import { useDebounce } from '~/hooks/useDebounce'; // Thêm Debounce hook
 
-export const SearchForm = ({ className, ...props }: HTMLAttributes<HTMLFormElement>) => {
+export const SearchForm = ({
+  className,
+  ...props
+}: HTMLAttributes<HTMLFormElement>) => {
   const router = useRouter();
-  const [searchQuery] = useQueryState("q", parseAsString.withDefault(""));
+  const [searchQuery] = useQueryState('q', parseAsString.withDefault(''));
   const [query, setQuery] = useState(searchQuery);
   const [isExpanded, setIsExpanded] = useState(!!searchQuery); // Giữ input mở rộng nếu có query
   const inputRef = useRef<HTMLInputElement>(null);
@@ -44,7 +53,7 @@ export const SearchForm = ({ className, ...props }: HTMLAttributes<HTMLFormEleme
   return (
     <form
       onSubmit={(e: FormEvent<HTMLFormElement>) => e.preventDefault()}
-      className={cx("flex items-center shrink-0", className)}
+      className={cx('flex items-center shrink-0', className)}
       noValidate
       {...props}
     >
@@ -56,8 +65,8 @@ export const SearchForm = ({ className, ...props }: HTMLAttributes<HTMLFormEleme
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search tools..."
           className={cx(
-            "transition-[width,opacity,transform] duration-200 ease-in-out",
-            isExpanded ? "w-32 opacity-100" : "w-0 opacity-0"
+            'transition-[width,opacity,transform] duration-200 ease-in-out',
+            isExpanded ? 'w-32 opacity-100' : 'w-0 opacity-0'
           )}
           onFocus={handleExpand}
           onBlur={handleBlur}

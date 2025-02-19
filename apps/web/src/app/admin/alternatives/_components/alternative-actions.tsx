@@ -1,27 +1,29 @@
-"use client"
+'use client';
 
-import type { Alternative } from "@openalternative/db/client"
-import { EllipsisIcon } from "lucide-react"
-import type { ComponentProps, Dispatch, SetStateAction } from "react"
-import { toast } from "sonner"
-import { useServerAction } from "zsa-react"
-import { Button } from "~/components/common/button"
+import type { Alternative } from '@openalternative/db/client';
+import { EllipsisIcon } from 'lucide-react';
+import type { ComponentProps, Dispatch, SetStateAction } from 'react';
+import { toast } from 'sonner';
+import { useServerAction } from 'zsa-react';
+import { Button } from '~/components/common/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "~/components/common/dropdown-menu"
-import { Link } from "~/components/common/link"
-import { reuploadAlternativeAssets } from "~/server/admin/alternatives/actions"
-import type { DataTableRowAction } from "~/types"
-import { cx } from "~/utils/cva"
+} from '~/components/common/dropdown-menu';
+import { Link } from '~/components/common/link';
+import { reuploadAlternativeAssets } from '~/server/admin/alternatives/actions';
+import type { DataTableRowAction } from '~/types';
+import { cx } from '~/utils/cva';
 
 type AlternativeActionsProps = ComponentProps<typeof Button> & {
-  alternative: Alternative
-  setRowAction: Dispatch<SetStateAction<DataTableRowAction<Alternative> | null>>
-}
+  alternative: Alternative;
+  setRowAction: Dispatch<
+    SetStateAction<DataTableRowAction<Alternative> | null>
+  >;
+};
 
 export const AlternativeActions = ({
   alternative,
@@ -29,15 +31,18 @@ export const AlternativeActions = ({
   className,
   ...props
 }: AlternativeActionsProps) => {
-  const { execute: reuploadAssets } = useServerAction(reuploadAlternativeAssets, {
-    onSuccess: () => {
-      toast.success("Alternative assets reuploaded")
-    },
+  const { execute: reuploadAssets } = useServerAction(
+    reuploadAlternativeAssets,
+    {
+      onSuccess: () => {
+        toast.success('Alternative assets reuploaded');
+      },
 
-    onError: ({ err }) => {
-      toast.error(err.message)
-    },
-  })
+      onError: ({ err }) => {
+        toast.error(err.message);
+      },
+    }
+  );
 
   return (
     <DropdownMenu modal={false}>
@@ -47,7 +52,7 @@ export const AlternativeActions = ({
           variant="secondary"
           size="sm"
           prefix={<EllipsisIcon />}
-          className={cx("data-[state=open]:bg-accent", className)}
+          className={cx('data-[state=open]:bg-accent', className)}
           {...props}
         />
       </DropdownMenuTrigger>
@@ -63,7 +68,9 @@ export const AlternativeActions = ({
           </Link>
         </DropdownMenuItem>
 
-        <DropdownMenuItem onSelect={() => reuploadAssets({ id: alternative.id })}>
+        <DropdownMenuItem
+          onSelect={() => reuploadAssets({ id: alternative.id })}
+        >
           Reupload Assets
         </DropdownMenuItem>
 
@@ -78,12 +85,12 @@ export const AlternativeActions = ({
         <DropdownMenuSeparator />
 
         <DropdownMenuItem
-          onSelect={() => setRowAction({ data: alternative, type: "delete" })}
+          onSelect={() => setRowAction({ data: alternative, type: 'delete' })}
           className="text-red-500"
         >
           Delete
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
-  )
-}
+  );
+};

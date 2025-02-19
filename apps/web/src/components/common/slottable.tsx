@@ -1,25 +1,31 @@
-import type { ReactNode } from "react"
-import { cloneElement, forwardRef, isValidElement } from "react"
+import type { ReactNode } from 'react';
+import { cloneElement, forwardRef, isValidElement } from 'react';
 
 type SlottableProps = {
-  asChild?: boolean
-  child?: ReactNode
-  children: (child: ReactNode) => ReactNode
-}
+  asChild?: boolean;
+  child?: ReactNode;
+  children: (child: ReactNode) => ReactNode;
+};
 
-export const Slottable = forwardRef<HTMLElement, SlottableProps>((props, ref) => {
-  const { asChild, child, children, ...rest } = props
+export const Slottable = forwardRef<HTMLElement, SlottableProps>(
+  (props, ref) => {
+    const { asChild, child, children, ...rest } = props;
 
-  if (!asChild) {
-    return children(child)
+    if (!asChild) {
+      return children(child);
+    }
+
+    if (!isValidElement(child)) {
+      return null;
+    }
+
+    // @ts-expect-error
+    return cloneElement(
+      child,
+      { ref, ...rest },
+      children(child.props?.children)
+    );
   }
+);
 
-  if (!isValidElement(child)) {
-    return null
-  }
-
-  // @ts-expect-error
-  return cloneElement(child, { ref, ...rest }, children(child.props?.children))
-})
-
-Slottable.displayName = "Slottable"
+Slottable.displayName = 'Slottable';

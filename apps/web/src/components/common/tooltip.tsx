@@ -1,14 +1,14 @@
-"use client"
+'use client';
 
-import { Tooltip as TooltipPrimitive } from "radix-ui"
-import type { ComponentProps, ReactNode } from "react"
-import { cx } from "~/utils/cva"
+import { Tooltip as TooltipPrimitive } from 'radix-ui';
+import type { ComponentProps, ReactNode } from 'react';
+import { cx } from '~/utils/cva';
 
-const TooltipProvider = TooltipPrimitive.Provider
-const TooltipRoot = TooltipPrimitive.Root
-const TooltipTrigger = TooltipPrimitive.Trigger
-const TooltipPortal = TooltipPrimitive.Portal
-const TooltipArrow = TooltipPrimitive.Arrow
+const TooltipProvider = TooltipPrimitive.Provider;
+const TooltipRoot = TooltipPrimitive.Root;
+const TooltipTrigger = TooltipPrimitive.Trigger;
+const TooltipPortal = TooltipPrimitive.Portal;
+const TooltipArrow = TooltipPrimitive.Arrow;
 
 const TooltipContent = ({
   className,
@@ -20,23 +20,29 @@ const TooltipContent = ({
       <TooltipPrimitive.Content
         sideOffset={sideOffset}
         className={cx(
-          "z-50 rounded-md bg-foreground px-3 py-1.5 text-xs text-background will-change-[transform,opacity]",
-          className,
+          'z-50 rounded-md bg-foreground px-3 py-1.5 text-xs text-background will-change-[transform,opacity]',
+          className
         )}
         {...props}
       />
     </TooltipPrimitive.Portal>
-  )
-}
+  );
+};
 
 type TooltipProps = ComponentProps<typeof TooltipPrimitive.Root> &
   ComponentProps<typeof TooltipContent> & {
-    tooltip: ReactNode
-  }
+    tooltip: ReactNode;
+  };
 
-const TooltipBase = ({ children, className, delayDuration, tooltip, ...rest }: TooltipProps) => {
+const TooltipBase = ({
+  children,
+  className,
+  delayDuration,
+  tooltip,
+  ...rest
+}: TooltipProps) => {
   if (!tooltip) {
-    return children
+    return children;
   }
 
   return (
@@ -52,8 +58,8 @@ const TooltipBase = ({ children, className, delayDuration, tooltip, ...rest }: T
         </TooltipContent>
       </TooltipPortal>
     </TooltipRoot>
-  )
-}
+  );
+};
 
 const Tooltip = Object.assign(TooltipBase, {
   Provider: TooltipProvider,
@@ -62,6 +68,12 @@ const Tooltip = Object.assign(TooltipBase, {
   Portal: TooltipPortal,
   Content: TooltipContent,
   Arrow: TooltipArrow,
-})
+});
 
-export { Tooltip, TooltipRoot, TooltipTrigger, TooltipContent, TooltipProvider }
+export {
+  Tooltip,
+  TooltipRoot,
+  TooltipTrigger,
+  TooltipContent,
+  TooltipProvider,
+};

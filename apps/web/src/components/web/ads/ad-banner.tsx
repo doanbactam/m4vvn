@@ -1,26 +1,29 @@
-import Image from "next/image"
-import type { ComponentProps } from "react"
-import { Badge } from "~/components/common/badge"
-import { Box } from "~/components/common/box"
-import { Button } from "~/components/common/button"
-import { ExternalLink } from "~/components/web/external-link"
-import { Container } from "~/components/web/ui/container"
-import { findAd } from "~/server/web/ads/queries"
-import { cx } from "~/utils/cva"
+import Image from 'next/image';
+import type { ComponentProps } from 'react';
+import { Badge } from '~/components/common/badge';
+import { Box } from '~/components/common/box';
+import { Button } from '~/components/common/button';
+import { ExternalLink } from '~/components/web/external-link';
+import { Container } from '~/components/web/ui/container';
+import { findAd } from '~/server/web/ads/queries';
+import { cx } from '~/utils/cva';
 
-export const AdBanner = async ({ className, ...props }: ComponentProps<typeof Container>) => {
-  const ad = await findAd({ where: { type: "Banner" } })
+export const AdBanner = async ({
+  className,
+  ...props
+}: ComponentProps<typeof Container>) => {
+  const ad = await findAd({ where: { type: 'Banner' } });
 
   if (!ad) {
-    return null
+    return null;
   }
 
   return (
     <Box hover focus>
       <Container
         className={cx(
-          "group/button relative -top-px z-50 flex items-center justify-between gap-3 py-2 bg-card hover:bg-accent lg:rounded-b-lg",
-          className,
+          'group/button relative -top-px z-50 flex items-center justify-between gap-3 py-2 bg-card hover:bg-accent lg:rounded-b-lg',
+          className
         )}
         asChild
         {...props}
@@ -44,7 +47,8 @@ export const AdBanner = async ({ className, ...props }: ComponentProps<typeof Co
                 className="inline-flex align-text-top mr-1 size-3.5 md:size-4"
               />
             )}
-            <strong className="font-medium text-foreground">{ad.name}</strong> — {ad.description}
+            <strong className="font-medium text-foreground">{ad.name}</strong> —{' '}
+            {ad.description}
           </div>
 
           <Button
@@ -58,5 +62,5 @@ export const AdBanner = async ({ className, ...props }: ComponentProps<typeof Co
         </ExternalLink>
       </Container>
     </Box>
-  )
-}
+  );
+};

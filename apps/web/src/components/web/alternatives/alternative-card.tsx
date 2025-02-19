@@ -1,18 +1,27 @@
-import plur from "plur"
-import type { ComponentProps } from "react"
-import { Card, CardDescription, CardFooter, CardHeader } from "~/components/common/card"
-import { H4 } from "~/components/common/heading"
-import { Link } from "~/components/common/link"
-import { Skeleton } from "~/components/common/skeleton"
-import { Favicon } from "~/components/web/ui/favicon"
-import type { AlternativeMany } from "~/server/web/alternatives/payloads"
+import plur from 'plur';
+import type { ComponentProps } from 'react';
+import {
+  Card,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+} from '~/components/common/card';
+import { H4 } from '~/components/common/heading';
+import { Link } from '~/components/common/link';
+import { Skeleton } from '~/components/common/skeleton';
+import { Favicon } from '~/components/web/ui/favicon';
+import type { AlternativeMany } from '~/server/web/alternatives/payloads';
 
-type AlternativeCardProps = Omit<ComponentProps<typeof Card>, "href"> & {
-  alternative: AlternativeMany
-  showCount?: boolean
-}
+type AlternativeCardProps = Omit<ComponentProps<typeof Card>, 'href'> & {
+  alternative: AlternativeMany;
+  showCount?: boolean;
+};
 
-const AlternativeCard = ({ alternative, showCount, ...props }: AlternativeCardProps) => {
+const AlternativeCard = ({
+  alternative,
+  showCount,
+  ...props
+}: AlternativeCardProps) => {
   return (
     <Card asChild {...props}>
       <Link href={`/alternatives/${alternative.slug}`}>
@@ -25,18 +34,21 @@ const AlternativeCard = ({ alternative, showCount, ...props }: AlternativeCardPr
         </CardHeader>
 
         {alternative.description && (
-          <CardDescription className="line-clamp-3">{alternative.description}</CardDescription>
+          <CardDescription className="line-clamp-3">
+            {alternative.description}
+          </CardDescription>
         )}
 
         {showCount && (
           <CardFooter className="mt-auto">
-            {alternative._count.tools} {plur("alternative", alternative._count.tools)}
+            {alternative._count.tools}{' '}
+            {plur('alternative', alternative._count.tools)}
           </CardFooter>
         )}
       </Link>
     </Card>
-  )
-}
+  );
+};
 
 const AlternativeCardSkeleton = () => {
   return (
@@ -58,7 +70,7 @@ const AlternativeCardSkeleton = () => {
         <Skeleton className="h-4 w-1/3">&nbsp;</Skeleton>
       </CardFooter>
     </Card>
-  )
-}
+  );
+};
 
-export { AlternativeCard, AlternativeCardSkeleton }
+export { AlternativeCard, AlternativeCardSkeleton };

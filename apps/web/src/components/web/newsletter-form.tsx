@@ -1,57 +1,62 @@
-"use client"
+'use client';
 
-import { zodResolver } from "@hookform/resolvers/zod"
-import { posthog } from "posthog-js"
-import type { ComponentProps } from "react"
-import { useForm } from "react-hook-form"
-import { useServerAction } from "zsa-react"
-import { subscribeToNewsletter } from "~/actions/subscribe"
-import { Box } from "~/components/common/box"
-import { Button } from "~/components/common/button"
-import { Form, FormControl, FormField } from "~/components/common/form"
-import { Hint } from "~/components/common/hint"
-import { Input } from "~/components/common/input"
-import { type NewsletterSchema, newsletterSchema } from "~/server/schemas"
-import { cx } from "~/utils/cva"
+import { zodResolver } from '@hookform/resolvers/zod';
+import { posthog } from 'posthog-js';
+import type { ComponentProps } from 'react';
+import { useForm } from 'react-hook-form';
+import { useServerAction } from 'zsa-react';
+import { subscribeToNewsletter } from '~/actions/subscribe';
+import { Box } from '~/components/common/box';
+import { Button } from '~/components/common/button';
+import { Form, FormControl, FormField } from '~/components/common/form';
+import { Hint } from '~/components/common/hint';
+import { Input } from '~/components/common/input';
+import { type NewsletterSchema, newsletterSchema } from '~/server/schemas';
+import { cx } from '~/utils/cva';
 
-type ButtonProps = ComponentProps<typeof Button>
-type InputProps = ComponentProps<typeof Input>
+type ButtonProps = ComponentProps<typeof Button>;
+type InputProps = ComponentProps<typeof Input>;
 
-type NewsletterFormProps = ComponentProps<"form"> & {
-  medium?: string
-  placeholder?: string
-  size?: InputProps["size"]
-  buttonProps?: ButtonProps
-}
+type NewsletterFormProps = ComponentProps<'form'> & {
+  medium?: string;
+  placeholder?: string;
+  size?: InputProps['size'];
+  buttonProps?: ButtonProps;
+};
 
 export const NewsletterForm = ({
   children,
   className,
-  medium = "subscribe_form",
-  placeholder = "Enter your email",
-  size = "md",
-  buttonProps = { size: "sm", children: "Subscribe" },
+  medium = 'subscribe_form',
+  placeholder = 'Enter your email',
+  size = 'md',
+  buttonProps = { size: 'sm', children: 'Subscribe' },
   ...props
 }: NewsletterFormProps) => {
   const form = useForm<NewsletterSchema>({
     resolver: zodResolver(newsletterSchema),
-    defaultValues: { captcha: "", value: "", utm_medium: medium },
-  })
+    defaultValues: { captcha: '', value: '', utm_medium: medium },
+  });
 
-  const { data, error, isPending, execute } = useServerAction(subscribeToNewsletter, {
-    onSuccess: () => {
-      posthog.capture("subscribe_newsletter", { email: form.getValues("value") })
-      form.reset()
-    },
+  const { data, error, isPending, execute } = useServerAction(
+    subscribeToNewsletter,
+    {
+      onSuccess: () => {
+        posthog.capture('subscribe_newsletter', {
+          email: form.getValues('value'),
+        });
+        form.reset();
+      },
 
-    onError: () => form.reset(),
-  })
+      onError: () => form.reset(),
+    }
+  );
 
   return (
     <Form {...form}>
       <form
-        onSubmit={form.handleSubmit(data => execute(data))}
-        className={cx("flex flex-col gap-3 w-full", className)}
+        onSubmit={form.handleSubmit((data) => execute(data))}
+        className={cx('flex flex-col gap-3 w-full', className)}
         noValidate
         {...props}
       >
@@ -88,8 +93,10 @@ export const NewsletterForm = ({
             <Button
               isPending={isPending}
               className={cx(
-                "shrink-0 ",
-                size === "lg" ? "text-sm/tight px-4 py-2 m-1" : "px-3 py-1.5 m-0.5",
+                'shrink-0 ',
+                size === 'lg'
+                  ? 'text-sm/tight px-4 py-2 m-1'
+                  : 'px-3 py-1.5 m-0.5'
               )}
               {...buttonProps}
             />
@@ -97,7 +104,9 @@ export const NewsletterForm = ({
         </Box>
 
         {(error || form.formState.errors.value) && (
-          <Hint className="-mt-1">{(error || form.formState.errors.value)?.message}</Hint>
+          <Hint className="-mt-1">
+            {(error || form.formState.errors.value)?.message}
+          </Hint>
         )}
 
         {data && <p className="text-sm text-green-600">{data}</p>}
@@ -105,5 +114,5 @@ export const NewsletterForm = ({
         {children}
       </form>
     </Form>
-  )
-}
+  );
+};

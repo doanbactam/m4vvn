@@ -1,34 +1,39 @@
-"use client"
+'use client';
 
-import { formatNumber } from "@curiousleaf/utils"
-import { AtSignIcon, RssIcon } from "lucide-react"
-import Image from "next/image"
-import type { ComponentProps } from "react"
+import { formatNumber } from '@curiousleaf/utils';
+import { AtSignIcon, RssIcon } from 'lucide-react';
+import Image from 'next/image';
+import type { ComponentProps } from 'react';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "~/components/common/dropdown-menu"
-import { H5, H6 } from "~/components/common/heading"
-import { BrandBlueskyIcon } from "~/components/common/icons/brand-bluesky"
-import { BrandGitHubIcon } from "~/components/common/icons/brand-github"
-import { BrandLinkedInIcon } from "~/components/common/icons/brand-linkedin"
-import { BrandMediumIcon } from "~/components/common/icons/brand-medium"
-import { BrandXIcon } from "~/components/common/icons/brand-x"
-import { Stack } from "~/components/common/stack"
-import { Tooltip, TooltipProvider } from "~/components/common/tooltip"
-import { ExternalLink } from "~/components/web/external-link"
-import { NewsletterForm } from "~/components/web/newsletter-form"
-import { NavLink, navLinkVariants } from "~/components/web/ui/nav-link"
-import { config } from "~/config"
-import { cx } from "~/utils/cva"
+} from '~/components/common/dropdown-menu';
+import { H5, H6 } from '~/components/common/heading';
+import { BrandBlueskyIcon } from '~/components/common/icons/brand-bluesky';
+import { BrandGitHubIcon } from '~/components/common/icons/brand-github';
+import { BrandLinkedInIcon } from '~/components/common/icons/brand-linkedin';
+import { BrandMediumIcon } from '~/components/common/icons/brand-medium';
+import { BrandXIcon } from '~/components/common/icons/brand-x';
+import { Stack } from '~/components/common/stack';
+import { Tooltip, TooltipProvider } from '~/components/common/tooltip';
+import { ExternalLink } from '~/components/web/external-link';
+import { NewsletterForm } from '~/components/web/newsletter-form';
+import { NavLink, navLinkVariants } from '~/components/web/ui/nav-link';
+import { config } from '~/config';
+import { cx } from '~/utils/cva';
 
-type FooterProps = ComponentProps<"div"> & {
-  hideNewsletter?: boolean
-}
+type FooterProps = ComponentProps<'div'> & {
+  hideNewsletter?: boolean;
+};
 
-export const Footer = ({ children, className, hideNewsletter, ...props }: FooterProps) => {
+export const Footer = ({
+  children,
+  className,
+  hideNewsletter,
+  ...props
+}: FooterProps) => {
   return (
     <footer
       className="flex flex-col gap-y-8 mt-auto pt-8 border-t border-foreground/10 md:pt-10 lg:pt-12"
@@ -36,8 +41,8 @@ export const Footer = ({ children, className, hideNewsletter, ...props }: Footer
     >
       <div
         className={cx(
-          "grid grid-cols-3 gap-y-8 gap-x-4 md:gap-x-6 md:grid-cols-[repeat(16,minmax(0,1fr))]",
-          className,
+          'grid grid-cols-3 gap-y-8 gap-x-4 md:gap-x-6 md:grid-cols-[repeat(16,minmax(0,1fr))]',
+          className
         )}
         {...props}
       >
@@ -51,8 +56,8 @@ export const Footer = ({ children, className, hideNewsletter, ...props }: Footer
             </H5>
 
             <p className="-mt-2 px-0.5 text-sm text-muted-foreground first:mt-0">
-              Join {formatNumber(config.stats.subscribers, "standard")}+ other members and get
-              updates on new open source tools.
+              Join {formatNumber(config.stats.subscribers, 'standard')}+ other
+              members and get updates on new open source tools.
             </p>
 
             <NewsletterForm medium="footer_form" />
@@ -62,7 +67,7 @@ export const Footer = ({ children, className, hideNewsletter, ...props }: Footer
             <TooltipProvider delayDuration={500}>
               <DropdownMenu modal={false}>
                 <Tooltip tooltip="RSS Feeds">
-                <DropdownMenuTrigger aria-label="RSS Feeds">
+                  <DropdownMenuTrigger aria-label="RSS Feeds">
                     <RssIcon className="size-[1.44em] stroke-[1.25] text-muted-foreground hover:text-foreground" />
                   </DropdownMenuTrigger>
                 </Tooltip>
@@ -70,7 +75,11 @@ export const Footer = ({ children, className, hideNewsletter, ...props }: Footer
                 <DropdownMenuContent align="start" side="top">
                   {config.links.feeds.map(({ url, title }) => (
                     <DropdownMenuItem key={url} asChild>
-                      <NavLink href={url} target="_blank" rel="nofollow noreferrer">
+                      <NavLink
+                        href={url}
+                        target="_blank"
+                        rel="nofollow noreferrer"
+                      >
                         RSS &raquo; {title}
                       </NavLink>
                     </DropdownMenuItem>
@@ -90,31 +99,51 @@ export const Footer = ({ children, className, hideNewsletter, ...props }: Footer
               </Tooltip>
 
               <Tooltip tooltip="View source code">
-                <NavLink href={config.links.github} target="_blank" rel="nofollow noreferrer">
+                <NavLink
+                  href={config.links.github}
+                  target="_blank"
+                  rel="nofollow noreferrer"
+                >
                   <BrandGitHubIcon className="size-[1.44em] stroke-[1.25]" />
                 </NavLink>
               </Tooltip>
 
               <Tooltip tooltip="Follow us on X/Twitter">
-                <NavLink href={config.links.twitter} target="_blank" rel="nofollow noreferrer">
+                <NavLink
+                  href={config.links.twitter}
+                  target="_blank"
+                  rel="nofollow noreferrer"
+                >
                   <BrandXIcon className="size-[1.44em] stroke-[1.25]" />
                 </NavLink>
               </Tooltip>
 
               <Tooltip tooltip="Follow us on Bluesky">
-                <NavLink href={config.links.bluesky} target="_blank" rel="nofollow noreferrer">
+                <NavLink
+                  href={config.links.bluesky}
+                  target="_blank"
+                  rel="nofollow noreferrer"
+                >
                   <BrandBlueskyIcon className="size-[1.44em] stroke-[1.25]" />
                 </NavLink>
               </Tooltip>
 
               <Tooltip tooltip="Follow us on LinkedIn">
-                <NavLink href={config.links.linkedin} target="_blank" rel="nofollow noreferrer">
+                <NavLink
+                  href={config.links.linkedin}
+                  target="_blank"
+                  rel="nofollow noreferrer"
+                >
                   <BrandLinkedInIcon className="size-[1.44em] stroke-[1.25]" />
                 </NavLink>
               </Tooltip>
 
               <Tooltip tooltip="Follow us on Medium">
-                <NavLink href={config.links.medium} target="_blank" rel="nofollow noreferrer">
+                <NavLink
+                  href={config.links.medium}
+                  target="_blank"
+                  rel="nofollow noreferrer"
+                >
                   <BrandMediumIcon className="size-[1.44em] stroke-[1.25]" />
                 </NavLink>
               </Tooltip>
@@ -122,7 +151,10 @@ export const Footer = ({ children, className, hideNewsletter, ...props }: Footer
           </Stack>
         </Stack>
 
-        <Stack direction="column" className="text-sm/normal md:col-span-3 md:col-start-8">
+        <Stack
+          direction="column"
+          className="text-sm/normal md:col-span-3 md:col-start-8"
+        >
           <H6 as="strong">Browse:</H6>
 
           <NavLink href="/alternatives">Alternatives</NavLink>
@@ -142,7 +174,7 @@ export const Footer = ({ children, className, hideNewsletter, ...props }: Footer
         </Stack>
 
         <Stack direction="column" className="text-sm/normal md:col-span-3">
-        <H6 as="strong">Other Products:</H6>
+          <H6 as="strong">Other Products:</H6>
           {config.links.family.map(({ href, title, description }) => (
             <ExternalLink
               key={href}
@@ -176,10 +208,12 @@ export const Footer = ({ children, className, hideNewsletter, ...props }: Footer
           Made by Piotr Kulpinski
         </NavLink>
 
-        <p className="text-xs text-muted-foreground">This website may contain affiliate links</p>
+        <p className="text-xs text-muted-foreground">
+          This website may contain affiliate links
+        </p>
       </div>
 
       {children}
     </footer>
-  )
-}
+  );
+};

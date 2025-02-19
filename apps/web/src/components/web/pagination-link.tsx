@@ -1,21 +1,24 @@
-"use client"
+'use client';
 
-import { Slot } from "radix-ui"
-import type { ComponentProps, ReactNode } from "react"
-import { Link } from "~/components/common/link"
-import { navLinkVariants } from "~/components/web/ui/nav-link"
-import { type VariantProps, cva, cx } from "~/utils/cva"
+import { Slot } from 'radix-ui';
+import type { ComponentProps, ReactNode } from 'react';
+import { Link } from '~/components/common/link';
+import { navLinkVariants } from '~/components/web/ui/nav-link';
+import { type VariantProps, cva, cx } from '~/utils/cva';
 
 const affixVariants = cva({
-  base: "size-5 duration-150 first:group-hover:-translate-x-0.5 last:group-hover:translate-x-0.5",
-})
+  base: 'size-5 duration-150 first:group-hover:-translate-x-0.5 last:group-hover:translate-x-0.5',
+});
 
-type PaginationLinkProps = Omit<ComponentProps<"a"> & ComponentProps<typeof Link>, "prefix"> &
+type PaginationLinkProps = Omit<
+  ComponentProps<'a'> & ComponentProps<typeof Link>,
+  'prefix'
+> &
   VariantProps<typeof navLinkVariants> & {
-    prefix?: ReactNode
-    suffix?: ReactNode
-    isDisabled?: boolean
-  }
+    prefix?: ReactNode;
+    suffix?: ReactNode;
+    isDisabled?: boolean;
+  };
 
 export const PaginationLink = ({
   children,
@@ -28,22 +31,29 @@ export const PaginationLink = ({
 }: PaginationLinkProps) => {
   if (isDisabled) {
     return (
-      <span className={cx(navLinkVariants({ className: "pointer-events-none opacity-40" }))}>
+      <span
+        className={cx(
+          navLinkVariants({ className: 'pointer-events-none opacity-40' })
+        )}
+      >
         <Slot.Root className={affixVariants()}>{prefix}</Slot.Root>
         <span>{children}</span>
         <Slot.Root className={affixVariants()}>{suffix}</Slot.Root>
       </span>
-    )
+    );
   }
 
   return (
     <Link
-      className={cx(isActive && "bg-accent rounded-xs", navLinkVariants({ isActive, className }))}
+      className={cx(
+        isActive && 'bg-accent rounded-xs',
+        navLinkVariants({ isActive, className })
+      )}
       {...props}
     >
-        <Slot.Root className={affixVariants()}>{suffix}</Slot.Root>
+      <Slot.Root className={affixVariants()}>{suffix}</Slot.Root>
       <span>{children}</span>
       <Slot.Root className={affixVariants()}>{suffix}</Slot.Root>
     </Link>
-  )
-}
+  );
+};

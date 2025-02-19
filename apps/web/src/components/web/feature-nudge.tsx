@@ -1,23 +1,33 @@
-import type { Tool } from "@openalternative/db/client"
-import type { ComponentProps } from "react"
-import { toast } from "sonner"
-import { Link } from "~/components/common/link"
-import { Stack } from "~/components/common/stack"
-import { Button } from "~/components/common/button"
-import { config } from "~/config"
-import { cx } from "~/utils/cva"
+import type { Tool } from '@openalternative/db/client';
+import type { ComponentProps } from 'react';
+import { toast } from 'sonner';
+import { Link } from '~/components/common/link';
+import { Stack } from '~/components/common/stack';
+import { Button } from '~/components/common/button';
+import { config } from '~/config';
+import { cx } from '~/utils/cva';
 
 type FeatureNudgeProps = ComponentProps<typeof Stack> & {
-  tool: Tool
-  t: string | number
-}
+  tool: Tool;
+  t: string | number;
+};
 
-export const FeatureNudge = ({ className, tool, t, ...props }: FeatureNudgeProps) => {
+export const FeatureNudge = ({
+  className,
+  tool,
+  t,
+  ...props
+}: FeatureNudgeProps) => {
   return (
-    <Stack direction="column" size="lg" className={cx("px-3 pb-0.5", className)} {...props}>
+    <Stack
+      direction="column"
+      size="lg"
+      className={cx('px-3 pb-0.5', className)}
+      {...props}
+    >
       <p className="text-sm text-foreground/65">
-        <strong>{tool.name}</strong> has already been published. If you want, you can feature it for
-        extra exposure.
+        <strong>{tool.name}</strong> has already been published. If you want,
+        you can feature it for extra exposure.
       </p>
 
       <Stack size="sm">
@@ -32,5 +42,5 @@ export const FeatureNudge = ({ className, tool, t, ...props }: FeatureNudgeProps
         </Button>
       </Stack>
     </Stack>
-  )
-}
+  );
+};

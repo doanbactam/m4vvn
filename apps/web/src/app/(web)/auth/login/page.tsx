@@ -1,27 +1,29 @@
-import { LoaderIcon } from "lucide-react"
-import type { Metadata } from "next"
-import { Suspense } from "react"
-import { LoginButton } from "~/app/(web)/auth/login/login-button"
-import { LoginForm } from "~/app/(web)/auth/login/login-form"
-import { BrandGoogleIcon } from "~/components/common/icons/brand-google"
-import { Stack } from "~/components/common/stack"
-import { Intro, IntroDescription, IntroTitle } from "~/components/web/ui/intro"
-import { config } from "~/config"
-import { metadataConfig } from "~/config/metadata"
+import { LoaderIcon } from 'lucide-react';
+import type { Metadata } from 'next';
+import { Suspense } from 'react';
+import { LoginButton } from '~/app/(web)/auth/login/login-button';
+import { LoginForm } from '~/app/(web)/auth/login/login-form';
+import { BrandGoogleIcon } from '~/components/common/icons/brand-google';
+import { Stack } from '~/components/common/stack';
+import { Intro, IntroDescription, IntroTitle } from '~/components/web/ui/intro';
+import { config } from '~/config';
+import { metadataConfig } from '~/config/metadata';
 
 export const metadata: Metadata = {
-  title: "Sign in",
+  title: 'Sign in',
   description: `Login to ${config.site.name} to access your dashboard and manage your tools (soon).`,
-  openGraph: { ...metadataConfig.openGraph, url: "/auth/login" },
-  alternates: { ...metadataConfig.alternates, canonical: "/auth/login" },
-}
+  openGraph: { ...metadataConfig.openGraph, url: '/auth/login' },
+  alternates: { ...metadataConfig.alternates, canonical: '/auth/login' },
+};
 
 export default function LoginPage() {
   return (
     <>
       <Intro>
         <IntroTitle size="h2">{`${metadata.title}`}</IntroTitle>
-        <IntroDescription className="md:text-base">{metadata.description}</IntroDescription>
+        <IntroDescription className="md:text-base">
+          {metadata.description}
+        </IntroDescription>
       </Intro>
 
       <Suspense fallback={<LoaderIcon className="animate-spin mx-auto" />}>
@@ -36,5 +38,5 @@ export default function LoginPage() {
         </Stack>
       </Suspense>
     </>
-  )
+  );
 }

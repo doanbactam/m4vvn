@@ -1,10 +1,11 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 @plugin "tailwindcss-animate";
 @plugin "@tailwindcss/typography";
 
 @theme {
-  --font-system: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
-    "Segoe UI Symbol", "Noto Color Emoji";
+  --font-system:
+    ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji';
 
   --header-height: 3.125rem;
   --header-top: 0rem;
@@ -151,37 +152,37 @@
   a,
   button,
   label[for],
-  [href] [class*="group-hover"] {
+  [href] [class*='group-hover'] {
     @apply transition;
     @apply ease-out;
     @apply duration-100;
     @apply cursor-pointer;
   }
 
-  svg.lucide:not([class*="stroke"]) {
+  svg.lucide:not([class*='stroke']) {
     @apply !stroke-[1.75];
   }
 
-  svg.lucide:not([class*="size-"]):not([class*="h-"]) {
+  svg.lucide:not([class*='size-']):not([class*='h-']) {
     @apply !size-[1em];
   }
 
-  [href] svg[class*="arrow-up-right"],
-  [href] svg[class*="arrow-right"],
-  [type] svg[class*="arrow-up-right"],
-  [type] svg[class*="arrow-right"] {
+  [href] svg[class*='arrow-up-right'],
+  [href] svg[class*='arrow-right'],
+  [type] svg[class*='arrow-up-right'],
+  [type] svg[class*='arrow-right'] {
     @apply will-change-transform;
     @apply duration-150;
   }
 
-  [href]:hover svg[class*="arrow-up-right"],
-  [type]:hover svg[class*="arrow-up-right"] {
+  [href]:hover svg[class*='arrow-up-right'],
+  [type]:hover svg[class*='arrow-up-right'] {
     @apply translate-x-[0.1em];
     @apply rotate-12;
   }
 
-  [href]:hover svg[class*="arrow-right"],
-  [type]:hover svg[class*="arrow-right"] {
+  [href]:hover svg[class*='arrow-right'],
+  [type]:hover svg[class*='arrow-right'] {
     @apply translate-x-[0.15em];
   }
 }
@@ -191,7 +192,7 @@
     @apply relative;
   }
 
-  & [id] > a[tabindex="-1"] {
+  & [id] > a[tabindex='-1'] {
     @apply opacity-0;
     @apply absolute;
     @apply right-full;
@@ -201,15 +202,15 @@
     @apply mr-0;
   }
 
-  & [id] > a[tabindex="-1"]:after {
+  & [id] > a[tabindex='-1']:after {
     @apply content-["#"];
   }
 
-  & [id]:hover > a[tabindex="-1"] {
+  & [id]:hover > a[tabindex='-1'] {
     @apply opacity-25;
   }
 
-  & [id]:hover > a[tabindex="-1"]:hover {
+  & [id]:hover > a[tabindex='-1']:hover {
     @apply opacity-100;
   }
 }
@@ -222,7 +223,7 @@
 }
 
 .meteor::before {
-  content: "";
+  content: '';
   position: absolute;
   top: 50%;
   transform: translateY(-50%);

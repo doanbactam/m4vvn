@@ -1,27 +1,27 @@
-import { formatNumber } from "@curiousleaf/utils"
-import NumberFlow, { continuous, type Format } from "@number-flow/react"
-import type { ComponentProps } from "react"
-import type Stripe from "stripe"
-import { Badge } from "~/components/common/badge"
-import { cx } from "~/utils/cva"
+import { formatNumber } from '@curiousleaf/utils';
+import NumberFlow, { continuous, type Format } from '@number-flow/react';
+import type { ComponentProps } from 'react';
+import type Stripe from 'stripe';
+import { Badge } from '~/components/common/badge';
+import { cx } from '~/utils/cva';
 
 const defaultFormat: Format = {
-  style: "currency",
-  currency: "USD",
-  notation: "standard",
+  style: 'currency',
+  currency: 'USD',
+  notation: 'standard',
   maximumFractionDigits: 2,
-  trailingZeroDisplay: "stripIfInteger",
-}
+  trailingZeroDisplay: 'stripIfInteger',
+};
 
-type PriceProps = ComponentProps<"div"> & {
-  price: number
-  fullPrice?: number | null
-  interval?: string
-  discount?: number | null
-  coupon?: Stripe.Coupon
-  format?: Format
-  priceClassName?: string
-}
+type PriceProps = ComponentProps<'div'> & {
+  price: number;
+  fullPrice?: number | null;
+  interval?: string;
+  discount?: number | null;
+  coupon?: Stripe.Coupon;
+  format?: Format;
+  priceClassName?: string;
+};
 
 export const Price = ({
   className,
@@ -35,22 +35,27 @@ export const Price = ({
   ...props
 }: PriceProps) => {
   return (
-    <div className={cx("relative flex items-center", className)} {...props}>
-      {format?.notation === "compact" && <span className="self-start mr-1 text-[0.9em]">$</span>}
+    <div className={cx('relative flex items-center', className)} {...props}>
+      {format?.notation === 'compact' && (
+        <span className="self-start mr-1 text-[0.9em]">$</span>
+      )}
 
       <div className="relative -tracking-wide tabular-nums font-display">
         <NumberFlow
           value={price}
           format={{ ...defaultFormat, ...format }}
           locales="en-US"
-          className={cx("flex! items-center font-semibold h-[0.9em]", priceClassName)}
+          className={cx(
+            'flex! items-center font-semibold h-[0.9em]',
+            priceClassName
+          )}
           plugins={[continuous]}
         />
 
         {!!fullPrice && fullPrice > price && (
           <div className="absolute -top-[1em] left-full ml-1">
             <del className="tabular-nums text-[0.9em] text-muted-foreground">
-              {formatNumber(fullPrice, "standard")}
+              {formatNumber(fullPrice, 'standard')}
             </del>
           </div>
         )}
@@ -68,13 +73,14 @@ export const Price = ({
           {coupon?.max_redemptions && (
             <span className="text-foreground/65">
               ({coupon.max_redemptions - coupon.times_redeemed}
-              {coupon.max_redemptions > coupon.max_redemptions - coupon.times_redeemed &&
-                `/${coupon.max_redemptions}`}{" "}
+              {coupon.max_redemptions >
+                coupon.max_redemptions - coupon.times_redeemed &&
+                `/${coupon.max_redemptions}`}{' '}
               left)
             </span>
           )}
         </Badge>
       )}
     </div>
-  )
-}
+  );
+};

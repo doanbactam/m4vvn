@@ -1,25 +1,25 @@
-import { slugify } from "@curiousleaf/utils"
-import type { ComponentProps } from "react"
-import { ExternalLink } from "~/components/web/external-link"
-import { config } from "~/config"
-import { cx } from "~/utils/cva"
+import { slugify } from '@curiousleaf/utils';
+import type { ComponentProps } from 'react';
+import { ExternalLink } from '~/components/web/external-link';
+import { config } from '~/config';
+import { cx } from '~/utils/cva';
 
-export const Advertisers = ({ className, ...props }: ComponentProps<"div">) => {
+export const Advertisers = ({ className, ...props }: ComponentProps<'div'>) => {
   return (
     <div
       className={cx(
-        "flex flex-wrap items-center justify-evenly gap-6 max-w-2xl mx-auto",
-        className,
+        'flex flex-wrap items-center justify-evenly gap-6 max-w-2xl mx-auto',
+        className
       )}
       {...props}
     >
-      {config.ads.advertisers.map(ad => (
+      {config.ads.advertisers.map((ad) => (
         <ExternalLink
           key={ad.name}
           href={ad.websiteUrl}
           rel="noopener noreferrer"
           eventName="click_ad"
-          eventProps={{ url: ad.websiteUrl, type: "Advertisers" }}
+          eventProps={{ url: ad.websiteUrl, type: 'Advertisers' }}
           className="flex flex-wrap items-center gap-x-2 font-semibold opacity-85 hover:opacity-100 md:text-lg"
           title={ad.description}
         >
@@ -35,5 +35,5 @@ export const Advertisers = ({ className, ...props }: ComponentProps<"div">) => {
         </ExternalLink>
       ))}
     </div>
-  )
-}
+  );
+};

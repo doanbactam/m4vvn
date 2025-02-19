@@ -1,22 +1,22 @@
-import { notFound } from "next/navigation"
-import { UpdateToolActions } from "~/app/admin/tools/[slug]/actions"
-import { ToolForm } from "~/app/admin/tools/_components/tool-form"
-import { Wrapper } from "~/components/admin/wrapper"
-import { H3 } from "~/components/common/heading"
-import { findAlternativeList } from "~/server/admin/alternatives/queries"
-import { findCategoryList } from "~/server/admin/categories/queries"
-import { findToolBySlug } from "~/server/admin/tools/queries"
+import { notFound } from 'next/navigation';
+import { UpdateToolActions } from '~/app/admin/tools/[slug]/actions';
+import { ToolForm } from '~/app/admin/tools/_components/tool-form';
+import { Wrapper } from '~/components/admin/wrapper';
+import { H3 } from '~/components/common/heading';
+import { findAlternativeList } from '~/server/admin/alternatives/queries';
+import { findCategoryList } from '~/server/admin/categories/queries';
+import { findToolBySlug } from '~/server/admin/tools/queries';
 
 type PageProps = {
-  params: Promise<{ slug: string }>
-}
+  params: Promise<{ slug: string }>;
+};
 
 export default async function UpdateToolPage({ params }: PageProps) {
-  const { slug } = await params
-  const tool = await findToolBySlug(slug)
+  const { slug } = await params;
+  const tool = await findToolBySlug(slug);
 
   if (!tool) {
-    return notFound()
+    return notFound();
   }
 
   return (
@@ -27,7 +27,11 @@ export default async function UpdateToolPage({ params }: PageProps) {
         <UpdateToolActions tool={tool} />
       </div>
 
-      <ToolForm tool={tool} alternatives={findAlternativeList()} categories={findCategoryList()} />
+      <ToolForm
+        tool={tool}
+        alternatives={findAlternativeList()}
+        categories={findCategoryList()}
+      />
     </Wrapper>
-  )
+  );
 }

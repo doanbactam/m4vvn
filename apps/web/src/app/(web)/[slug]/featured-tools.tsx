@@ -1,18 +1,20 @@
-import { formatNumber } from "@curiousleaf/utils"
-import { StarIcon } from "lucide-react"
-import type { ComponentProps } from "react"
-import { H5, H6 } from "~/components/common/heading"
-import { Link } from "~/components/common/link"
-import { Stack } from "~/components/common/stack"
-import { Card } from "~/components/common/card"
-import { FaviconImage } from "~/components/web/ui/favicon"
-import { findTools } from "~/server/web/tools/queries"
+import { formatNumber } from '@curiousleaf/utils';
+import { StarIcon } from 'lucide-react';
+import type { ComponentProps } from 'react';
+import { H5, H6 } from '~/components/common/heading';
+import { Link } from '~/components/common/link';
+import { Stack } from '~/components/common/stack';
+import { Card } from '~/components/common/card';
+import { FaviconImage } from '~/components/web/ui/favicon';
+import { findTools } from '~/server/web/tools/queries';
 
-export const FeaturedTools = async ({ ...props }: ComponentProps<typeof Card>) => {
-  const tools = await findTools({ where: { isFeatured: true } })
+export const FeaturedTools = async ({
+  ...props
+}: ComponentProps<typeof Card>) => {
+  const tools = await findTools({ where: { isFeatured: true } });
 
   if (!tools.length) {
-    return null
+    return null;
   }
 
   return (
@@ -20,17 +22,29 @@ export const FeaturedTools = async ({ ...props }: ComponentProps<typeof Card>) =
       <H5 as="strong">Featured open source projects:</H5>
 
       <div className="w-full divide-y -my-1.5">
-        {tools.map(tool => (
-          <Stack key={tool.slug} size="sm" className="group py-1.5 justify-between w-full" asChild>
+        {tools.map((tool) => (
+          <Stack
+            key={tool.slug}
+            size="sm"
+            className="group py-1.5 justify-between w-full"
+            asChild
+          >
             <Link href={`/${tool.slug}`}>
               <Stack size="sm" className="flex-nowrap">
-                <FaviconImage src={tool.faviconUrl} title={tool.name} className="size-4" />
+                <FaviconImage
+                  src={tool.faviconUrl}
+                  title={tool.name}
+                  className="size-4"
+                />
 
-                <H6 as="strong" className="text-muted-foreground group-hover:text-foreground">
+                <H6
+                  as="strong"
+                  className="text-muted-foreground group-hover:text-foreground"
+                >
                   {tool.name}
                 </H6>
               </Stack>
-{/* 
+              {/* 
               <Stack size="xs">
                 <StarIcon className="size-3" />
                 <span className="text-xs text-muted-foreground tabular-nums">
@@ -42,5 +56,5 @@ export const FeaturedTools = async ({ ...props }: ComponentProps<typeof Card>) =
         ))}
       </div>
     </Card>
-  )
-}
+  );
+};

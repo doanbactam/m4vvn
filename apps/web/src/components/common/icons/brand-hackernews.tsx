@@ -1,6 +1,8 @@
-import type { SVGAttributes } from "react"
+import type { SVGAttributes } from 'react';
 
-export const BrandHackerNewsIcon = ({ ...props }: SVGAttributes<SVGSVGElement>) => {
+export const BrandHackerNewsIcon = ({
+  ...props
+}: SVGAttributes<SVGSVGElement>) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -21,5 +23,5 @@ export const BrandHackerNewsIcon = ({ ...props }: SVGAttributes<SVGSVGElement>) 
       <path d="M8 7l4 6l4 -6" />
       <path d="M12 17l0 -4" />
     </svg>
-  )
-}
+  );
+};

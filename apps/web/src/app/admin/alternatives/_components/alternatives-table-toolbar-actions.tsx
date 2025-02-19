@@ -1,19 +1,23 @@
-"use client"
+'use client';
 
-import type { Alternative } from "@openalternative/db/client"
-import type { Table } from "@tanstack/react-table"
-import { AlternativesDeleteDialog } from "./alternatives-delete-dialog"
+import type { Alternative } from '@openalternative/db/client';
+import type { Table } from '@tanstack/react-table';
+import { AlternativesDeleteDialog } from './alternatives-delete-dialog';
 
 interface AlternativesTableToolbarActionsProps {
-  table: Table<Alternative>
+  table: Table<Alternative>;
 }
 
-export function AlternativesTableToolbarActions({ table }: AlternativesTableToolbarActionsProps) {
+export function AlternativesTableToolbarActions({
+  table,
+}: AlternativesTableToolbarActionsProps) {
   return (
     <>
       {table.getFilteredSelectedRowModel().rows.length > 0 ? (
         <AlternativesDeleteDialog
-          alternatives={table.getFilteredSelectedRowModel().rows.map(row => row.original)}
+          alternatives={table
+            .getFilteredSelectedRowModel()
+            .rows.map((row) => row.original)}
           onSuccess={() => table.toggleAllRowsSelected(false)}
         />
       ) : null}
@@ -23,5 +27,5 @@ export function AlternativesTableToolbarActions({ table }: AlternativesTableTool
        * For example, import, view, etc.
        */}
     </>
-  )
+  );
 }

@@ -1,3 +1,3 @@
 export const searchConfig = {
-  filters: ["alternative", "category"] as const,
-}
+  filters: ['alternative', 'category'] as const,
+};

@@ -1,13 +1,21 @@
-"use client"
+'use client';
 
-import { Circle } from "lucide-react"
-import { RadioGroup as RadioGroupPrimitive } from "radix-ui"
-import type { ComponentProps } from "react"
-import { cx } from "~/utils/cva"
+import { Circle } from 'lucide-react';
+import { RadioGroup as RadioGroupPrimitive } from 'radix-ui';
+import type { ComponentProps } from 'react';
+import { cx } from '~/utils/cva';
 
-const RadioGroup = ({ className, ...props }: ComponentProps<typeof RadioGroupPrimitive.Root>) => {
-  return <RadioGroupPrimitive.Root className={cx("grid gap-2", className)} {...props} />
-}
+const RadioGroup = ({
+  className,
+  ...props
+}: ComponentProps<typeof RadioGroupPrimitive.Root>) => {
+  return (
+    <RadioGroupPrimitive.Root
+      className={cx('grid gap-2', className)}
+      {...props}
+    />
+  );
+};
 
 const RadioGroupItem = ({
   className,
@@ -16,8 +24,8 @@ const RadioGroupItem = ({
   return (
     <RadioGroupPrimitive.Item
       className={cx(
-        "aspect-square size-4 rounded-full border border-primary text-primary shadow focus:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50",
-        className,
+        'aspect-square size-4 rounded-full border border-primary text-primary shadow focus:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50',
+        className
       )}
       {...props}
     >
@@ -25,7 +33,7 @@ const RadioGroupItem = ({
         <Circle className="size-2.5 fill-current text-current" />
       </RadioGroupPrimitive.Indicator>
     </RadioGroupPrimitive.Item>
-  )
-}
+  );
+};
 
-export { RadioGroup, RadioGroupItem }
+export { RadioGroup, RadioGroupItem };

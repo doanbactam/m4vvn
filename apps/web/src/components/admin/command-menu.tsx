@@ -1,13 +1,18 @@
-"use client"
+'use client';
 
-import { useDebouncedState } from "@mantine/hooks"
-import type { Alternative, Category, License, Tool } from "@openalternative/db/client"
-import { LoaderIcon } from "lucide-react"
-import { useRouter } from "next/navigation"
-import { useEffect, useState } from "react"
-import { toast } from "sonner"
-import { testSocialPosts } from "~/actions/misc"
-import { searchItems } from "~/actions/search"
+import { useDebouncedState } from '@mantine/hooks';
+import type {
+  Alternative,
+  Category,
+  License,
+  Tool,
+} from '@openalternative/db/client';
+import { LoaderIcon } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { toast } from 'sonner';
+import { testSocialPosts } from '~/actions/misc';
+import { searchItems } from '~/actions/search';
 import {
   CommandDialog,
   CommandEmpty,
@@ -15,88 +20,91 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from "~/components/common/command"
+} from '~/components/common/command';
 
 type SearchResult = {
-  tools: Tool[]
-  alternatives: Alternative[]
-  categories: Category[]
-  licenses: License[]
-}
+  tools: Tool[];
+  alternatives: Alternative[];
+  categories: Category[];
+  licenses: License[];
+};
 
 export const CommandMenu = () => {
-  const router = useRouter()
-  const [open, setOpen] = useState(false)
-  const [query, setQuery] = useDebouncedState("", 100)
-  const [searchResults, setSearchResults] = useState<SearchResult | null>(null)
-  const [isSearching, setIsSearching] = useState(false)
+  const router = useRouter();
+  const [open, setOpen] = useState(false);
+  const [query, setQuery] = useDebouncedState('', 100);
+  const [searchResults, setSearchResults] = useState<SearchResult | null>(null);
+  const [isSearching, setIsSearching] = useState(false);
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
-      if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
-        e.preventDefault()
-        setOpen(open => {
+      if (e.key === 'k' && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault();
+        setOpen((open) => {
           if (!open) {
-            return true
+            return true;
           }
 
           // Clear search results
-          clearSearch()
-          return false
-        })
+          clearSearch();
+          return false;
+        });
       }
-    }
+    };
 
-    document.addEventListener("keydown", down)
-    return () => document.removeEventListener("keydown", down)
-  }, [])
+    document.addEventListener('keydown', down);
+    return () => document.removeEventListener('keydown', down);
+  }, []);
 
   useEffect(() => {
     const performSearch = async () => {
       if (query.length > 1) {
-        setIsSearching(true)
-        const results = await searchItems({ query })
-        results && setSearchResults(results[0])
-        setIsSearching(false)
+        setIsSearching(true);
+        const results = await searchItems({ query });
+        results && setSearchResults(results[0]);
+        setIsSearching(false);
       } else {
-        setSearchResults(null)
+        setSearchResults(null);
       }
-    }
+    };
 
-    performSearch()
-  }, [query])
+    performSearch();
+  }, [query]);
 
   const handleOpenChange = (newOpen: boolean) => {
-    setOpen(newOpen)
+    setOpen(newOpen);
 
     // Clear search results
-    !newOpen && clearSearch()
-  }
+    !newOpen && clearSearch();
+  };
 
   const handleSearch = (value: string) => {
-    setQuery(value)
-  }
+    setQuery(value);
+  };
 
   const handleSendSocialPost = async () => {
-    await testSocialPosts({ slug: "dub" })
-    toast.success("Social post sent")
-  }
+    await testSocialPosts({ slug: 'dub' });
+    toast.success('Social post sent');
+  };
 
   const handleSelect = (url: string) => {
-    handleOpenChange(false)
-    router.push(url)
-  }
+    handleOpenChange(false);
+    router.push(url);
+  };
 
   const clearSearch = () => {
     setTimeout(() => {
-      setSearchResults(null)
-      setQuery("")
-    }, 250)
-  }
+      setSearchResults(null);
+      setQuery('');
+    }, 250);
+  };
 
   return (
     <CommandDialog open={open} onOpenChange={handleOpenChange}>
-      <CommandInput placeholder="Type to search..." onValueChange={handleSearch} />
+      <CommandInput
+        placeholder="Type to search..."
+        onValueChange={handleSearch}
+      />
 
       {isSearching && (
         <div className="absolute top-4 left-3 bg-background text-muted-foreground">
@@ -108,25 +116,29 @@ export const CommandMenu = () => {
         <CommandEmpty>No results found.</CommandEmpty>
 
         <CommandGroup heading="Create">
-          <CommandItem onSelect={() => handleSelect("/admin/tools/new")}>New Tool</CommandItem>
-          <CommandItem onSelect={() => handleSelect("/admin/alternatives/new")}>
+          <CommandItem onSelect={() => handleSelect('/admin/tools/new')}>
+            New Tool
+          </CommandItem>
+          <CommandItem onSelect={() => handleSelect('/admin/alternatives/new')}>
             New Alternative
           </CommandItem>
-          <CommandItem onSelect={() => handleSelect("/admin/categories/new")}>
+          <CommandItem onSelect={() => handleSelect('/admin/categories/new')}>
             New Category
           </CommandItem>
-          <CommandItem onSelect={() => handleSelect("/admin/licenses/new")}>
+          <CommandItem onSelect={() => handleSelect('/admin/licenses/new')}>
             New License
           </CommandItem>
         </CommandGroup>
 
         <CommandGroup heading="Quick Commands">
-          <CommandItem onSelect={handleSendSocialPost}>Send Social Post</CommandItem>
+          <CommandItem onSelect={handleSendSocialPost}>
+            Send Social Post
+          </CommandItem>
         </CommandGroup>
 
         {!!searchResults?.tools.length && (
           <CommandGroup heading="Tools">
-            {searchResults.tools.map(tool => (
+            {searchResults.tools.map((tool) => (
               <CommandItem
                 key={tool.id}
                 value={`tool:${tool.name}`}
@@ -140,11 +152,13 @@ export const CommandMenu = () => {
 
         {!!searchResults?.alternatives.length && (
           <CommandGroup heading="Alternatives">
-            {searchResults.alternatives.map(alternative => (
+            {searchResults.alternatives.map((alternative) => (
               <CommandItem
                 key={alternative.id}
                 value={`alternative:${alternative.name}`}
-                onSelect={() => handleSelect(`/admin/alternatives/${alternative.slug}`)}
+                onSelect={() =>
+                  handleSelect(`/admin/alternatives/${alternative.slug}`)
+                }
               >
                 {alternative.name}
               </CommandItem>
@@ -154,10 +168,12 @@ export const CommandMenu = () => {
 
         {!!searchResults?.categories.length && (
           <CommandGroup heading="Categories">
-            {searchResults.categories.map(category => (
+            {searchResults.categories.map((category) => (
               <CommandItem
                 key={category.id}
-                onSelect={() => handleSelect(`/admin/categories/${category.slug}`)}
+                onSelect={() =>
+                  handleSelect(`/admin/categories/${category.slug}`)
+                }
               >
                 {category.name}
               </CommandItem>
@@ -167,7 +183,7 @@ export const CommandMenu = () => {
 
         {!!searchResults?.licenses.length && (
           <CommandGroup heading="Licenses">
-            {searchResults.licenses.map(license => (
+            {searchResults.licenses.map((license) => (
               <CommandItem
                 key={license.id}
                 onSelect={() => handleSelect(`/admin/licenses/${license.slug}`)}
@@ -179,5 +195,5 @@ export const CommandMenu = () => {
         )}
       </CommandList>
     </CommandDialog>
-  )
-}
+  );
+};

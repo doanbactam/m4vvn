@@ -83,20 +83,20 @@ cp .env.example .env
 
 All commands are run from the root of the project, from a terminal:
 
-| Command           | Action                                           |
-| :---------------- | :----------------------------------------------- |
-| `bun install`     | Installs dependencies                            |
-| `bun run dev`     | Starts local dev server at `localhost:5173`      |
-| `bun run build`   | Build production application                     |
-| `bun run start`   | Preview production build locally                 |
-| `bun run lint`    | Run linter                                       |
-| `bun run format`  | Format code                                      |
-| `bun run typecheck` | Run TypeScript type checking                   |
-| `bun run db:generate` | Generate Prisma client                       |
-| `bun run db:studio` | Start Prisma Studio                           |
-| `bun run db:push` | Push Prisma schema to database                  |
-| `bun run db:pull` | Pull Prisma schema from database                |
-| `bun run db:reset` | Reset Prisma schema                            |
+| Command               | Action                                      |
+| :-------------------- | :------------------------------------------ |
+| `bun install`         | Installs dependencies                       |
+| `bun run dev`         | Starts local dev server at `localhost:5173` |
+| `bun run build`       | Build production application                |
+| `bun run start`       | Preview production build locally            |
+| `bun run lint`        | Run linter                                  |
+| `bun run format`      | Format code                                 |
+| `bun run typecheck`   | Run TypeScript type checking                |
+| `bun run db:generate` | Generate Prisma client                      |
+| `bun run db:studio`   | Start Prisma Studio                         |
+| `bun run db:push`     | Push Prisma schema to database              |
+| `bun run db:pull`     | Pull Prisma schema from database            |
+| `bun run db:reset`    | Reset Prisma schema                         |
 
 ## Third-Party Services
 

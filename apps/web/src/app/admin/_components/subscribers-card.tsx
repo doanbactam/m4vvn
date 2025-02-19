@@ -1,81 +1,90 @@
-import { eachDayOfInterval, format, startOfDay, subDays } from "date-fns"
-import { unstable_cacheLife as cacheLife, unstable_cacheTag as cacheTag } from "next/cache"
-import type { ComponentProps } from "react"
-import wretch from "wretch"
-import { Chart, type ChartData } from "~/app/admin/_components/chart"
-import { Card, CardDescription, CardHeader } from "~/components/common/card"
-import { H2 } from "~/components/common/heading"
-import { env } from "~/env"
+import { eachDayOfInterval, format, startOfDay, subDays } from 'date-fns';
+import {
+  unstable_cacheLife as cacheLife,
+  unstable_cacheTag as cacheTag,
+} from 'next/cache';
+import type { ComponentProps } from 'react';
+import wretch from 'wretch';
+import { Chart, type ChartData } from '~/app/admin/_components/chart';
+import { Card, CardDescription, CardHeader } from '~/components/common/card';
+import { H2 } from '~/components/common/heading';
+import { env } from '~/env';
 
 type BeehiivSubscription = {
-  id: string
-  email: string
-  status: "active" | "validating" | "inactive" | "bounced" | "spam_complaint" | "unsubscribed"
-  created: number
-  subscription_tier: "free" | "premium"
-  subscription_premium_tier_names: string[]
-  utm_source: string
-  utm_medium: string
-  utm_channel: string
-  utm_campaign: string
-  referring_site: string
-  referral_code: string
-}
+  id: string;
+  email: string;
+  status:
+    | 'active'
+    | 'validating'
+    | 'inactive'
+    | 'bounced'
+    | 'spam_complaint'
+    | 'unsubscribed';
+  created: number;
+  subscription_tier: 'free' | 'premium';
+  subscription_premium_tier_names: string[];
+  utm_source: string;
+  utm_medium: string;
+  utm_channel: string;
+  utm_campaign: string;
+  referring_site: string;
+  referral_code: string;
+};
 
 type SubscribersResponse = {
-  data: BeehiivSubscription[]
-  limit: number
-  page: number
-  total_results: number
-  total_pages: number
-}
+  data: BeehiivSubscription[];
+  limit: number;
+  page: number;
+  total_results: number;
+  total_pages: number;
+};
 
 const getSubscribers = async () => {
-  "use cache"
+  'use cache';
 
-  cacheTag("subscribers")
-  cacheLife("minutes")
+  cacheTag('subscribers');
+  cacheLife('minutes');
 
-  const url = `https://api.beehiiv.com/v2/publications/${env.BEEHIIV_PUBLICATION_ID}/subscriptions`
-  const thirtyDaysAgo = startOfDay(subDays(new Date(), 30))
-  const allSubscribers: BeehiivSubscription[] = []
-  let currentPage = 1
-  let hasMorePages = true
-  let totalResults = 0
+  const url = `https://api.beehiiv.com/v2/publications/${env.BEEHIIV_PUBLICATION_ID}/subscriptions`;
+  const thirtyDaysAgo = startOfDay(subDays(new Date(), 30));
+  const allSubscribers: BeehiivSubscription[] = [];
+  let currentPage = 1;
+  let hasMorePages = true;
+  let totalResults = 0;
 
   const baseParams = {
-    limit: "100",
-    status: "active",
-    order_by: "created",
-    direction: "desc",
-  }
+    limit: '100',
+    status: 'active',
+    order_by: 'created',
+    direction: 'desc',
+  };
 
   try {
     while (hasMorePages) {
       const params = new URLSearchParams({
         ...baseParams,
         page: currentPage.toString(),
-      })
+      });
 
       const response = await wretch(`${url}?${params}`)
         .auth(`Bearer ${env.BEEHIIV_API_KEY}`)
         .get()
-        .json<SubscribersResponse>()
+        .json<SubscribersResponse>();
 
       // Store total_results from first response
       if (currentPage === 1) {
-        totalResults = response.total_results
+        totalResults = response.total_results;
       }
 
-      const subscribers = response.data
-      const oldestSubscriber = subscribers[subscribers.length - 1]
+      const subscribers = response.data;
+      const oldestSubscriber = subscribers[subscribers.length - 1];
 
       // Add only subscribers from last 30 days
       const relevantSubscribers = subscribers.filter(
-        sub => new Date(sub.created * 1000) >= thirtyDaysAgo,
-      )
+        (sub) => new Date(sub.created * 1000) >= thirtyDaysAgo
+      );
 
-      allSubscribers.push(...relevantSubscribers)
+      allSubscribers.push(...relevantSubscribers);
 
       // Stop if we've reached subscribers older than 30 days or no more pages
       if (
@@ -83,42 +92,46 @@ const getSubscribers = async () => {
         new Date(oldestSubscriber.created * 1000) < thirtyDaysAgo ||
         currentPage >= response.total_pages
       ) {
-        hasMorePages = false
+        hasMorePages = false;
       } else {
-        currentPage++
+        currentPage++;
       }
     }
 
     // Group subscribers by date
-    const subscribersByDate = allSubscribers.reduce<Record<string, number>>((acc, sub) => {
-      const date = format(new Date(sub.created * 1000), "yyyy-MM-dd")
-      acc[date] = (acc[date] || 0) + 1
-      return acc
-    }, {})
+    const subscribersByDate = allSubscribers.reduce<Record<string, number>>(
+      (acc, sub) => {
+        const date = format(new Date(sub.created * 1000), 'yyyy-MM-dd');
+        acc[date] = (acc[date] || 0) + 1;
+        return acc;
+      },
+      {}
+    );
 
     // Fill in missing dates with 0
     const results: ChartData[] = eachDayOfInterval({
       start: thirtyDaysAgo,
       end: new Date(),
-    }).map(day => ({
-      date: format(day, "yyyy-MM-dd"),
-      value: subscribersByDate[format(day, "yyyy-MM-dd")] || 0,
-    }))
+    }).map((day) => ({
+      date: format(day, 'yyyy-MM-dd'),
+      value: subscribersByDate[format(day, 'yyyy-MM-dd')] || 0,
+    }));
 
-    const totalSubscribers = totalResults
+    const totalSubscribers = totalResults;
     const averageSubscribers = Math.round(
-      results.reduce((sum, day) => sum + day.value, 0) / results.length,
-    )
+      results.reduce((sum, day) => sum + day.value, 0) / results.length
+    );
 
-    return { results, totalSubscribers, averageSubscribers }
+    return { results, totalSubscribers, averageSubscribers };
   } catch (error) {
-    console.error("Subscribers error:", error)
-    return { results: [], totalSubscribers: 0, averageSubscribers: 0 }
+    console.error('Subscribers error:', error);
+    return { results: [], totalSubscribers: 0, averageSubscribers: 0 };
   }
-}
+};
 
 const SubscribersCard = async ({ ...props }: ComponentProps<typeof Card>) => {
-  const { results, totalSubscribers, averageSubscribers } = await getSubscribers()
+  const { results, totalSubscribers, averageSubscribers } =
+    await getSubscribers();
 
   return (
     <Card hover={false} focus={false} {...props}>
@@ -132,10 +145,10 @@ const SubscribersCard = async ({ ...props }: ComponentProps<typeof Card>) => {
         average={averageSubscribers}
         className="h-56 w-full"
         cellClassName="fill-chart-2"
-        config={{ value: { label: "Subscribers" } }}
+        config={{ value: { label: 'Subscribers' } }}
       />
     </Card>
-  )
-}
+  );
+};
 
-export { SubscribersCard }
+export { SubscribersCard };

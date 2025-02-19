@@ -1,11 +1,11 @@
-"use client"
+'use client';
 
-import type { Tool } from "@openalternative/db/client"
-import { TrashIcon } from "lucide-react"
-import type * as React from "react"
-import { toast } from "sonner"
-import { useServerAction } from "zsa-react"
-import { Button } from "~/components/common/button"
+import type { Tool } from '@openalternative/db/client';
+import { TrashIcon } from 'lucide-react';
+import type * as React from 'react';
+import { toast } from 'sonner';
+import { useServerAction } from 'zsa-react';
+import { Button } from '~/components/common/button';
 import {
   Dialog,
   DialogClose,
@@ -15,13 +15,14 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "~/components/common/dialog"
-import { deleteTools } from "~/server/admin/tools/actions"
+} from '~/components/common/dialog';
+import { deleteTools } from '~/server/admin/tools/actions';
 
-interface ToolsDeleteDialogProps extends React.ComponentPropsWithoutRef<typeof Dialog> {
-  tools: Tool[]
-  showTrigger?: boolean
-  onSuccess?: () => void
+interface ToolsDeleteDialogProps
+  extends React.ComponentPropsWithoutRef<typeof Dialog> {
+  tools: Tool[];
+  showTrigger?: boolean;
+  onSuccess?: () => void;
 }
 
 export const ToolsDeleteDialog = ({
@@ -32,15 +33,15 @@ export const ToolsDeleteDialog = ({
 }: ToolsDeleteDialogProps) => {
   const { execute, isPending } = useServerAction(deleteTools, {
     onSuccess: () => {
-      props.onOpenChange?.(false)
-      toast.success("Tools deleted")
-      onSuccess?.()
+      props.onOpenChange?.(false);
+      toast.success('Tools deleted');
+      onSuccess?.();
     },
 
     onError: ({ err }) => {
-      toast.error(err.message)
+      toast.error(err.message);
     },
-  })
+  });
 
   return (
     <Dialog {...props}>
@@ -56,9 +57,9 @@ export const ToolsDeleteDialog = ({
         <DialogHeader>
           <DialogTitle>Are you absolutely sure?</DialogTitle>
           <DialogDescription>
-            This action cannot be undone. This will permanently delete your{" "}
+            This action cannot be undone. This will permanently delete your{' '}
             <span className="font-medium">{tools.length}</span>
-            {tools.length === 1 ? " tool" : " tools"} from our servers.
+            {tools.length === 1 ? ' tool' : ' tools'} from our servers.
           </DialogDescription>
         </DialogHeader>
 
@@ -80,5 +81,5 @@ export const ToolsDeleteDialog = ({
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  )
-}
+  );
+};

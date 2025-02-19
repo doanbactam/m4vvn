@@ -1,25 +1,25 @@
-import Script from "next/script"
-import { type PropsWithChildren, Suspense } from "react"
-import type { Graph } from "schema-dts"
-import Providers from "~/app/(web)/providers"
-import { AdBanner } from "~/components/web/ads/ad-banner"
-import { Bottom } from "~/components/web/bottom"
-import { Footer } from "~/components/web/footer"
-import { Header } from "~/components/web/header"
-import { Container } from "~/components/web/ui/container"
-import { config } from "~/config"
-import { env } from "~/env"
-import { Button } from "~/components/common/button"
-import { UserMenu } from "~/components/web/user-menu"
+import Script from 'next/script';
+import { type PropsWithChildren, Suspense } from 'react';
+import type { Graph } from 'schema-dts';
+import Providers from '~/app/(web)/providers';
+import { AdBanner } from '~/components/web/ads/ad-banner';
+import { Bottom } from '~/components/web/bottom';
+import { Footer } from '~/components/web/footer';
+import { Header } from '~/components/web/header';
+import { Container } from '~/components/web/ui/container';
+import { config } from '~/config';
+import { env } from '~/env';
+import { Button } from '~/components/common/button';
+import { UserMenu } from '~/components/web/user-menu';
 
 export default function RootLayout({ children }: PropsWithChildren) {
-  const url = config.site.url
+  const url = config.site.url;
   const jsonLd: Graph = {
-    "@context": "https://schema.org",
-    "@graph": [
+    '@context': 'https://schema.org',
+    '@graph': [
       {
-        "@type": "Organization",
-        "@id": `${url}/#/schema/organization/1`,
+        '@type': 'Organization',
+        '@id': `${url}/#/schema/organization/1`,
         name: config.site.name,
         url: `${url}/`,
         sameAs: [
@@ -29,39 +29,39 @@ export default function RootLayout({ children }: PropsWithChildren) {
           config.links.github,
         ],
         logo: {
-          "@type": "ImageObject",
-          "@id": `${url}/#/schema/image/1`,
+          '@type': 'ImageObject',
+          '@id': `${url}/#/schema/image/1`,
           url: `${url}/favicon.png`,
-          width: "480",
-          height: "480",
+          width: '480',
+          height: '480',
           caption: `${config.site.name} Logo`,
         },
       },
       {
-        "@type": "Person",
-        "@id": `${url}/#/schema/person/1`,
-        name: "Piotr Kulpinski",
+        '@type': 'Person',
+        '@id': `${url}/#/schema/person/1`,
+        name: 'Piotr Kulpinski',
         sameAs: [config.links.author],
       },
       {
-        "@type": "WebSite",
+        '@type': 'WebSite',
         url: config.site.url,
         name: config.site.name,
         description: config.site.description,
-        inLanguage: "en-US",
+        inLanguage: 'en-US',
         potentialAction: {
-          "@type": "SearchAction",
+          '@type': 'SearchAction',
           target: {
-            "@type": "EntryPoint",
+            '@type': 'EntryPoint',
             urlTemplate: `${url}/?q={search_term_string}`,
           },
-          "query-input": "required name=search_term_string",
+          'query-input': 'required name=search_term_string',
         } as any,
-        isPartOf: { "@id": `${url}#/schema/website/1` },
-        about: { "@id": `${url}#/schema/organization/1` },
+        isPartOf: { '@id': `${url}#/schema/website/1` },
+        about: { '@id': `${url}#/schema/organization/1` },
       },
     ],
-  }
+  };
 
   return (
     <Providers>
@@ -107,5 +107,5 @@ export default function RootLayout({ children }: PropsWithChildren) {
         src={env.NEXT_PUBLIC_PLAUSIBLE_SCRIPT_URL}
       />
     </Providers>
-  )
+  );
 }

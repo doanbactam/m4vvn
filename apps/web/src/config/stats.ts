@@ -3,4 +3,4 @@ export const statsConfig = {
   tools: 350,
   subscribers: 3000,
   stars: 4000,
-}
+};

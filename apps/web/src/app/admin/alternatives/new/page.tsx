@@ -1,7 +1,7 @@
-import { AlternativeForm } from "~/app/admin/alternatives/_components/alternative-form"
-import { Wrapper } from "~/components/admin/wrapper"
-import { H3 } from "~/components/common/heading"
-import { findToolList } from "~/server/admin/tools/queries"
+import { AlternativeForm } from '~/app/admin/alternatives/_components/alternative-form';
+import { Wrapper } from '~/components/admin/wrapper';
+import { H3 } from '~/components/common/heading';
+import { findToolList } from '~/server/admin/tools/queries';
 
 export default function CreateAlternativePage() {
   return (
@@ -10,5 +10,5 @@ export default function CreateAlternativePage() {
 
       <AlternativeForm tools={findToolList()} />
     </Wrapper>
-  )
+  );
 }

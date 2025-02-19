@@ -1,13 +1,13 @@
-"use client"
+'use client';
 
-import { zodResolver } from "@hookform/resolvers/zod"
-import { redirect } from "next/navigation"
-import type { ComponentProps } from "react"
-import { useForm } from "react-hook-form"
-import { toast } from "sonner"
-import { useServerAction } from "zsa-react"
-import { RelationSelector } from "~/components/admin/relation-selector"
-import { Button } from "~/components/common/button"
+import { zodResolver } from '@hookform/resolvers/zod';
+import { redirect } from 'next/navigation';
+import type { ComponentProps } from 'react';
+import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
+import { useServerAction } from 'zsa-react';
+import { RelationSelector } from '~/components/admin/relation-selector';
+import { Button } from '~/components/common/button';
 import {
   Form,
   FormControl,
@@ -15,22 +15,28 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "~/components/common/form"
-import { Input } from "~/components/common/input"
-import { Link } from "~/components/common/link"
-import { Switch } from "~/components/common/switch"
-import { TextArea } from "~/components/common/textarea"
-import { createAlternative, updateAlternative } from "~/server/admin/alternatives/actions"
-import type { findAlternativeBySlug } from "~/server/admin/alternatives/queries"
-import { type AlternativeSchema, alternativeSchema } from "~/server/admin/alternatives/validations"
-import type { findToolList } from "~/server/admin/tools/queries"
-import { cx } from "~/utils/cva"
-import { nullsToUndefined } from "~/utils/helpers"
+} from '~/components/common/form';
+import { Input } from '~/components/common/input';
+import { Link } from '~/components/common/link';
+import { Switch } from '~/components/common/switch';
+import { TextArea } from '~/components/common/textarea';
+import {
+  createAlternative,
+  updateAlternative,
+} from '~/server/admin/alternatives/actions';
+import type { findAlternativeBySlug } from '~/server/admin/alternatives/queries';
+import {
+  type AlternativeSchema,
+  alternativeSchema,
+} from '~/server/admin/alternatives/validations';
+import type { findToolList } from '~/server/admin/tools/queries';
+import { cx } from '~/utils/cva';
+import { nullsToUndefined } from '~/utils/helpers';
 
-type AlternativeFormProps = ComponentProps<"form"> & {
-  alternative?: Awaited<ReturnType<typeof findAlternativeBySlug>>
-  tools: ReturnType<typeof findToolList>
-}
+type AlternativeFormProps = ComponentProps<'form'> & {
+  alternative?: Awaited<ReturnType<typeof findAlternativeBySlug>>;
+  tools: ReturnType<typeof findToolList>;
+};
 
 export function AlternativeForm({
   children,
@@ -45,51 +51,50 @@ export function AlternativeForm({
       ...nullsToUndefined(alternative),
       tools: alternative?.tools.map(({ id }) => id),
     },
-  })
+  });
 
   // Create alternative
-  const { execute: createAlternativeAction, isPending: isCreatingAlternative } = useServerAction(
-    createAlternative,
-    {
+  const { execute: createAlternativeAction, isPending: isCreatingAlternative } =
+    useServerAction(createAlternative, {
       onSuccess: ({ data }) => {
-        toast.success("Alternative successfully created")
-        redirect(`/admin/alternatives/${data.slug}`)
+        toast.success('Alternative successfully created');
+        redirect(`/admin/alternatives/${data.slug}`);
       },
 
       onError: ({ err }) => {
-        toast.error(err.message)
+        toast.error(err.message);
       },
-    },
-  )
+    });
 
   // Update alternative
-  const { execute: updateAlternativeAction, isPending: isUpdatingAlternative } = useServerAction(
-    updateAlternative,
-    {
+  const { execute: updateAlternativeAction, isPending: isUpdatingAlternative } =
+    useServerAction(updateAlternative, {
       onSuccess: ({ data }) => {
-        toast.success("Alternative successfully updated")
-        redirect(`/admin/alternatives/${data.slug}`)
+        toast.success('Alternative successfully updated');
+        redirect(`/admin/alternatives/${data.slug}`);
       },
 
       onError: ({ err }) => {
-        toast.error(err.message)
+        toast.error(err.message);
       },
-    },
-  )
+    });
 
-  const onSubmit = form.handleSubmit(data => {
+  const onSubmit = form.handleSubmit((data) => {
     alternative
       ? updateAlternativeAction({ id: alternative.id, ...data })
-      : createAlternativeAction(data)
-  })
+      : createAlternativeAction(data);
+  });
 
-  const isPending = isCreatingAlternative || isUpdatingAlternative
+  const isPending = isCreatingAlternative || isUpdatingAlternative;
 
   return (
     <Form {...form}>
       <form
         onSubmit={onSubmit}
-        className={cx("grid grid-cols-1 gap-4 max-w-3xl sm:grid-cols-2", className)}
+        className={cx(
+          'grid grid-cols-1 gap-4 max-w-3xl sm:grid-cols-2',
+          className
+        )}
         noValidate
         {...props}
       >
@@ -158,7 +163,10 @@ export function AlternativeForm({
             <FormItem>
               <FormLabel>Featured</FormLabel>
               <FormControl>
-                <Switch onCheckedChange={field.onChange} checked={field.value} />
+                <Switch
+                  onCheckedChange={field.onChange}
+                  checked={field.value}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -228,10 +236,10 @@ export function AlternativeForm({
           </Button>
 
           <Button variant="fancy" isPending={isPending}>
-            {alternative ? "Update alternative" : "Create alternative"}
+            {alternative ? 'Update alternative' : 'Create alternative'}
           </Button>
         </div>
       </form>
     </Form>
-  )
+  );
 }

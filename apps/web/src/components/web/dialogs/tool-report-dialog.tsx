@@ -1,12 +1,12 @@
-import { zodResolver } from "@hookform/resolvers/zod"
-import { ReportType } from "@openalternative/db/client"
-import { sentenceCase } from "change-case"
-import type { Dispatch, SetStateAction } from "react"
-import { useForm } from "react-hook-form"
-import { toast } from "sonner"
-import { useServerAction } from "zsa-react"
-import { reportTool } from "~/actions/report"
-import { Button } from "~/components/common/button"
+import { zodResolver } from '@hookform/resolvers/zod';
+import { ReportType } from '@openalternative/db/client';
+import { sentenceCase } from 'change-case';
+import type { Dispatch, SetStateAction } from 'react';
+import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
+import { useServerAction } from 'zsa-react';
+import { reportTool } from '~/actions/report';
+import { Button } from '~/components/common/button';
 import {
   Dialog,
   DialogContent,
@@ -14,7 +14,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "~/components/common/dialog"
+} from '~/components/common/dialog';
 import {
   Form,
   FormControl,
@@ -22,49 +22,57 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "~/components/common/form"
-import { RadioGroup, RadioGroupItem } from "~/components/common/radio-group"
-import { TextArea } from "~/components/common/textarea"
-import { type ReportSchema, reportSchema } from "~/server/schemas"
-import type { ToolMany, ToolManyExtended } from "~/server/web/tools/payloads"
+} from '~/components/common/form';
+import { RadioGroup, RadioGroupItem } from '~/components/common/radio-group';
+import { TextArea } from '~/components/common/textarea';
+import { type ReportSchema, reportSchema } from '~/server/schemas';
+import type { ToolMany, ToolManyExtended } from '~/server/web/tools/payloads';
 
 type ToolReportDialogProps = {
-  tool: ToolMany | ToolManyExtended
-  isOpen: boolean
-  setIsOpen: Dispatch<SetStateAction<boolean>>
-}
+  tool: ToolMany | ToolManyExtended;
+  isOpen: boolean;
+  setIsOpen: Dispatch<SetStateAction<boolean>>;
+};
 
-export const ToolReportDialog = ({ tool, isOpen, setIsOpen }: ToolReportDialogProps) => {
+export const ToolReportDialog = ({
+  tool,
+  isOpen,
+  setIsOpen,
+}: ToolReportDialogProps) => {
   const form = useForm<ReportSchema>({
     resolver: zodResolver(reportSchema),
     defaultValues: {
       type: ReportType.BrokenLink,
-      message: "",
+      message: '',
     },
-  })
+  });
 
   const { execute, isPending } = useServerAction(reportTool, {
     onSuccess: () => {
-      toast.success("Thank you for your report")
-      setIsOpen(false)
-      form.reset()
+      toast.success('Thank you for your report');
+      setIsOpen(false);
+      form.reset();
     },
     onError: ({ err }) => {
-      toast.error(err.message)
+      toast.error(err.message);
     },
-  })
+  });
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogContent className="max-w-md">
         <DialogHeader>
           <DialogTitle>Report {tool.name}</DialogTitle>
-          <DialogDescription>What is happening with this tool?</DialogDescription>
+          <DialogDescription>
+            What is happening with this tool?
+          </DialogDescription>
         </DialogHeader>
 
         <Form {...form}>
           <form
-            onSubmit={form.handleSubmit(data => execute({ toolSlug: tool.slug, ...data }))}
+            onSubmit={form.handleSubmit((data) =>
+              execute({ toolSlug: tool.slug, ...data })
+            )}
             className="grid gap-6"
             noValidate
           >
@@ -79,10 +87,12 @@ export const ToolReportDialog = ({ tool, isOpen, setIsOpen }: ToolReportDialogPr
                       defaultValue={field.value}
                       className="grid gap-3"
                     >
-                      {Object.values(ReportType).map(type => (
+                      {Object.values(ReportType).map((type) => (
                         <div key={type} className="flex items-center space-x-2">
                           <RadioGroupItem value={type} id={`r${type}`} />
-                          <FormLabel htmlFor={`r${type}`}>{sentenceCase(type)}</FormLabel>
+                          <FormLabel htmlFor={`r${type}`}>
+                            {sentenceCase(type)}
+                          </FormLabel>
                         </div>
                       ))}
                     </RadioGroup>
@@ -112,11 +122,19 @@ export const ToolReportDialog = ({ tool, isOpen, setIsOpen }: ToolReportDialogPr
             />
 
             <DialogFooter>
-              <Button type="button" variant="secondary" onClick={() => setIsOpen(false)}>
+              <Button
+                type="button"
+                variant="secondary"
+                onClick={() => setIsOpen(false)}
+              >
                 Cancel
               </Button>
 
-              <Button variant="destructive" className="min-w-28" isPending={isPending}>
+              <Button
+                variant="destructive"
+                className="min-w-28"
+                isPending={isPending}
+              >
                 Report
               </Button>
             </DialogFooter>
@@ -124,5 +142,5 @@ export const ToolReportDialog = ({ tool, isOpen, setIsOpen }: ToolReportDialogPr
         </Form>
       </DialogContent>
     </Dialog>
-  )
-}
+  );
+};

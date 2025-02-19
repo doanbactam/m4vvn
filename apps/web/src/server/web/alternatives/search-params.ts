@@ -1,10 +1,16 @@
-import { createSearchParamsCache, parseAsInteger, parseAsString } from "nuqs/server"
+import {
+  createSearchParamsCache,
+  parseAsInteger,
+  parseAsString,
+} from 'nuqs/server';
 
 export const alternativesSearchParams = {
-  q: parseAsString.withDefault(""),
+  q: parseAsString.withDefault(''),
   page: parseAsInteger.withDefault(1),
-  sort: parseAsString.withDefault(""),
+  sort: parseAsString.withDefault(''),
   perPage: parseAsInteger.withDefault(54),
-}
+};
 
-export const alternativesSearchParamsCache = createSearchParamsCache(alternativesSearchParams)
+export const alternativesSearchParamsCache = createSearchParamsCache(
+  alternativesSearchParams
+);

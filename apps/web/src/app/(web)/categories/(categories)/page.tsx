@@ -1,17 +1,18 @@
-import type { Metadata } from "next"
-import { Suspense } from "react"
-import { CategoryListing } from "~/app/(web)/categories/(categories)/listing"
-import { CategoryListSkeleton } from "~/components/web/categories/category-list"
-import { Breadcrumbs } from "~/components/web/ui/breadcrumbs"
-import { Intro, IntroDescription, IntroTitle } from "~/components/web/ui/intro"
-import { metadataConfig } from "~/config/metadata"
+import type { Metadata } from 'next';
+import { Suspense } from 'react';
+import { CategoryListing } from '~/app/(web)/categories/(categories)/listing';
+import { CategoryListSkeleton } from '~/components/web/categories/category-list';
+import { Breadcrumbs } from '~/components/web/ui/breadcrumbs';
+import { Intro, IntroDescription, IntroTitle } from '~/components/web/ui/intro';
+import { metadataConfig } from '~/config/metadata';
 
 export const metadata: Metadata = {
-  title: "Open Source Software Categories",
-  description: "Browse top categories to find your best Open Source software options.",
-  openGraph: { ...metadataConfig.openGraph, url: "/categories" },
-  alternates: { ...metadataConfig.alternates, canonical: "/categories" },
-}
+  title: 'Open Source Software Categories',
+  description:
+    'Browse top categories to find your best Open Source software options.',
+  openGraph: { ...metadataConfig.openGraph, url: '/categories' },
+  alternates: { ...metadataConfig.alternates, canonical: '/categories' },
+};
 
 export default function Categories() {
   return (
@@ -19,8 +20,8 @@ export default function Categories() {
       <Breadcrumbs
         items={[
           {
-            href: "/categories",
-            name: "Categories",
+            href: '/categories',
+            name: 'Categories',
           },
         ]}
       />
@@ -34,5 +35,5 @@ export default function Categories() {
         <CategoryListing />
       </Suspense>
     </>
-  )
+  );
 }

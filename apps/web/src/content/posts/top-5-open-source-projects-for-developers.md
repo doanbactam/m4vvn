@@ -1,23 +1,23 @@
 ---
-title: "Top 5 Open-Source Projects for Developers"
-description: "If you’re a developer looking to improve your productivity, check out some outstanding open-source projects I’ve found. They can enhance your skills and streamline your workflow effectively."
-image: "/content/top-5-open-source-projects-for-developers/thumbnail.webp"
+title: 'Top 5 Open-Source Projects for Developers'
+description: 'If you’re a developer looking to improve your productivity, check out some outstanding open-source projects I’ve found. They can enhance your skills and streamline your workflow effectively.'
+image: '/content/top-5-open-source-projects-for-developers/thumbnail.webp'
 publishedAt: 2024-12-04
 author:
   name: Mohit Vaswani
-  image: "/authors/mohitvaswani.webp"
-  twitterHandle: "hii_mohit"
+  image: '/authors/mohitvaswani.webp'
+  twitterHandle: 'hii_mohit'
 ---
 
 Hey there, developers! We've got some awesome projects to share with you, created by talented coders just like you. No matter if you're new to the game or a seasoned pro, there's something here that'll catch your eye.
 
 These projects will help you with a variety of tasks like —
 
-*   Track, improve, and build better apps.
-*   Find and Fix code errors faster than ever
-*   Connect and organize your data for smarter decisions.
-*   See and fix issues in your app while keeping your data secure.
-*   Make your website analytics much easier and shareable.
+- Track, improve, and build better apps.
+- Find and Fix code errors faster than ever
+- Connect and organize your data for smarter decisions.
+- See and fix issues in your app while keeping your data secure.
+- Make your website analytics much easier and shareable.
 
 Let’s take a look at the top five projects in detail:
 

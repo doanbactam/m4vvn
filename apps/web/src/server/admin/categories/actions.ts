@@ -1,13 +1,13 @@
-"use server"
+'use server';
 
-import { slugify } from "@curiousleaf/utils"
-import { db } from "@openalternative/db"
-import { revalidateTag } from "next/cache"
-import { z } from "zod"
-import { adminProcedure  } from "~/lib/safe-actions"
-import { categorySchema } from "~/server/admin/categories/validations"
+import { slugify } from '@curiousleaf/utils';
+import { db } from '@openalternative/db';
+import { revalidateTag } from 'next/cache';
+import { z } from 'zod';
+import { adminProcedure } from '~/lib/safe-actions';
+import { categorySchema } from '~/server/admin/categories/validations';
 
-export const createCategory = adminProcedure 
+export const createCategory = adminProcedure
   .createServerAction()
   .input(categorySchema)
   .handler(async ({ input: { tools, ...input } }) => {
@@ -15,16 +15,16 @@ export const createCategory = adminProcedure
       data: {
         ...input,
         slug: input.slug || slugify(input.name),
-        tools: { connect: tools?.map(id => ({ id })) },
+        tools: { connect: tools?.map((id) => ({ id })) },
       },
-    })
+    });
 
-    revalidateTag("categories")
+    revalidateTag('categories');
 
-    return category
-  })
+    return category;
+  });
 
-export const updateCategory = adminProcedure 
+export const updateCategory = adminProcedure
   .createServerAction()
   .input(categorySchema.extend({ id: z.string() }))
   .handler(async ({ input: { id, tools, ...input } }) => {
@@ -33,25 +33,25 @@ export const updateCategory = adminProcedure
       data: {
         ...input,
         slug: input.slug || slugify(input.name),
-        tools: { set: tools?.map(id => ({ id })) },
+        tools: { set: tools?.map((id) => ({ id })) },
       },
-    })
+    });
 
-    revalidateTag("categories")
-    revalidateTag(`category-${category.slug}`)
+    revalidateTag('categories');
+    revalidateTag(`category-${category.slug}`);
 
-    return category
-  })
+    return category;
+  });
 
-export const deleteCategories = adminProcedure 
+export const deleteCategories = adminProcedure
   .createServerAction()
   .input(z.object({ ids: z.array(z.string()) }))
   .handler(async ({ input: { ids } }) => {
     await db.category.deleteMany({
       where: { id: { in: ids } },
-    })
+    });
 
-    revalidateTag("categories")
+    revalidateTag('categories');
 
-    return true
-  })
+    return true;
+  });

@@ -1,19 +1,23 @@
-"use client"
+'use client';
 
-import type { Tool } from "@openalternative/db/client"
-import type { Table } from "@tanstack/react-table"
-import { ToolsDeleteDialog } from "./tools-delete-dialog"
+import type { Tool } from '@openalternative/db/client';
+import type { Table } from '@tanstack/react-table';
+import { ToolsDeleteDialog } from './tools-delete-dialog';
 
 interface ToolsTableToolbarActionsProps {
-  table: Table<Tool>
+  table: Table<Tool>;
 }
 
-export function ToolsTableToolbarActions({ table }: ToolsTableToolbarActionsProps) {
+export function ToolsTableToolbarActions({
+  table,
+}: ToolsTableToolbarActionsProps) {
   return (
     <>
       {table.getFilteredSelectedRowModel().rows.length > 0 ? (
         <ToolsDeleteDialog
-          tools={table.getFilteredSelectedRowModel().rows.map(row => row.original)}
+          tools={table
+            .getFilteredSelectedRowModel()
+            .rows.map((row) => row.original)}
           onSuccess={() => table.toggleAllRowsSelected(false)}
         />
       ) : null}
@@ -23,5 +27,5 @@ export function ToolsTableToolbarActions({ table }: ToolsTableToolbarActionsProp
        * For example, import, view, etc.
        */}
     </>
-  )
+  );
 }

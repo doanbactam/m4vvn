@@ -1,39 +1,46 @@
-"use client"
+'use client';
 
-import type { Tool } from "@openalternative/db/client"
-import { EllipsisIcon } from "lucide-react"
-import type { ComponentProps, Dispatch, SetStateAction } from "react"
-import { toast } from "sonner"
-import { useServerAction } from "zsa-react"
-import { Button } from "~/components/common/button"
+import type { Tool } from '@openalternative/db/client';
+import { EllipsisIcon } from 'lucide-react';
+import type { ComponentProps, Dispatch, SetStateAction } from 'react';
+import { toast } from 'sonner';
+import { useServerAction } from 'zsa-react';
+import { Button } from '~/components/common/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "~/components/common/dropdown-menu"
-import { Link } from "~/components/common/link"
-import { reuploadToolAssets } from "~/server/admin/tools/actions"
-import type { DataTableRowAction } from "~/types"
-import { cx } from "~/utils/cva"
+} from '~/components/common/dropdown-menu';
+import { Link } from '~/components/common/link';
+import { reuploadToolAssets } from '~/server/admin/tools/actions';
+import type { DataTableRowAction } from '~/types';
+import { cx } from '~/utils/cva';
 
 type ToolActionsProps = ComponentProps<typeof Button> & {
-  tool: Tool
-  setRowAction: Dispatch<SetStateAction<DataTableRowAction<Tool> | null>>
-}
+  tool: Tool;
+  setRowAction: Dispatch<SetStateAction<DataTableRowAction<Tool> | null>>;
+};
 
-export const ToolActions = ({ className, tool, setRowAction, ...props }: ToolActionsProps) => {
-  const { execute: reuploadAssetsAction } = useServerAction(reuploadToolAssets, {
-    onSuccess: () => {
-      toast.success("Tool assets reuploaded")
-    },
+export const ToolActions = ({
+  className,
+  tool,
+  setRowAction,
+  ...props
+}: ToolActionsProps) => {
+  const { execute: reuploadAssetsAction } = useServerAction(
+    reuploadToolAssets,
+    {
+      onSuccess: () => {
+        toast.success('Tool assets reuploaded');
+      },
 
-    onError: ({ err }) => {
-      toast.error(err.message)
-    },
-  })
-
+      onError: ({ err }) => {
+        toast.error(err.message);
+      },
+    }
+  );
 
   return (
     <DropdownMenu modal={false}>
@@ -43,7 +50,7 @@ export const ToolActions = ({ className, tool, setRowAction, ...props }: ToolAct
           variant="secondary"
           size="sm"
           prefix={<EllipsisIcon />}
-          className={cx("data-[state=open]:bg-accent", className)}
+          className={cx('data-[state=open]:bg-accent', className)}
           {...props}
         />
       </DropdownMenuTrigger>
@@ -61,17 +68,18 @@ export const ToolActions = ({ className, tool, setRowAction, ...props }: ToolAct
 
         {!tool.publishedAt && (
           <DropdownMenuItem
-            onSelect={() => setRowAction({ data: tool, type: "schedule" })}
+            onSelect={() => setRowAction({ data: tool, type: 'schedule' })}
             className="text-green-600"
           >
             Schedule
           </DropdownMenuItem>
         )}
 
-        <DropdownMenuItem onSelect={() => reuploadAssetsAction({ id: tool.id })}>
+        <DropdownMenuItem
+          onSelect={() => reuploadAssetsAction({ id: tool.id })}
+        >
           Reupload Assets
         </DropdownMenuItem>
-
 
         <DropdownMenuSeparator />
 
@@ -84,12 +92,12 @@ export const ToolActions = ({ className, tool, setRowAction, ...props }: ToolAct
         <DropdownMenuSeparator />
 
         <DropdownMenuItem
-          onSelect={() => setRowAction({ data: tool, type: "delete" })}
+          onSelect={() => setRowAction({ data: tool, type: 'delete' })}
           className="text-red-500"
         >
           Delete
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
-  )
-}
+  );
+};

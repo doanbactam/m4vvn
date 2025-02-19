@@ -1,4 +1,4 @@
-import type { SVGAttributes } from "react"
+import type { SVGAttributes } from 'react';
 
 export const BrandRedditIcon = ({ ...props }: SVGAttributes<SVGSVGElement>) => {
   return (
@@ -24,5 +24,5 @@ export const BrandRedditIcon = ({ ...props }: SVGAttributes<SVGSVGElement>) => {
       <circle cx="15" cy="13" r=".5" fill="currentColor" />
       <path d="M10 17c.667 .333 1.333 .5 2 .5s1.333 -.167 2 -.5" />
     </svg>
-  )
-}
+  );
+};

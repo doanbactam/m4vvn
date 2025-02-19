@@ -1,18 +1,18 @@
-"use client"
+'use client';
 
-import { ArrowUpRightIcon } from "lucide-react"
-import type { ComponentProps } from "react"
-import { Button } from "~/components/common/button"
-import { Card, CardDescription, CardHeader } from "~/components/common/card"
-import { H4 } from "~/components/common/heading"
-import { ExternalLink } from "~/components/web/external-link"
-import { Favicon } from "~/components/web/ui/favicon"
-import type { AlternativeOne } from "~/server/web/alternatives/payloads"
-import { cx } from "~/utils/cva"
+import { ArrowUpRightIcon } from 'lucide-react';
+import type { ComponentProps } from 'react';
+import { Button } from '~/components/common/button';
+import { Card, CardDescription, CardHeader } from '~/components/common/card';
+import { H4 } from '~/components/common/heading';
+import { ExternalLink } from '~/components/web/external-link';
+import { Favicon } from '~/components/web/ui/favicon';
+import type { AlternativeOne } from '~/server/web/alternatives/payloads';
+import { cx } from '~/utils/cva';
 
 type AlternativeCardExternalProps = ComponentProps<typeof Card> & {
-  alternative: AlternativeOne
-}
+  alternative: AlternativeOne;
+};
 
 export const AlternativeCardExternal = ({
   className,
@@ -20,7 +20,7 @@ export const AlternativeCardExternal = ({
   ...props
 }: AlternativeCardExternalProps) => {
   return (
-    <Card className={cx("group/button", className)} {...props} asChild>
+    <Card className={cx('group/button', className)} {...props} asChild>
       <ExternalLink
         href={alternative.websiteUrl}
         eventName="click_alternative"
@@ -44,7 +44,7 @@ export const AlternativeCardExternal = ({
           <p className="*:underline *:font-semibold text-pretty text-sm text-green-600 dark:text-green-400">
             {alternative.discountCode ? (
               <>
-                Use code <strong>{alternative.discountCode}</strong> to get{" "}
+                Use code <strong>{alternative.discountCode}</strong> to get{' '}
                 <strong>{alternative.discountAmount}</strong>
               </>
             ) : (
@@ -55,10 +55,14 @@ export const AlternativeCardExternal = ({
           </p>
         )}
 
-        <Button className="pointer-events-none md:w-full" suffix={<ArrowUpRightIcon />} asChild>
+        <Button
+          className="pointer-events-none md:w-full"
+          suffix={<ArrowUpRightIcon />}
+          asChild
+        >
           <span>Visit {alternative.name}</span>
         </Button>
       </ExternalLink>
     </Card>
-  )
-}
+  );
+};

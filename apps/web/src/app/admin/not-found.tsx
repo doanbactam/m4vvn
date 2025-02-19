@@ -1,4 +1,4 @@
-import { H2 } from "~/components/common/heading"
+import { H2 } from '~/components/common/heading';
 
 export default function NotFound() {
   return (
@@ -9,5 +9,5 @@ export default function NotFound() {
         We're sorry, but the page you're looking for doesn't exist.
       </p>
     </div>
-  )
+  );
 }

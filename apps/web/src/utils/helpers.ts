@@ -1,11 +1,11 @@
-import { Children, type ReactNode } from "react"
-import wretch from "wretch"
+import { Children, type ReactNode } from 'react';
+import wretch from 'wretch';
 
 type Metadata = {
-  title: string
-  description: string
-  image: string
-}
+  title: string;
+  description: string;
+  image: string;
+};
 
 /**
  * Checks if an email is a disposable email by checking if the domain is in the disposable domains list
@@ -14,13 +14,15 @@ type Metadata = {
  */
 export const isDisposableEmail = async (email: string) => {
   const disposableJsonURL =
-    "https://rawcdn.githack.com/disposable/disposable-email-domains/master/domains.json"
+    'https://rawcdn.githack.com/disposable/disposable-email-domains/master/domains.json';
 
-  const disposableDomains = await wretch(disposableJsonURL).get().json<string[]>()
-  const domain = email.split("@")[1]
+  const disposableDomains = await wretch(disposableJsonURL)
+    .get()
+    .json<string[]>();
+  const domain = email.split('@')[1];
 
-  return disposableDomains.includes(domain)
-}
+  return disposableDomains.includes(domain);
+};
 
 /**
  * Get the URL metadata
@@ -29,16 +31,15 @@ export const isDisposableEmail = async (email: string) => {
  */
 export const getUrlMetadata = async (url: string) => {
   try {
-    const api = wretch(`https://api.dub.co/metatags?url=${url}`)
-    const metadata = await api.get().json<Metadata>()
+    const api = wretch(`https://api.dub.co/metatags?url=${url}`);
+    const metadata = await api.get().json<Metadata>();
 
-    return metadata
+    return metadata;
   } catch (error) {
-    console.error("Error fetching metadata:", error)
-    return
+    console.error('Error fetching metadata:', error);
+    return;
   }
-}
-
+};
 
 /**
  * Returns the position of an element with the given ID relative to the top of the viewport.
@@ -46,15 +47,17 @@ export const getUrlMetadata = async (url: string) => {
  * @returns An object with the ID and top position of the element, or undefined if the element is not found.
  */
 export const getElementPosition = (id?: string) => {
-  const el = document.getElementById(id || "")
-  if (!el) return
+  const el = document.getElementById(id || '');
+  if (!el) return;
 
-  const style = window.getComputedStyle(el)
-  const scrollMt = Number.parseFloat(style.scrollMarginTop)
-  const top = Math.floor(window.scrollY + el.getBoundingClientRect().top - scrollMt)
+  const style = window.getComputedStyle(el);
+  const scrollMt = Number.parseFloat(style.scrollMarginTop);
+  const top = Math.floor(
+    window.scrollY + el.getBoundingClientRect().top - scrollMt
+  );
 
-  return { id, top }
-}
+  return { id, top };
+};
 
 /**
  * Converts null and undefined values to undefined
@@ -63,15 +66,15 @@ export const getElementPosition = (id?: string) => {
  */
 export function nullsToUndefined<T>(obj: T) {
   if (obj === null || obj === undefined) {
-    return undefined as any
+    return undefined as any;
   }
 
-  if ((obj as any).constructor.name === "Object" || Array.isArray(obj)) {
+  if ((obj as any).constructor.name === 'Object' || Array.isArray(obj)) {
     for (const key in obj) {
-      obj[key] = nullsToUndefined(obj[key]) as any
+      obj[key] = nullsToUndefined(obj[key]) as any;
     }
   }
-  return obj as any
+  return obj as any;
 }
 
 /**
@@ -80,5 +83,5 @@ export function nullsToUndefined<T>(obj: T) {
  * @returns True if the children are empty, false otherwise
  */
 export const isChildrenEmpty = (children: ReactNode) => {
-  return Children.count(children) === 0
-}
+  return Children.count(children) === 0;
+};

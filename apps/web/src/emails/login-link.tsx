@@ -1,11 +1,14 @@
-import { Text } from "@react-email/components"
-import { config } from "~/config"
-import { EmailButton } from "~/emails/components/button"
-import { EmailWrapper, type EmailWrapperProps } from "~/emails/components/wrapper"
+import { Text } from '@react-email/components';
+import { config } from '~/config';
+import { EmailButton } from '~/emails/components/button';
+import {
+  EmailWrapper,
+  type EmailWrapperProps,
+} from '~/emails/components/wrapper';
 
 export type EmailProps = EmailWrapperProps & {
-  url: string
-}
+  url: string;
+};
 
 const EmailLoginLink = ({ url, ...props }: EmailProps) => {
   return (
@@ -20,7 +23,7 @@ const EmailLoginLink = ({ url, ...props }: EmailProps) => {
 
       <Text className="max-w-sm flex-wrap break-words font-medium">{url}</Text>
     </EmailWrapper>
-  )
-}
+  );
+};
 
-export default EmailLoginLink
+export default EmailLoginLink;

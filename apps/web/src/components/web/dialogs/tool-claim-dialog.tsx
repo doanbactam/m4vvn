@@ -1,10 +1,10 @@
-import { getUrlHostname } from "@curiousleaf/utils"
-import { usePathname } from "next/navigation"
-import type { Dispatch, SetStateAction } from "react"
-import { toast } from "sonner"
-import { useServerAction } from "zsa-react"
-import { claimTool } from "~/actions/claim"
-import { Button } from "~/components/common/button"
+import { getUrlHostname } from '@curiousleaf/utils';
+import { usePathname } from 'next/navigation';
+import type { Dispatch, SetStateAction } from 'react';
+import { toast } from 'sonner';
+import { useServerAction } from 'zsa-react';
+import { claimTool } from '~/actions/claim';
+import { Button } from '~/components/common/button';
 import {
   Dialog,
   DialogContent,
@@ -12,31 +12,35 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "~/components/common/dialog"
-import { siteConfig } from "~/config/site"
-import { useSession } from "~/lib/auth-client"
-import type { ToolMany, ToolManyExtended } from "~/server/web/tools/payloads"
+} from '~/components/common/dialog';
+import { siteConfig } from '~/config/site';
+import { useSession } from '~/lib/auth-client';
+import type { ToolMany, ToolManyExtended } from '~/server/web/tools/payloads';
 
 type ToolClaimDialogProps = {
-  tool: ToolMany | ToolManyExtended
-  isOpen: boolean
-  setIsOpen: Dispatch<SetStateAction<boolean>>
-}
+  tool: ToolMany | ToolManyExtended;
+  isOpen: boolean;
+  setIsOpen: Dispatch<SetStateAction<boolean>>;
+};
 
-export const ToolClaimDialog = ({ tool, isOpen, setIsOpen }: ToolClaimDialogProps) => {
-  const pathname = usePathname()
-  const { data: session } = useSession()
-  const callbackURL = `${siteConfig.url}${pathname}`
+export const ToolClaimDialog = ({
+  tool,
+  isOpen,
+  setIsOpen,
+}: ToolClaimDialogProps) => {
+  const pathname = usePathname();
+  const { data: session } = useSession();
+  const callbackURL = `${siteConfig.url}${pathname}`;
 
   const { execute, isPending } = useServerAction(claimTool, {
     onSuccess: () => {
-      toast.success("Thank you for your claim")
-      setIsOpen(false)
+      toast.success('Thank you for your claim');
+      setIsOpen(false);
     },
     onError: ({ err }) => {
-      toast.error(err.message)
+      toast.error(err.message);
     },
-  })
+  });
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -46,9 +50,10 @@ export const ToolClaimDialog = ({ tool, isOpen, setIsOpen }: ToolClaimDialogProp
 
           <DialogDescription>
             <p>
-              To claim this listing, you need to sign in with an email address from the same domain
-              – <strong>{getUrlHostname(tool.websiteUrl)}</strong>. This helps us verify that you
-              represent the organization.
+              To claim this listing, you need to sign in with an email address
+              from the same domain –{' '}
+              <strong>{getUrlHostname(tool.websiteUrl)}</strong>. This helps us
+              verify that you represent the organization.
             </p>
 
             <p>By claiming this tool, you'll be able to:</p>
@@ -71,10 +76,10 @@ export const ToolClaimDialog = ({ tool, isOpen, setIsOpen }: ToolClaimDialogProp
             className="min-w-28"
             isPending={isPending}
           >
-            {session?.user ? `Claim ${tool.name}` : "Sign in to claim"}
+            {session?.user ? `Claim ${tool.name}` : 'Sign in to claim'}
           </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  )
-}
+  );
+};

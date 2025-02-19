@@ -1,17 +1,17 @@
 ---
-title: "7 Open-Source Tools for Better Website Analytics"
+title: '7 Open-Source Tools for Better Website Analytics'
 description: "If you are running a website, SaaS, or online business, having a good analytics tool is important for understanding your website's performance and growth. Here are 7 open-source tools that can help you with that."
-image: "/content/7-open-source-tools-for-website-analytics/thumbnail.webp"
+image: '/content/7-open-source-tools-for-website-analytics/thumbnail.webp'
 publishedAt: 2025-01-14
 author:
   name: Mohit Vaswani
-  image: "/authors/mohitvaswani.webp"
-  twitterHandle: "hii_mohit"
+  image: '/authors/mohitvaswani.webp'
+  twitterHandle: 'hii_mohit'
 ---
 
 If you are running a website, SaaS, or online business, having a good analytics tool is important for understanding your website's performance and growth. Analytics tools can give you valuable information about user behavior, where your traffic comes from, and how people engage with your site.
 
-In 2025, open-source analytics tools have become more powerful and affordable, giving businesses of all sizes a way to track and analyze their data without breaking the bank. 
+In 2025, open-source analytics tools have become more powerful and affordable, giving businesses of all sizes a way to track and analyze their data without breaking the bank.
 
 Let's dive into the list:
 
@@ -59,8 +59,7 @@ Countly helps you understand how people use your apps and websites. It gathers d
 
 You can customize Countly to fit your needs by creating special dashboards or adding extra features. Countly makes analytics simple and powerful for businesses of all sizes.
 
-It's the best alternative for [June](/alternatives/june),  [Fathom Analytics](/alternatives/fathom-analytics), [Google Analytics](/alternatives/google-analytics), [Amplitude](/alternatives/amplitude), [Kissmetrics](/alternatives/kissmetrics), and [MixPanel](/alternatives/mixpanel)
-
+It's the best alternative for [June](/alternatives/june), [Fathom Analytics](/alternatives/fathom-analytics), [Google Analytics](/alternatives/google-analytics), [Amplitude](/alternatives/amplitude), [Kissmetrics](/alternatives/kissmetrics), and [MixPanel](/alternatives/mixpanel)
 
 Project Link: [**Countly**](/countly)
 
@@ -90,7 +89,7 @@ Matomo prioritizes the safety and confidentiality of user information while help
 
 It's user-friendly and doesn't rely on tracking cookies, making it easier to comply with privacy regulations. You can use Matomo to monitor visitor activity, gain insights into their interests, and make informed decisions to improve your website.
 
-If you want to grow your website without compromising privacy, Matomo is an excellent choice, trusted by over a million users. 
+If you want to grow your website without compromising privacy, Matomo is an excellent choice, trusted by over a million users.
 
 It's the best alternative for [Fathom Analytics](/alternatives/fathom-analytics), [Google Analytics](/alternatives/google-analytics), [Google Tag Manager](/alternatives/google-tag-manager), and [Kissmetrics](/alternatives/kissmetrics)
 

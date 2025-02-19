@@ -1,14 +1,14 @@
-"use server"
+'use server';
 
-import { slugify } from "@curiousleaf/utils"
-import { db } from "@openalternative/db"
-import { revalidateTag } from "next/cache"
-import { z } from "zod"
-import { isProd } from "~/env"
-import { uploadFavicon } from "~/lib/media"
-import { adminProcedure } from "~/lib/safe-actions"
-import { alternativeSchema } from "~/server/admin/alternatives/validations"
-import { inngest } from "~/services/inngest"
+import { slugify } from '@curiousleaf/utils';
+import { db } from '@openalternative/db';
+import { revalidateTag } from 'next/cache';
+import { z } from 'zod';
+import { isProd } from '~/env';
+import { uploadFavicon } from '~/lib/media';
+import { adminProcedure } from '~/lib/safe-actions';
+import { alternativeSchema } from '~/server/admin/alternatives/validations';
+import { inngest } from '~/services/inngest';
 
 export const createAlternative = adminProcedure
   .createServerAction()
@@ -18,17 +18,20 @@ export const createAlternative = adminProcedure
       data: {
         ...input,
         slug: input.slug || slugify(input.name),
-        tools: { connect: tools?.map(id => ({ id })) },
+        tools: { connect: tools?.map((id) => ({ id })) },
       },
-    })
+    });
 
-    revalidateTag("alternatives")
+    revalidateTag('alternatives');
 
     isProd &&
-      (await inngest.send({ name: "alternative.created", data: { slug: alternative.slug } }))
+      (await inngest.send({
+        name: 'alternative.created',
+        data: { slug: alternative.slug },
+      }));
 
-    return alternative
-  })
+    return alternative;
+  });
 
 export const updateAlternative = adminProcedure
   .createServerAction()
@@ -38,15 +41,15 @@ export const updateAlternative = adminProcedure
       where: { id },
       data: {
         ...input,
-        tools: { set: tools?.map(id => ({ id })) },
+        tools: { set: tools?.map((id) => ({ id })) },
       },
-    })
+    });
 
-    revalidateTag("alternatives")
-    revalidateTag(`alternative-${alternative.slug}`)
+    revalidateTag('alternatives');
+    revalidateTag(`alternative-${alternative.slug}`);
 
-    return alternative
-  })
+    return alternative;
+  });
 
 export const deleteAlternatives = adminProcedure
   .createServerAction()
@@ -55,21 +58,24 @@ export const deleteAlternatives = adminProcedure
     const alternatives = await db.alternative.findMany({
       where: { id: { in: ids } },
       select: { slug: true },
-    })
+    });
 
     await db.alternative.deleteMany({
       where: { id: { in: ids } },
-    })
+    });
 
-    revalidateTag("alternatives")
+    revalidateTag('alternatives');
 
     for (const alternative of alternatives) {
       isProd &&
-        (await inngest.send({ name: "alternative.deleted", data: { slug: alternative.slug } }))
+        (await inngest.send({
+          name: 'alternative.deleted',
+          data: { slug: alternative.slug },
+        }));
     }
 
-    return true
-  })
+    return true;
+  });
 
 export const reuploadAlternativeAssets = adminProcedure
   .createServerAction()
@@ -77,20 +83,20 @@ export const reuploadAlternativeAssets = adminProcedure
   .handler(async ({ input: { id } }) => {
     const alternative = await db.alternative.findUniqueOrThrow({
       where: { id },
-    })
+    });
 
     const faviconUrl = await uploadFavicon(
       alternative.websiteUrl,
-      `alternatives/${alternative.slug}/favicon`,
-    )
+      `alternatives/${alternative.slug}/favicon`
+    );
 
     await db.alternative.update({
       where: { id: alternative.id },
       data: { faviconUrl },
-    })
+    });
 
-    revalidateTag("alternatives")
-    revalidateTag(`alternative-${alternative.slug}`)
+    revalidateTag('alternatives');
+    revalidateTag(`alternative-${alternative.slug}`);
 
-    return true
-  })
+    return true;
+  });
