@@ -1,8 +1,6 @@
-import type { SVGAttributes } from 'react';
+import type { ComponentProps } from "react"
 
-export const BrandHackerNewsIcon = ({
-  ...props
-}: SVGAttributes<SVGSVGElement>) => {
+export const BrandHackerNewsIcon = ({ className, ...props }: ComponentProps<"svg">) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
