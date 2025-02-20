@@ -4,13 +4,8 @@ import { usePathname } from 'next/navigation';
 import type { ComponentProps, ReactNode } from 'react';
 import { Badge } from '~/components/common/badge';
 import { Button, type ButtonProps } from '~/components/common/button';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '~/components/common/tooltip';
 import { Link } from '~/components/common/link';
+import { Tooltip, TooltipProvider } from "~/components/common/tooltip"
 import { Stack } from '~/components/common/stack';
 import { cx } from '~/utils/cva';
 
@@ -63,7 +58,7 @@ export const NavMain = ({
               size="md"
               variant="ghost"
               aria-label={title}
-              className={cx(isActive(href) && 'bg-accent')}
+              className={cx(isActive(href) && "bg-accent text-foreground")}
               hover={false}
               asChild
               {...props}
@@ -83,7 +78,7 @@ export const NavMain = ({
                 </Badge>
               )
             }
-            className={cx('justify-start', isActive(href) && 'bg-accent')}
+            className={cx("justify-start", isActive(href) && "bg-accent text-foreground")}
             hover={false}
             asChild
             {...props}

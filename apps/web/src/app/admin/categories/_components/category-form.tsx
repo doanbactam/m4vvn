@@ -1,13 +1,13 @@
-'use client';
+"use client"
 
-import { zodResolver } from '@hookform/resolvers/zod';
-import { redirect } from 'next/navigation';
-import type { ComponentProps } from 'react';
-import { useForm } from 'react-hook-form';
-import { toast } from 'sonner';
-import { useServerAction } from 'zsa-react';
-import { RelationSelector } from '~/components/admin/relation-selector';
-import { Button } from '~/components/common/button';
+import { zodResolver } from "@hookform/resolvers/zod"
+import { redirect } from "next/navigation"
+import type { ComponentProps } from "react"
+import { useForm } from "react-hook-form"
+import { toast } from "sonner"
+import { useServerAction } from "zsa-react"
+import { RelationSelector } from "~/components/admin/relation-selector"
+import { Button } from "~/components/common/button"
 import {
   Form,
   FormControl,
@@ -15,26 +15,19 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '~/components/common/form';
-import { Input } from '~/components/common/input';
-import { Link } from '~/components/common/link';
-import {
-  createCategory,
-  updateCategory,
-} from '~/server/admin/categories/actions';
-import type { findCategoryBySlug } from '~/server/admin/categories/queries';
-import {
-  type CategorySchema,
-  categorySchema,
-} from '~/server/admin/categories/validations';
-import type { findToolList } from '~/server/admin/tools/queries';
-import { cx } from '~/utils/cva';
-import { nullsToUndefined } from '~/utils/helpers';
+} from "~/components/common/form"
+import { Input } from "~/components/common/input"
+import { Link } from "~/components/common/link"
+import { createCategory, updateCategory } from "~/server/admin/categories/actions"
+import type { findCategoryBySlug } from "~/server/admin/categories/queries"
+import { categorySchema } from "~/server/admin/categories/validations"
+import type { findToolList } from "~/server/admin/tools/queries"
+import { cx } from "~/utils/cva"
 
-type CategoryFormProps = ComponentProps<'form'> & {
-  category?: Awaited<ReturnType<typeof findCategoryBySlug>>;
-  tools: ReturnType<typeof findToolList>;
-};
+type CategoryFormProps = ComponentProps<"form"> & {
+  category?: Awaited<ReturnType<typeof findCategoryBySlug>>
+  tools: ReturnType<typeof findToolList>
+}
 
 export function CategoryForm({
   children,
@@ -43,56 +36,57 @@ export function CategoryForm({
   tools,
   ...props
 }: CategoryFormProps) {
-  const form = useForm<CategorySchema>({
+  const form = useForm({
     resolver: zodResolver(categorySchema),
     defaultValues: {
-      ...nullsToUndefined(category),
-      tools: category?.tools.map(({ id }) => id),
+      name: category?.name ?? "",
+      slug: category?.slug ?? "",
+      label: category?.label ?? "",
+      tools: category?.tools.map(t => t.id) ?? [],
     },
-  });
+  })
 
   // Create category
-  const { execute: createCategoryAction, isPending: isCreatingCategory } =
-    useServerAction(createCategory, {
+  const { execute: createCategoryAction, isPending: isCreatingCategory } = useServerAction(
+    createCategory,
+    {
       onSuccess: ({ data }) => {
-        toast.success('Category successfully created');
-        redirect(`/admin/categories/${data.slug}`);
+        toast.success("Category successfully created")
+        redirect(`/admin/categories/${data.slug}`)
       },
 
       onError: ({ err }) => {
-        toast.error(err.message);
+        toast.error(err.message)
       },
-    });
+    },
+  )
 
   // Update category
-  const { execute: updateCategoryAction, isPending: isUpdatingCategory } =
-    useServerAction(updateCategory, {
+  const { execute: updateCategoryAction, isPending: isUpdatingCategory } = useServerAction(
+    updateCategory,
+    {
       onSuccess: ({ data }) => {
-        toast.success('Category successfully updated');
-        redirect(`/admin/categories/${data.slug}`);
+        toast.success("Category successfully updated")
+        redirect(`/admin/categories/${data.slug}`)
       },
 
       onError: ({ err }) => {
-        toast.error(err.message);
+        toast.error(err.message)
       },
-    });
+    },
+  )
 
-  const onSubmit = form.handleSubmit((data) => {
-    category
-      ? updateCategoryAction({ id: category.id, ...data })
-      : createCategoryAction(data);
-  });
+  const onSubmit = form.handleSubmit(data => {
+    category ? updateCategoryAction({ id: category.id, ...data }) : createCategoryAction(data)
+  })
 
-  const isPending = isCreatingCategory || isUpdatingCategory;
+  const isPending = isCreatingCategory || isUpdatingCategory
 
   return (
     <Form {...form}>
       <form
         onSubmit={onSubmit}
-        className={cx(
-          'grid grid-cols-1 gap-4 max-w-3xl sm:grid-cols-2',
-          className
-        )}
+        className={cx("grid grid-cols-1 gap-4 max-w-3xl sm:grid-cols-2", className)}
         noValidate
         {...props}
       >
@@ -104,7 +98,7 @@ export function CategoryForm({
               <FormItem>
                 <FormLabel>Name</FormLabel>
                 <FormControl>
-                  <Input {...field} />
+                  <Input data-1p-ignore {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -160,11 +154,11 @@ export function CategoryForm({
             <Link href="/admin/categories">Cancel</Link>
           </Button>
 
-          <Button variant="fancy" isPending={isPending}>
-            {category ? 'Update category' : 'Create category'}
+          <Button variant="primary" isPending={isPending}>
+            {category ? "Update category" : "Create category"}
           </Button>
         </div>
       </form>
     </Form>
-  );
+  )
 }
