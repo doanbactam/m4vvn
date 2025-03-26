@@ -3,7 +3,7 @@ import { NonRetriableError } from "inngest"
 import { revalidateTag } from "next/cache"
 import { getPageAnalytics } from "~/lib/analytics"
 import { getMilestoneReached } from "~/lib/milestones"
-import { getToolRepositoryData } from "~/lib/repositories"
+import { getToolWebsiteData } from "~/lib/website"
 import { getPostMilestoneTemplate, getPostTemplate, sendSocialPost } from "~/lib/socials"
 import { isToolPublished } from "~/lib/tools"
 import { inngest } from "~/services/inngest"
@@ -22,10 +22,10 @@ export const fetchTools = inngest.createFunction(
 
     await Promise.all([
       // Fetch repository data and handle milestones
-      step.run("fetch-repository-data", async () => {
+      step.run("fetch-website-data", async () => {
         return await Promise.allSettled(
           tools.map(async tool => {
-            const result = await tryCatch(getToolRepositoryData(tool.repositoryUrl))
+            const result = await tryCatch(getToolWebsiteData(tool.websiteUrl))
 
             if (result.error) {
               logger.error(`Failed to fetch repository data for ${tool.name}`, {
