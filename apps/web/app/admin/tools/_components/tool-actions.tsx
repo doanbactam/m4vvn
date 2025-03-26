@@ -1,6 +1,6 @@
 "use client"
 
-import type { Tool } from "@openalternative/db/client"
+import type { Tool } from "@m4v/db/client"
 import { EllipsisIcon } from "lucide-react"
 import type { ComponentProps, Dispatch, SetStateAction } from "react"
 import { toast } from "sonner"
@@ -15,9 +15,9 @@ import {
 } from "~/components/common/dropdown-menu"
 import { Link } from "~/components/common/link"
 import {
-  analyzeToolStack,
   regenerateToolContent,
   reuploadToolAssets,
+  fetchSimilarWebData,
 } from "~/server/admin/tools/actions"
 import type { DataTableRowAction } from "~/types"
 import { cx } from "~/utils/cva"
@@ -30,6 +30,12 @@ type ToolActionsProps = ComponentProps<typeof Button> & {
 export const ToolActions = ({ className, tool, setRowAction, ...props }: ToolActionsProps) => {
   const actions = [
     {
+      action: fetchSimilarWebData,
+      label: "Fetch SimilarWeb",
+      successMessage: "SimilarWeb data fetched successfully", 
+      show: () => !!tool.websiteUrl,
+    },
+    {
       action: reuploadToolAssets,
       label: "Reupload Assets",
       successMessage: "Tool assets reuploaded",
@@ -39,20 +45,17 @@ export const ToolActions = ({ className, tool, setRowAction, ...props }: ToolAct
       label: "Regenerate Content",
       successMessage: "Tool content regenerated",
     },
-    {
-      action: analyzeToolStack,
-      label: "Analyze Stack",
-      successMessage: "Tool stack analyzed",
-    },
   ] as const
 
-  const toolActions = actions.map(({ label, action, successMessage }) => ({
-    label,
-    execute: useServerAction(action, {
-      onSuccess: () => toast.success(successMessage),
-      onError: ({ err }) => toast.error(err.message),
-    }).execute,
-  }))
+  const toolActions = actions
+    .filter(action => !action.show || action.show())
+    .map(({ label, action, successMessage }) => ({
+      label,
+      execute: useServerAction(action, {
+        onSuccess: () => toast.success(successMessage),
+        onError: ({ err }) => toast.error(err.message),
+      }).execute,
+    }))
 
   return (
     <DropdownMenu modal={false}>
@@ -98,12 +101,6 @@ export const ToolActions = ({ className, tool, setRowAction, ...props }: ToolAct
         <DropdownMenuItem asChild>
           <Link href={tool.websiteUrl} target="_blank">
             Visit website
-          </Link>
-        </DropdownMenuItem>
-
-        <DropdownMenuItem asChild>
-          <Link href={tool.repositoryUrl} target="_blank">
-            Visit repository
           </Link>
         </DropdownMenuItem>
 

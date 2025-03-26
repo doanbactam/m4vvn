@@ -1,2 +1,2 @@
 export * from "@prisma/client"
-export { AdType, ToolStatus, StackType, Prisma } from "@prisma/client"
+export { AdType, ToolStatus, Prisma } from "@prisma/client"

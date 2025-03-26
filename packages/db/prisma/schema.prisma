@@ -25,25 +25,6 @@ enum ToolStatus {
   Deleted
 }
 
-enum StackType {
-  Tool
-  SaaS
-  Cloud
-  ETL
-  Analytics
-  Language
-  DB
-  CI
-  Framework
-  Hosting
-  API
-  Storage
-  Monitoring
-  Messaging
-  App
-  Network
-}
-
 enum ReportType {
   BrokenLink
   WrongCategory
@@ -146,13 +127,9 @@ model Tool {
   slug            String                   @unique
   websiteUrl      String                   @unique
   affiliateUrl    String?
-  repositoryUrl   String                   @unique
   tagline         String?
   description     String?
   content         String?
-  stars           Int                      @default(0)
-  forks           Int                      @default(0)
-  score           Int                      @default(0)
   faviconUrl      String?
   screenshotUrl   String?
   isFeatured      Boolean                  @default(false)
@@ -163,9 +140,15 @@ model Tool {
   hostingUrl      String?
   discountCode    String?
   discountAmount  String?
-  firstCommitDate DateTime?
-  lastCommitDate  DateTime?
-  pageviews       Int?                     @default(0)
+  priceType       String                   @default("Free")
+  priceRange      String?
+  
+  // New SimilarWeb fields
+  globalRank        Int?
+  categoryRank      Int?
+  monthlyVisits     BigInt?              @default(0) @db.BigInt
+  lastWebUpdate     DateTime?
+
   status          ToolStatus               @default(Draft)
   publishedAt     DateTime?
   createdAt       DateTime                 @default(now())
@@ -176,9 +159,6 @@ model Tool {
   alternatives Alternative[]
   categories   Category[]
   topics       Topic[]
-  stacks       Stack[]
-  license      License?      @relation(fields: [licenseId], references: [id])
-  licenseId    String?
   likes        Like[]
   reports      Report[]
   claims       Claim[]
@@ -188,7 +168,7 @@ model Tool {
   @@index([id, slug])
   @@index([name])
   @@index([status])
-  @@index([isFeatured, score])
+  @@index([isFeatured])
   @@index([searchVector], type: Gin)
   @@index([ownerId])
 }
@@ -234,38 +214,6 @@ model Topic {
   updatedAt DateTime @updatedAt
 
   // Implicit relation
-  tools Tool[]
-
-  // Indexes
-  @@index([slug])
-}
-
-model License {
-  id        String   @id @default(cuid())
-  name      String   @unique @db.Citext
-  slug      String   @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  // Relations
-  tools Tool[]
-
-  // Indexes
-  @@index([slug])
-}
-
-model Stack {
-  id          String    @id @default(cuid())
-  name        String    @db.Citext
-  slug        String    @unique
-  type        StackType @default(Language)
-  description String?
-  website     String?
-  faviconUrl  String?
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-
-  // Relations
   tools Tool[]
 
   // Indexes

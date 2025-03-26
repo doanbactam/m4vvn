@@ -14,10 +14,10 @@ export const getToolWebsiteData = async (websiteUrl: string) => {
 
   if (!website) return null
 
-  // Sử dụng kiểu Record để bỏ qua việc kiểm tra kiểu dữ liệu cho các trường mới
   return {
     globalRank: website.globalRank,
     categoryRank: website.categoryRank,
     monthlyVisits: website.monthlyVisits,
+    lastWebUpdate: website.lastWebUpdate,
   } as unknown as Prisma.ToolUpdateInput
 }

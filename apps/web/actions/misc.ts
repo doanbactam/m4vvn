@@ -1,12 +1,13 @@
 "use server"
 
-import { db } from "@openalternative/db"
-import { ToolStatus } from "@openalternative/db/client"
+import { db } from "@m4v/db"
+import { ToolStatus } from "@m4v/db/client"
+import { tool } from "ai"
 import { revalidateTag } from "next/cache"
 import { z } from "zod"
-import { getToolRepositoryData } from "~/lib/repositories"
 import { adminProcedure } from "~/lib/safe-actions"
 import { getPostTemplate, sendSocialPost } from "~/lib/socials"
+import { getToolWebsiteData } from "~/lib/website"
 import { tryCatch } from "~/utils/helpers"
 
 export const testSocialPosts = adminProcedure
@@ -20,43 +21,38 @@ export const testSocialPosts = adminProcedure
       return sendSocialPost(template, tool)
     }
   })
+export const fetchWebsiteData = adminProcedure.createServerAction().handler(async () => {
+    const tools = await db.tool.findMany({
+        where: {
+            status: { in: [ToolStatus.Scheduled, ToolStatus.Published] },
+        },
+    })
+    if (tools.length === 0) {
+        return { success: false, message: "No tools found" }
+    }
+    await Promise.allSettled(
+        tools.map(async tool => {
+            const result = await tryCatch(getToolWebsiteData(tool.websiteUrl))
 
-export const fetchRepositoryData = adminProcedure.createServerAction().handler(async () => {
-  const tools = await db.tool.findMany({
-    where: {
-      status: { in: [ToolStatus.Scheduled, ToolStatus.Published] },
-    },
-  })
+            if (result.error){
+              console.error(`Failed to fetch website data for ${tool.name}`, {
+                error: result.error,
+                slug: tool.slug,
+              })
+              return null
+            }
 
-  if (tools.length === 0) {
-    return { success: false, message: "No tools found" }
-  }
+            if (!result.data) {
+              console.error(`No website data found for ${tool.name}`, {
+                slug: tool.slug,
+              })
+              return null
+            }
 
-  await Promise.allSettled(
-    tools.map(async tool => {
-      const result = await tryCatch(getToolRepositoryData(tool.repositoryUrl))
-
-      if (result.error) {
-        console.error(`Failed to fetch repository data for ${tool.name}`, {
-          error: result.error,
-          slug: tool.slug,
+            await db.tool.update({
+              where: { id: tool.id },
+              data: result.data,
+            })  
         })
-
-        return null
-      }
-
-      if (!result.data) {
-        return null
-      }
-
-      await db.tool.update({
-        where: { id: tool.id },
-        data: result.data,
-      })
-    }),
-  )
-
-  // Revalidate cache
-  revalidateTag("tools")
-  revalidateTag("tool")
-})
+    )
+})    

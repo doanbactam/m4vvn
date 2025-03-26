@@ -1,7 +1,6 @@
-import { Prisma } from "@openalternative/db/client"
+import { Prisma } from "@m4v/db/client"
 import { alternativeManyPayload } from "~/server/web/alternatives/payloads"
 import { categoryManyPayload } from "~/server/web/categories/payloads"
-import { stackManyPayload } from "~/server/web/stacks/payloads"
 import { topicManyPayload } from "~/server/web/topics/payloads"
 
 export const toolAlternativesPayload = Prisma.validator<Prisma.Tool$alternativesArgs>()({
@@ -19,11 +18,6 @@ export const toolTopicsPayload = Prisma.validator<Prisma.Tool$topicsArgs>()({
   orderBy: { slug: "asc" },
 })
 
-export const toolStackPayload = Prisma.validator<Prisma.Tool$stacksArgs>()({
-  select: stackManyPayload,
-  orderBy: [{ tools: { _count: "desc" } }, { slug: "asc" }],
-})
-
 export const toolOwnerPayload = Prisma.validator<Prisma.Tool$ownerArgs>()({
   select: { id: true },
 })
@@ -33,12 +27,9 @@ export const toolOnePayload = Prisma.validator<Prisma.ToolSelect>()({
   slug: true,
   websiteUrl: true,
   affiliateUrl: true,
-  repositoryUrl: true,
   tagline: true,
   description: true,
   content: true,
-  stars: true,
-  forks: true,
   faviconUrl: true,
   screenshotUrl: true,
   isFeatured: true,
@@ -46,17 +37,18 @@ export const toolOnePayload = Prisma.validator<Prisma.ToolSelect>()({
   hostingUrl: true,
   discountCode: true,
   discountAmount: true,
-  firstCommitDate: true,
-  lastCommitDate: true,
+  priceType: true,
+  priceRange: true,
   status: true,
   publishedAt: true,
   updatedAt: true,
-  license: true,
+  globalRank: true,
+  monthlyVisits: true,
+  lastWebUpdate: true,
   owner: toolOwnerPayload,
   alternatives: toolAlternativesPayload,
   categories: toolCategoriesPayload,
   topics: toolTopicsPayload,
-  stacks: toolStackPayload,
 })
 
 export const toolManyPayload = Prisma.validator<Prisma.ToolSelect>()({
@@ -65,16 +57,16 @@ export const toolManyPayload = Prisma.validator<Prisma.ToolSelect>()({
   websiteUrl: true,
   tagline: true,
   description: true,
-  stars: true,
-  forks: true,
   faviconUrl: true,
   discountCode: true,
   discountAmount: true,
-  firstCommitDate: true,
-  lastCommitDate: true,
+  priceType: true,
+  priceRange: true,
   publishedAt: true,
   createdAt: true,
   updatedAt: true,
+  monthlyVisits: true,
+  globalRank: true,
   owner: toolOwnerPayload,
   alternatives: { ...toolAlternativesPayload, take: 1 },
 })
@@ -89,7 +81,8 @@ export const toolManyExtendedPayload = Prisma.validator<Prisma.ToolSelect>()({
   screenshotUrl: true,
   discountCode: true,
   discountAmount: true,
-  firstCommitDate: true,
+  priceType: true,
+  priceRange: true,
   publishedAt: true,
   createdAt: true,
   updatedAt: true,

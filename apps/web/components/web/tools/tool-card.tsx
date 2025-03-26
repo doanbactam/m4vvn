@@ -1,7 +1,7 @@
 import { formatNumber } from "@curiousleaf/utils"
 import { cx } from "cva"
 import { formatDistanceToNowStrict } from "date-fns"
-import { GitForkIcon, StarIcon, TimerIcon } from "lucide-react"
+import { GlobeIcon, HandCoinsIcon, UsersIcon } from "lucide-react"
 import type { ComponentProps } from "react"
 import { Card, CardDescription, CardHeader } from "~/components/common/card"
 import { H4 } from "~/components/common/heading"
@@ -25,13 +25,13 @@ type ToolCardProps = ComponentProps<typeof Card> & {
 
 const ToolCard = ({ className, tool, isRelated, ...props }: ToolCardProps) => {
   const hasMoreInfo = tool.description || !!tool.alternatives.length
-  const lastCommitDate =
-    tool.lastCommitDate && formatDistanceToNowStrict(tool.lastCommitDate, { addSuffix: true })
+  // const lastCommitDate =
+  //   tool.lastCommitDate && formatDistanceToNowStrict(tool.lastCommitDate, { addSuffix: true })
 
   const insights = [
-    { label: "Stars", value: formatNumber(tool.stars, "standard"), icon: <StarIcon /> },
-    { label: "Forks", value: formatNumber(tool.forks, "standard"), icon: <GitForkIcon /> },
-    { label: "Last commit", value: lastCommitDate, icon: <TimerIcon /> },
+    { label: "Lượt truy cập", value: formatNumber(Number(tool.monthlyVisits), "standard"), icon: <UsersIcon /> },
+    { label: "Thứ hạng toàn cầu", value: formatNumber(tool.globalRank || 0, "standard"), icon: <GlobeIcon /> },
+    { label: "Giá", value: tool.priceRange, icon: <HandCoinsIcon /> },
   ]
 
   return (
@@ -64,13 +64,17 @@ const ToolCard = ({ className, tool, isRelated, ...props }: ToolCardProps) => {
               {!!tool.alternatives.length && (
                 <Stack className="mt-auto text-sm">
                   <span>
-                    <span className="sr-only">Open Source </span>Alternative to:
+                    <span className="sr-only">AI  </span>Công cụ tương tự:
                   </span>
 
-                  {tool.alternatives.map(({ slug, name, faviconUrl }) => (
-                    <Stack size="xs" key={slug}>
-                      <Favicon src={faviconUrl} title={name} className="size-6 p-[3px]" />
-                      <strong className="font-medium">{name}</strong>
+                  {tool.alternatives.map((alternative) => (
+                    <Stack size="xs" key={alternative.slug}>
+                      <Favicon 
+                        src={alternative.faviconUrl || '/default-favicon.png'} 
+                        title={alternative.name} 
+                        className="size-6 p-[3px]" 
+                      />
+                      <strong className="font-medium">{alternative.name}</strong>
                     </Stack>
                   ))}
                 </Stack>
@@ -97,9 +101,9 @@ const ToolCard = ({ className, tool, isRelated, ...props }: ToolCardProps) => {
 
 const ToolCardSkeleton = () => {
   const insights = [
-    { label: "Stars", value: <Skeleton className="h-4 w-16" />, icon: <StarIcon /> },
-    { label: "Forks", value: <Skeleton className="h-4 w-14" />, icon: <GitForkIcon /> },
-    { label: "Last commit", value: <Skeleton className="h-4 w-20" />, icon: <TimerIcon /> },
+    { label: "Lượt truy cập", value: <Skeleton className="h-4 w-16" />, icon: <UsersIcon /> },
+    { label: "Thứ hạng toàn cầu", value: <Skeleton className="h-4 w-14" />, icon: <GlobeIcon /> },
+    { label: "Giá", value: <Skeleton className="h-4 w-20" />, icon: <HandCoinsIcon /> },
   ]
 
   return (

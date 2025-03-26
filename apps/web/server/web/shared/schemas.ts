@@ -1,5 +1,4 @@
-import { ReportType } from "@openalternative/db/client"
-import { githubRegex } from "@openalternative/github"
+import { ReportType } from "@m4v/db/client"
 import { createSearchParamsCache, parseAsArrayOf, parseAsInteger, parseAsString } from "nuqs/server"
 import { z } from "zod"
 import { config } from "~/config"
@@ -18,21 +17,10 @@ export const filterParamsSchema = {
 export const filterParamsCache = createSearchParamsCache(filterParamsSchema)
 export type FilterSchema = Awaited<ReturnType<typeof filterParamsCache.parse>>
 
-const repositoryMessage =
-  "Please enter a valid GitHub repository URL (e.g. https://github.com/owner/name)"
-
-export const repositorySchema = z
-  .string()
-  .min(1, "Repository is required")
-  .url(repositoryMessage)
-  .trim()
-  .toLowerCase()
-  .regex(githubRegex, repositoryMessage)
 
 export const submitToolSchema = z.object({
   name: z.string().min(1, "Name is required"),
   websiteUrl: z.string().min(1, "Website is required").url("Invalid URL").trim(),
-  repositoryUrl: repositorySchema,
   submitterName: z.string().min(1, "Your name is required"),
   submitterEmail: z.string().email("Please enter a valid email address"),
   submitterNote: z.string().max(200),

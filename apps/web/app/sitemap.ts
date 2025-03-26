@@ -3,8 +3,6 @@ import type { MetadataRoute } from "next"
 import { config } from "~/config"
 import { findAlternativeSlugs } from "~/server/web/alternatives/queries"
 import { findCategorySlugs } from "~/server/web/categories/queries"
-import { findLicenseSlugs } from "~/server/web/licenses/queries"
-import { findStackSlugs } from "~/server/web/stacks/queries"
 import { findToolSlugs } from "~/server/web/tools/queries"
 import { findTopicSlugs } from "~/server/web/topics/queries"
 
@@ -22,9 +20,7 @@ export default async function Sitemap(): Promise<MetadataRoute.Sitemap> {
     findToolSlugs({}),
     findCategorySlugs({}),
     findAlternativeSlugs({}),
-    findStackSlugs({}),
     findTopicSlugs({}),
-    findLicenseSlugs({}),
   ])
 
   const pages = ["/about", "/advertise", "/submit", "/self-hosted"]
@@ -56,17 +52,11 @@ export default async function Sitemap(): Promise<MetadataRoute.Sitemap> {
     createEntry("/alternatives", now),
     ...alternatives.map(a => createEntry(`/alternatives/${a.slug}`, a.updatedAt)),
 
-    // Stacks
-    createEntry("/stacks", now),
-    ...stacks.map(l => createEntry(`/stacks/${l.slug}`, l.updatedAt)),
 
     // Topics
     createEntry("/topics", now),
     ...config.site.alphabet.split("").map(letter => createEntry(`/topics/letter/${letter}`, now)),
     ...topics.map(t => createEntry(`/topics/${t.slug}`, t.updatedAt)),
 
-    // Licenses
-    createEntry("/licenses", now),
-    ...licenses.map(l => createEntry(`/licenses/${l.slug}`, l.updatedAt)),
   ]
 }

@@ -21,8 +21,6 @@ export const env = createEnv({
     BETTER_AUTH_URL: z.string().min(1).url(),
     AUTH_GOOGLE_ID: z.string().min(1),
     AUTH_GOOGLE_SECRET: z.string().min(1),
-    AUTH_GITHUB_ID: z.string().min(1),
-    AUTH_GITHUB_SECRET: z.string().min(1),
     REDIS_REST_URL: z.string().min(1),
     REDIS_REST_TOKEN: z.string().min(1),
     RESEND_API_KEY: z.string().min(1),
@@ -33,7 +31,7 @@ export const env = createEnv({
     S3_SECRET_ACCESS_KEY: z.string().min(1),
     STRIPE_SECRET_KEY: z.string().min(1),
     STRIPE_WEBHOOK_SECRET: z.string().min(1),
-    GITHUB_TOKEN: z.string().min(1),
+    RAPIDAPI_KEY: z.string().min(1).optional(),
     SCREENSHOTONE_ACCESS_KEY: z.string().min(1),
     PLAUSIBLE_API_KEY: z.string().min(1),
     BEEHIIV_API_KEY: z.string().min(1),
@@ -48,8 +46,6 @@ export const env = createEnv({
     ANTHROPIC_API_KEY: z.string().min(1),
     FIRECRAWL_API_KEY: z.string().min(1),
     LOGTAIL_SOURCE_TOKEN: z.string().min(1),
-    STACK_ANALYZER_API_URL: z.string().min(1).url(),
-    STACK_ANALYZER_API_KEY: z.string().min(1),
   },
 
   /**

@@ -1,6 +1,6 @@
 import { createAnthropic } from "@ai-sdk/anthropic"
 import { isTruthy } from "@curiousleaf/utils"
-import { db } from "@openalternative/db"
+import { db } from "@m4v/db"
 import { generateObject } from "ai"
 import { z } from "zod"
 import { env } from "~/env"
@@ -12,7 +12,8 @@ import { tryCatch } from "~/utils/helpers"
  * The system prompt for the content generator.
  */
 const systemPrompt = `
-  You are an expert content creator specializing in open source products.
+using Vietnamese language
+  You are an expert content creator specializing in AI products.
   Your task is to generate high-quality, engaging content to display on a directory website.
   You do not use any catchphrases like "Empower", "Streamline" etc.
 `
@@ -105,7 +106,7 @@ export const generateContentWithRelations = async (url: string) => {
       .array(z.string())
       .transform(a => a.map(name => categories.find(cat => cat.name === name)).filter(isTruthy))
       .describe(`
-        Assign the open source software product to the categories that it belongs to.
+        Assign the AI software product to the categories that it belongs to.
         Try to assign the tool to multiple categories, but not more than 3.
         If a tool does not belong to any category, return an empty array.
       `),
@@ -113,7 +114,7 @@ export const generateContentWithRelations = async (url: string) => {
       .array(z.string())
       .transform(a => a.map(name => alternatives.find(alt => alt.name === name)).filter(isTruthy))
       .describe(`
-        Assign the open source software product to the proprietary software products that it is similar to.
+        Assign the AI software product to the proprietary software products that it is similar to.
         Try to assign the tool to multiple alternatives.
         If a tool does not have an alternative, return an empty array.
       `),

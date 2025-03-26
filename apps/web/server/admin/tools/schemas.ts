@@ -1,4 +1,4 @@
-import { type Tool, ToolStatus } from "@openalternative/db/client"
+import { type Tool, ToolStatus } from "@m4v/db/client"
 import {
   createSearchParamsCache,
   parseAsArrayOf,
@@ -8,7 +8,8 @@ import {
 } from "nuqs/server"
 import { z } from "zod"
 import { getSortingStateParser } from "~/lib/parsers"
-import { repositorySchema } from "~/server/web/shared/schemas"
+
+const PRICE_TYPES = ["Free", "Premium", "Other", "Free Trial", "Open Source"] as const
 
 export const toolsTableParamsSchema = {
   name: parseAsString.withDefault(""),
@@ -29,7 +30,6 @@ export const toolSchema = z.object({
   slug: z.string().optional(),
   websiteUrl: z.string().min(1, "Website is required").url(),
   affiliateUrl: z.string().url().optional().or(z.literal("")),
-  repositoryUrl: repositorySchema,
   tagline: z.string().optional(),
   description: z.string().optional(),
   content: z.string().optional(),
@@ -43,6 +43,8 @@ export const toolSchema = z.object({
   hostingUrl: z.string().url().optional().or(z.literal("")),
   discountCode: z.string().optional(),
   discountAmount: z.string().optional(),
+  priceType: z.enum(PRICE_TYPES).default("Free"),
+  priceRange: z.string().optional(),
   publishedAt: z.coerce.date().nullish(),
   status: z.nativeEnum(ToolStatus).default("Draft"),
   alternatives: z.array(z.string()).optional(),

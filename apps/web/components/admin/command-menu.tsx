@@ -1,11 +1,11 @@
 import { useDebouncedState } from "@mantine/hooks"
-import type { Alternative, Category, Tool } from "@openalternative/db/client"
+import type { Alternative, Category, Tool } from "@m4v/db/client"
 import { LoaderIcon } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 import { toast } from "sonner"
 import { useServerAction } from "zsa-react"
-import { fetchRepositoryData, testSocialPosts } from "~/actions/misc"
+import { fetchWebsiteData, testSocialPosts } from "~/actions/misc"
 import { searchItems } from "~/actions/search"
 import {
   CommandDialog,
@@ -68,8 +68,8 @@ export const CommandMenu = ({ isOpen, onOpenChange }: CommandMenuProps) => {
     toast.success("Social post sent")
   }
 
-  const handleFetchRepositoryData = async () => {
-    await fetchRepositoryData()
+  const handleFetchWebsiteData = async () => {
+    await fetchWebsiteData()
     toast.success("Repository data fetched")
   }
 
@@ -117,7 +117,7 @@ export const CommandMenu = ({ isOpen, onOpenChange }: CommandMenuProps) => {
 
         <CommandGroup heading="Quick Commands">
           <CommandItem onSelect={handleSendSocialPost}>Send Social Post</CommandItem>
-          <CommandItem onSelect={handleFetchRepositoryData}>Fetch Repository Data</CommandItem>
+          <CommandItem onSelect={handleFetchWebsiteData}>Fetch Repository Data</CommandItem>
         </CommandGroup>
 
         {!!searchResults?.tools.length && (

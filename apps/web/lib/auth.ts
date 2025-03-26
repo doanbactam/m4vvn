@@ -1,4 +1,4 @@
-import { db } from "@openalternative/db"
+import { db } from "@m4v/db"
 import { betterAuth } from "better-auth"
 import { prismaAdapter } from "better-auth/adapters/prisma"
 import { admin, magicLink } from "better-auth/plugins"
@@ -18,10 +18,6 @@ export const auth = betterAuth({
       clientSecret: env.AUTH_GOOGLE_SECRET,
     },
 
-    github: {
-      clientId: env.AUTH_GITHUB_ID,
-      clientSecret: env.AUTH_GITHUB_SECRET,
-    },
   },
 
   account: {

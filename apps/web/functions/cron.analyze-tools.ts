@@ -1,4 +1,4 @@
-import { ToolStatus } from "@openalternative/db/client"
+import { ToolStatus } from "@m4v/db/client"
 import { revalidateTag } from "next/cache"
 import { analyzeRepositoryStack } from "~/lib/stack-analysis"
 import { inngest } from "~/services/inngest"

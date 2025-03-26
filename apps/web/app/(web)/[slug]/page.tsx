@@ -14,9 +14,8 @@ import { AdCard, AdCardSkeleton } from "~/components/web/ads/ad-card"
 import { ExternalLink } from "~/components/web/external-link"
 import { Listing } from "~/components/web/listing"
 import { Markdown } from "~/components/web/markdown"
-import { RepositoryDetails } from "~/components/web/repository-details"
+import { WebsiteDetails } from "~/components/web/website-details"
 import { ShareButtons } from "~/components/web/share-buttons"
-import { StackList } from "~/components/web/stacks/stack-list"
 import { ToolActions } from "~/components/web/tools/tool-actions"
 import { ToolAlternatives } from "~/components/web/tools/tool-alternatives"
 import { ToolListSkeleton } from "~/components/web/tools/tool-list"
@@ -179,7 +178,7 @@ export default async function ToolPage(props: PageProps) {
                   className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 opacity-0 pointer-events-none shadow-lg group-hover:opacity-100"
                   asChild
                 >
-                  <span>Visit</span>
+                  <span>Truy cập</span>
                 </Button>
               </ExternalLink>
             </Box>
@@ -187,19 +186,11 @@ export default async function ToolPage(props: PageProps) {
 
           {tool.content && <Markdown code={tool.content} className="max-md:order-5" />}
 
-          {/* Stacks */}
-          {!!tool.stacks.length && (
-            <Stack size="lg" direction="column" className="w-full max-md:order-6 md:gap-y-6">
-              <H4 as="strong">Technical Stack:</H4>
-
-              <StackList stacks={tool.stacks} />
-            </Stack>
-          )}
 
           {/* Categories */}
           {!!tool.categories.length && (
             <Stack size="lg" direction="column" className="w-full max-md:order-7">
-              <H5 as="strong">Categories:</H5>
+              <H5 as="strong">Thể loại:</H5>
 
               <Stack>
                 {tool.categories?.map(({ slug, name }) => (
@@ -214,7 +205,7 @@ export default async function ToolPage(props: PageProps) {
           {/* Topics */}
           {!!tool.topics.length && (
             <Stack size="lg" direction="column" className="w-full max-md:order-8">
-              <H5 as="strong">Related topics:</H5>
+              <H5 as="strong">Chủ đề:</H5>
 
               <Stack>
                 {tool.topics.map(({ slug }) => (
@@ -230,8 +221,7 @@ export default async function ToolPage(props: PageProps) {
         </Section.Content>
 
         <Section.Sidebar className="max-md:contents">
-          <RepositoryDetails tool={tool} className="max-md:order-3" />
-
+          <WebsiteDetails tool={tool} className="max-md:order-4" />
           {/* Advertisement */}
           <Suspense fallback={<AdCardSkeleton className="max-md:order-4" />}>
             <AdCard type="ToolPage" className="max-md:order-4" />
@@ -247,7 +237,7 @@ export default async function ToolPage(props: PageProps) {
       {/* Related */}
       <Suspense
         fallback={
-          <Listing title={`Open source alternatives similar to ${tool.name}:`}>
+          <Listing title={`Các công cụ AI tương tự ${tool.name}:`}>
             <ToolListSkeleton count={3} />
           </Listing>
         }
