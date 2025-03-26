@@ -5,8 +5,8 @@ import EmailToolExpediteReminder from "~/emails/tool-expedite-reminder"
 import EmailToolScheduled from "~/emails/tool-scheduled"
 import { sendEmails } from "~/lib/email"
 import { generateContentWithRelations } from "~/lib/generate-content"
-import { getToolWebsiteData } from "~/lib/website"
 import { uploadFavicon, uploadScreenshot } from "~/lib/media"
+import { getToolWebsiteData } from "~/lib/repositories"
 import { inngest } from "~/services/inngest"
 import { ensureFreeSubmissions } from "~/utils/functions"
 
@@ -36,17 +36,15 @@ export const toolScheduled = inngest.createFunction(
         })
       }),
 
+
       step.run("fetch-website-data", async () => {
         const data = await getToolWebsiteData(tool.websiteUrl)
-
         if (!data) return
-
         return await db.tool.update({
           where: { id: tool.id },
           data,
         })
       }),
-
 
       step.run("upload-favicon", async () => {
         const { id, slug, websiteUrl } = tool

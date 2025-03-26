@@ -3,7 +3,7 @@ import { NonRetriableError } from "inngest"
 import { revalidateTag } from "next/cache"
 import { getPageAnalytics } from "~/lib/analytics"
 import { getMilestoneReached } from "~/lib/milestones"
-import { getToolWebsiteData } from "~/lib/website"
+import { getToolWebsiteData } from "~/lib/repositories"
 import { getPostMilestoneTemplate, getPostTemplate, sendSocialPost } from "~/lib/socials"
 import { isToolPublished } from "~/lib/tools"
 import { inngest } from "~/services/inngest"
@@ -22,41 +22,6 @@ export const fetchTools = inngest.createFunction(
 
     await Promise.all([
       // Fetch repository data and handle milestones
-      step.run("fetch-website-data", async () => {
-        return await Promise.allSettled(
-          tools.map(async tool => {
-            const result = await tryCatch(getToolWebsiteData(tool.websiteUrl))
-
-            if (result.error) {
-              logger.error(`Failed to fetch repository data for ${tool.name}`, {
-                error: result.error,
-                slug: tool.slug,
-              })
-
-              return null
-            }
-
-            if (!result.data) {
-              return null
-            }
-
-            if (isToolPublished(tool) && result.data.stars > tool.stars) {
-              const milestone = getMilestoneReached(tool.stars, result.data.stars)
-
-              if (milestone) {
-                const template = getPostMilestoneTemplate(tool, milestone)
-                await sendSocialPost(template, tool)
-              }
-            }
-
-            await db.tool.update({
-              where: { id: tool.id },
-              data: result.data,
-            })
-          }),
-        )
-      }),
-
       // Fetch analytics data
       step.run("fetch-analytics-data", async () => {
         return await Promise.allSettled(
@@ -74,10 +39,34 @@ export const fetchTools = inngest.createFunction(
 
             await db.tool.update({
               where: { id: tool.id },
-              data: { pageviews: result.data.pageviews ?? tool.pageviews ?? 0 },
+              data: { monthlyVisits: result.data.pageviews ?? tool.monthlyVisits ?? 0 },
             })
           }),
         )
+      }),
+
+      // Fetch website data
+      step.run("fetch-website-data", async () => {
+        return await Promise.allSettled(
+          tools.map(async tool => {
+            const result = await tryCatch(getToolWebsiteData(tool.websiteUrl));
+
+            if (result.error) {
+              logger.error(`Failed to fetch website data for ${tool.name}`, {
+                error: result.error,
+                slug: tool.slug,
+              });
+              return null;
+            }
+
+            if (!result.data) return null;
+
+            await db.tool.update({
+              where: { id: tool.id },
+              data: result.data,
+            });
+          })
+        );
       }),
     ])
 
