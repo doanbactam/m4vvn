@@ -16,7 +16,7 @@ const createEntry = (path: string, lastModified: Date, options?: Partial<Entry>)
 })
 
 export default async function Sitemap(): Promise<MetadataRoute.Sitemap> {
-  const [tools, categories, alternatives, stacks, topics, licenses] = await Promise.all([
+  const [tools, categories, alternatives, topics] = await Promise.all([
     findToolSlugs({}),
     findCategorySlugs({}),
     findAlternativeSlugs({}),
@@ -45,7 +45,6 @@ export default async function Sitemap(): Promise<MetadataRoute.Sitemap> {
     ...categories.map(c => createEntry(`/categories/${c.slug}`, c.updatedAt)),
     ...categories.map(c => createEntry(`/categories/${c.slug}/self-hosted`, c.updatedAt)),
     ...categories.flatMap(c => [
-      ...stacks.map(s => createEntry(`/categories/${c.slug}/using/${s.slug}`, c.updatedAt)),
     ]),
 
     // Alternatives
