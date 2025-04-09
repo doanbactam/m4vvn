@@ -1,5 +1,6 @@
 "use client"
 
+import { slugify } from "@curiousleaf/utils"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { ToolStatus } from "@m4v/db/client"
 import { formatDate } from "date-fns"
@@ -33,6 +34,7 @@ import { Stack } from "~/components/common/stack"
 import { Switch } from "~/components/common/switch"
 import { TextArea } from "~/components/common/textarea"
 import { Markdown } from "~/components/web/markdown"
+import { useComputedField } from "~/hooks/use-computed-field"
 import type { findAlternativeList } from "~/server/admin/alternatives/queries"
 import type { findCategoryList } from "~/server/admin/categories/queries"
 import { createTool, updateTool } from "~/server/admin/tools/actions"
@@ -66,7 +68,6 @@ export function ToolForm({
       content: tool?.content ?? "",
       websiteUrl: tool?.websiteUrl ?? "",
       affiliateUrl: tool?.affiliateUrl ?? "",
-      repositoryUrl: tool?.repositoryUrl ?? "",
       faviconUrl: tool?.faviconUrl ?? "",
       screenshotUrl: tool?.screenshotUrl ?? "",
       isFeatured: tool?.isFeatured ?? false,
@@ -84,6 +85,13 @@ export function ToolForm({
     },
   })
 
+   // Set the slug based on the name
+   useComputedField({
+    form,
+    sourceField: "name",
+    computedField: "slug",
+    callback: slugify,
+  })
   // Create tool
   const { execute: createToolAction, isPending: isCreatingTool } = useServerAction(createTool, {
     onSuccess: ({ data }) => {
